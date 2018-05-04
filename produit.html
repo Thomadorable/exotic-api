@@ -58,11 +58,20 @@
             <ul>
                 <li v-for="lieu in infosProduct.localisation">
                     {{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}
+                    <iframe
+            width="600"
+            height="450"
+            frameborder="0" style="border:0"
+            v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + lieu.lieu_boutique">
+        </iframe>
                 </li>
             </ul>
         </div>
 
+        
+
     </div>
+
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>

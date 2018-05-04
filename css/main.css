@@ -72,6 +72,7 @@ html {
 body {
     background: #F5F5F5;
     padding: 50px;
+    color: #292929;
 }
 
 input {
@@ -84,10 +85,15 @@ input {
     font-size: 1.4rem;    
 }
 
-.error {
+.error,
+.success {
     color: red;
     font-style: italic;
     margin: 20px 0;
+}
+
+.success {
+    color: green;
 }
 
 .highlightText {
@@ -104,15 +110,58 @@ a:hover {
     text-decoration: underline;
 }
 
-ul li {
-    margin: 0;
-    margin-left: 20px;
+/* RESULTS PAGE */
+.result {
+    display: inline-block;
+    width: calc(100% / 3 - 20px);
+    font-size: 1.4rem;
+    background: #fff;
+    margin: 10px;
+    font-weight: normal;
+    text-decoration: none;
 }
 
-ul li a {
-    display: block;
-    padding: 10px;
+.result:hover {
+    text-decoration: none;
 }
+
+.result:hover .product-cover-img {
+    transform: scale(1.15);
+}
+
+.product-cover {
+    height: 17vw;
+    overflow: hidden;
+}
+
+.product-cover-img {
+    display: block;
+    background-size: cover;
+    transition: all ease 0.5s;
+    height: 100%;
+}
+
+.results-no-img {
+    line-height: 17vw;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #eae7e7;
+}
+
+.description {
+    padding: 20px;
+    display: block;
+}
+
+.product-title {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
 
 .half-bloc {
     margin-top: 40px;

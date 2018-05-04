@@ -24,8 +24,9 @@ function sendJSON(res, result) {
 }
 
 function getProductsBy(where, res) {
-    let sql = "SELECT produit.id_produit, produit.nom, theme.nom AS 'id_theme' FROM produit ";
-    sql += "INNER JOIN theme ON theme.id_theme = produit.id_theme ";
+    let sql = "SELECT produit.id_produit, produit.nom, theme.nom AS 'id_theme', photo.url AS 'image' FROM produit ";
+    sql += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
+    sql += "LEFT JOIN photo ON photo.id_produit = produit.id_produit  ";
     sql += "WHERE " + where + " ";
     sql += "GROUP BY produit.id_produit";
 
@@ -163,8 +164,10 @@ app.get('/api/product/:id', function (req, res) {
 })
 
 app.use(function(req, res, next){
-    res.setHeader('Content-Type', 'text/plain');
-    res.status(404).send('Page introuvable !');
+    // res.setHeader('Content-Type', 'text/plain');
+    // res.status(404).send('Page introuvable !');
+    console.log('Page introuvable !');
+    sendJSON(res);
 });
 
 app.listen(3000);

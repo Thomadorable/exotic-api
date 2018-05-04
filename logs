@@ -2,13 +2,20 @@
 - Escape string pour autoriser les apostrophe
 - no résult front 
 - highlight résultat 
+- gestion des accents dans le highlight
+- nb de résultats
+- créer une fonction qui retourne les résultats avec les bons header
+- search by "all"
+- insertion de la recherche dans l'URL (permet de faire retour sur la recherche)
+- amélioration du css results
+- début carte google MAp
+- boutons suivant / précédent (début pagination)
 
 
 TODO :
-- créer une fonction qui retourne les résultats avec les bons header
-- search by "all"
 - refacto sql by id theme + sql by id location
-- rendre la recherche plus flex ??
+- rendre la recherche plus flex ?? (en mode elastic search - à voir)
+- gérer des stats de produits recherchés / visités
 - front : mettre une photo "pas d'image dispo pour ce produit"
 - créer toutes les routes du doc
 - Pouvoir retourner à la recherche sur une fiche produit
