@@ -14,12 +14,16 @@
 - ajouter le type de recherche dans le hash
 - fix bug where id_boutique ou id_theme find 0 
 - afficher tous les produits du même thèmes
+- recherche trop longue affiche "pas de résultat pour 'a'" rapidement
+- afficher Vue JS après chargement
+- touches clavier (recherche = scroll + recherche, echap = quitter recherche)
+- gérer des stats de produits visités
+- afficher les produits les plus visités
 
 
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
-- gérer des stats de produits recherchés / visités
 - Pouvoir retourner à la recherche sur une fiche produit
 - API google Map : afficher map à partir d'une adresse
 - API google Map : itinéraire ?
@@ -30,11 +34,12 @@ TODO :
 - rechercher par marque ?
 - Comment passer le paramètre id dans l'url ? utiliser node ?
 - sécuriser l'API
-- recherche trop longue affiche "pas de résultat pour 'a'" rapidement
 - garder le mode de recherche dans l'url ?
 - garder la page dans l'url ?
-- touches clavier (recherche = scroll + recherche, echap = quitter recherche)
 - route info boutique + front ?
 - Géolocalisation de l'user
 - route + front rechercher une boutique (par lieu ?)
 - refacto getHashEntity (list des entity)
+- ajouter des loaders (photos + recherche)
+- ne pas sélectionner un tri, mais cocher plutôt
+- responsive ?
