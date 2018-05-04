@@ -1,2 +1,24 @@
 - Group by sur l'id produit pour retourner 1 résulat quand plusieurs thèmes correspondent
 - Escape string pour autoriser les apostrophe
+- no résult front 
+- highlight résultat 
+
+
+TODO :
+- créer une fonction qui retourne les résultats avec les bons header
+- search by "all"
+- refacto sql by id theme + sql by id location
+- rendre la recherche plus flex ??
+- front : mettre une photo "pas d'image dispo pour ce produit"
+- créer toutes les routes du doc
+- Pouvoir retourner à la recherche sur une fiche produit
+- Géolocalisation de l'user
+- API google Map : afficher map à partir d'une adresse
+- API google Map : itinéraire ?
+- pagination des résultats
+- afficher tous les produits du même thèmes
+- afficher tous les produits d'une catégorie
+- rechercher par catégorie ?
+- Comment passer le paramètre id dans l'url ? utiliser node ?
+- sécuriser l'API
+- recherche trop longue affiche "pas de résultat pour 'a'" rapidement

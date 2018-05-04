@@ -84,6 +84,16 @@ input {
     font-size: 1.4rem;    
 }
 
+.error {
+    color: red;
+    font-style: italic;
+    margin: 20px 0;
+}
+
+.highlightText {
+    background: yellow;
+}
+
 a {
     text-decoration: none;
     color: #292929;

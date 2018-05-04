@@ -14,6 +14,7 @@
     <div id="app-7">
         <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue">
         <select id="" v-model="searchEntity">
+            <option value="all">Par nom, thème ou lieu</option>
             <option value="name">Par nom</option>
             <option value="theme">Par theme</option>
             <option value="location">Par Lieu</option>
@@ -21,24 +22,28 @@
         <ul v-for="product in listresults">
             <li>
                 <a v-bind:href="'produit.html?id=' + product.id_produit">
-                {{ product.nom }} <br>
-                Thème : {{product.id_theme}} 
+                    <span v-html="highlight(product.nom)"></span> <br>
+                    Thème : <span v-html="highlight(product.id_theme)"></span>
                 </a>
             </li>
         </ul>
+        <div v-if="listresults.length === 0 && searchValue.length > 0">
+            <p class="error">Aucun résultat pour la recherche « {{searchValue}} » 
+            </p>
+        </div>
     </div>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
 
     <script>
-
         var app7 = new Vue({
             el: '#app-7',
             data: {
                 searchValue: '',
-                searchEntity: 'name',
-                listresults: []
+                searchEntity: 'all',
+                listresults: [],
+                query: "paris"
             },
             methods: {
                 getProductsByName: function (search) {
@@ -52,6 +57,15 @@
                         this.listresults = [];
                     }
                 },
+                highlight: function (content) {
+                    console.log('hgihtligh', content);
+                    if(!this.searchValue) {
+                        return content;
+                    }
+                    return content.replace(new RegExp(this.searchValue, "gi"), match => {
+                        return '<span class="highlightText">' + match + '</span>';
+                    });
+                }
             },
             watch: {
                 searchValue: function () {

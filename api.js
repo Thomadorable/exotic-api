@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 const jsStringEscape = require('js-string-escape');
+const express = require('express');
+const app = express();
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -8,6 +10,18 @@ const con = mysql.createConnection({
     database: "exotic",
     port: "8889"
 });
+
+function sendJSON(res, result) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader('Content-Type', 'application/json');
+
+    if (!result) {
+        result = [];
+    }
+
+    res.send(JSON.stringify(result));
+}
 
 function getProductsBy(where, res) {
     let sql = "SELECT produit.id_produit, produit.nom, theme.nom AS 'id_theme' FROM produit ";
@@ -21,23 +35,51 @@ function getProductsBy(where, res) {
 
     con.query(sql, function (err, result, fields) {
         if (err) throw err;
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.setHeader('Content-Type', 'application/json');
-
-        res.send(JSON.stringify(result));
+        sendJSON(res, result);
     });
 }
 
-const express = require('express')
-const app = express()
+function getIdThemes(search, res, callback) {
+    let sql = "SELECT id_theme FROM theme WHERE nom LIKE '%" + search + "%'";
+    con.query(sql, function (err, result, fields) {
+        if (err) throw err;
+            let idThemes = '';
+            for (let index = 0; index < result.length; index++) {
+                idThemes += result[index].id_theme + ', ';
+            }
+
+            idThemes = idThemes.substring(0, idThemes.length - 2);
+
+            if(callback && typeof(callback) === 'function') {
+                callback(idThemes);
+            }
+    });
+}
+
+function getIdBoutiques(search, res, callback) {
+    console.log('get id boutiques !');
+    let sql = "SELECT id_boutique FROM boutique WHERE nom LIKE '%" +search+ "%' OR lieu LIKE '%" +search+ "%'";
+    con.query(sql, function (err, result, fields) {
+        if (err) throw err;
+            let idBoutiques = '';
+            for (let index = 0; index < result.length; index++) {
+                idBoutiques += result[index].id_boutique + ', ';
+            }
+
+            idBoutiques = idBoutiques.substring(0, idBoutiques.length - 2);
+
+            if(callback && typeof(callback) === 'function') {
+                callback(idBoutiques);
+            }
+    });
+}
 
 // SEARCH BY NAME
 app.get('/api/search/products/name/:search', function (req, res) {
     let search = req.params.search;
     search = jsStringEscape(search);
 
-    getProductsBy('produit.nom LIKE "%' +search+ '%"', res);
+    getProductsBy('produit.nom LIKE "%' + search + '%"', res);
 })
 
 // SEARCH BY THEME
@@ -45,52 +87,38 @@ app.get('/api/search/products/theme/:search', function (req, res) {
     let search = req.params.search;
     search = jsStringEscape(search);
 
-    let sql = "SELECT id_theme FROM theme WHERE nom LIKE '%" + search + "%'";
-    con.query(sql, function (err, result, fields) {
-        if (err) throw err;
-            if (result.length > 0) {
-                console.log('result ok');
-                let idThemes = '';
-                for (let index = 0; index < result.length; index++) {
-                    idThemes += result[index].id_theme + ', ';
-                }
-    
-                idThemes = idThemes.substring(0, idThemes.length - 2);
-                
-                console.log('still ok ?');
-                getProductsBy('produit.id_theme IN ('+ idThemes + ') ', res);
-            } else {
-                res.setHeader("Access-Control-Allow-Origin", "*");
-                res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify([]));
-            }
-    });
+   getIdThemes(search, res, function(idThemes){
+        getProductsBy('produit.id_theme IN ('+ idThemes + ')', res);
+   });
 })
 
-// TODO : Search by location ?
+// SEARCH BY LOCATION
 app.get('/api/search/products/location/:search', function (req, res) {
     let search = req.params.search;
     search = jsStringEscape(search);
 
-    con.query("SELECT id_boutique FROM boutique WHERE nom LIKE '%" +search+ "%' OR lieu LIKE '%" +search+ "%'", function (err, result, fields) {
-        if (err) throw err;
-            if (result.length > 0) {
-                let idBoutiques = '';
-                for (let index = 0; index < result.length; index++) {
-                    idBoutiques += result[index].id_boutique + ', ';
-                }
-    
-                idBoutiques = idBoutiques.substring(0, idBoutiques.length - 2);
-    
-                getProductsBy('produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ ')) ', res);
-            } else {
-                res.setHeader("Access-Control-Allow-Origin", "*");
-                res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                res.setHeader('Content-Type', 'application/json');
+    getIdBoutiques(search, res, function(idBoutiques){
+        let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ '))';
+        getProductsBy(sql, res);
+    });
+})
 
-                res.send(JSON.stringify([1]));
+// SEARCH BY ALL
+app.get('/api/search/products/all/:search', function (req, res) {
+    let search = req.params.search;
+    search = jsStringEscape(search);
+
+    getIdThemes(search, res, function(idThemes){
+        getIdBoutiques(search, res, function(idBoutiques){
+            let sql = 'produit.nom LIKE "%' + search + '%" ';
+            if (idThemes.length > 0) {
+                sql += 'OR produit.id_theme IN ('+ idThemes + ') ';
+            } 
+            if (idBoutiques.length > 0) {
+                sql += 'OR produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ '))';
             }
+            getProductsBy(sql, res);
+        });
     });
 })
 
