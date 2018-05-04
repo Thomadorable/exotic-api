@@ -15,7 +15,7 @@
 
     <div id="app-7" class="font-size-0">
         <h1>#{{infosProduct.id}} {{infosProduct.nom}}</h1>
-        <h2>Thème | {{infosProduct.theme}}</h2>
+        <h2>Thème | <a v-bind:href="'index.html#theme-' + infosProduct.theme">{{infosProduct.theme}}</a></h2>
 
         <div class="half-bloc">
             <h3>Description</h3>
@@ -53,17 +53,21 @@
             </div>
         </div>
 
+        <div class="half-bloc product-cover" v-else>
+            <p class="results-no-img">No image available</p>
+        </div>
+
         <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
             <h3>Lieux</h3>
             <ul>
                 <li v-for="lieu in infosProduct.localisation">
                     {{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}
                     <iframe
-            width="600"
-            height="450"
-            frameborder="0" style="border:0"
-            v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + lieu.lieu_boutique">
-        </iframe>
+                        width="600"
+                        height="450"
+                        frameborder="0" style="border:0"
+                        v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + lieu.lieu_boutique">
+                    </iframe>
                 </li>
             </ul>
         </div>

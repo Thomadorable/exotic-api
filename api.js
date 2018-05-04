@@ -89,7 +89,11 @@ app.get('/api/search/products/theme/:search', function (req, res) {
     search = jsStringEscape(search);
 
    getIdThemes(search, res, function(idThemes){
-        getProductsBy('produit.id_theme IN ('+ idThemes + ')', res);
+        if (idThemes.length > 0)  {
+            getProductsBy('produit.id_theme IN ('+ idThemes + ')', res);
+        } else {
+            sendJSON(res);
+        }
    });
 })
 
@@ -99,8 +103,12 @@ app.get('/api/search/products/location/:search', function (req, res) {
     search = jsStringEscape(search);
 
     getIdBoutiques(search, res, function(idBoutiques){
-        let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ '))';
-        getProductsBy(sql, res);
+        if (idBoutiques.length > 0)  {
+            let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ '))';
+            getProductsBy(sql, res);
+        } else {
+            sendJSON(res);
+        }
     });
 })
 

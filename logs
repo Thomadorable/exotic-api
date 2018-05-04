@@ -10,22 +10,31 @@
 - amélioration du css results
 - début carte google MAp
 - boutons suivant / précédent (début pagination)
+- front : mettre une photo "pas d'image dispo pour ce produit"
+- ajouter le type de recherche dans le hash
+- fix bug where id_boutique ou id_theme find 0 
+- afficher tous les produits du même thèmes
 
 
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
 - gérer des stats de produits recherchés / visités
-- front : mettre une photo "pas d'image dispo pour ce produit"
-- créer toutes les routes du doc
 - Pouvoir retourner à la recherche sur une fiche produit
-- Géolocalisation de l'user
 - API google Map : afficher map à partir d'une adresse
 - API google Map : itinéraire ?
 - pagination des résultats
-- afficher tous les produits du même thèmes
 - afficher tous les produits d'une catégorie
+- afficher tous les produits d'une même marque ?
 - rechercher par catégorie ?
+- rechercher par marque ?
 - Comment passer le paramètre id dans l'url ? utiliser node ?
 - sécuriser l'API
 - recherche trop longue affiche "pas de résultat pour 'a'" rapidement
+- garder le mode de recherche dans l'url ?
+- garder la page dans l'url ?
+- touches clavier (recherche = scroll + recherche, echap = quitter recherche)
+- route info boutique + front ?
+- Géolocalisation de l'user
+- route + front rechercher une boutique (par lieu ?)
+- refacto getHashEntity (list des entity)

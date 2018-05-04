@@ -39,7 +39,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-h2 {
+h2, h2 a {
     font-size: 2rem;
     text-align: center;
     font-weight: bold;
@@ -73,6 +73,8 @@ body {
     background: #F5F5F5;
     padding: 50px;
     color: #292929;
+    max-width: 960px;
+    margin: auto;
 }
 
 input {
@@ -90,6 +92,7 @@ input {
     color: red;
     font-style: italic;
     margin: 20px 0;
+    text-align: center
 }
 
 .success {
@@ -97,7 +100,8 @@ input {
 }
 
 .highlightText {
-    background: yellow;
+    background: rgba(249, 156, 2, 0.5);
+    border-radius: 5px;
 }
 
 a {
@@ -111,6 +115,10 @@ a:hover {
 }
 
 /* RESULTS PAGE */
+.results {
+    position: relative;
+    padding-bottom: 40px;
+}
 .result {
     display: inline-block;
     width: calc(100% / 3 - 20px);
@@ -160,6 +168,32 @@ a:hover {
     font-weight: bold;
     font-size: 1.3rem;
     margin-bottom: 10px;
+}
+
+.pagination-btn {
+    position: absolute;
+    bottom: 0;
+    border: 1px solid #eae7e7;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease 0.5s;
+}
+
+.pagination-btn:hover {
+    border-color: #292929;
+    background: #292929;
+    color: white;
+}
+
+.pagination-btn.prev {
+    left: 10px;
+}
+
+.pagination-btn.next {
+    right: 10px;
 }
 
 
