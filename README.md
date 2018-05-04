@@ -1,4 +1,4 @@
 # exotic-api
 
-$ npm install
-$ node api.js
+- $ npm install
+- $ node api.js
