@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rechercher un produit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <div id="app-7">
+        <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue">
+        <select id="" v-model="searchEntity">
+            <option value="name">Par nom</option>
+            <option value="theme">Par theme</option>
+            <option value="location">Par Lieu</option>
+        </select>
+        <ul v-for="product in listresults">
+            <li>
+                <a v-bind:href="'produit.html?id=' + product.id_produit">
+                {{ product.nom }} <br>
+                Thème : {{product.id_theme}} <br>
+                Lieu : {{product.boutique}}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
+
+    <script>
+
+        var app7 = new Vue({
+            el: '#app-7',
+            data: {
+                searchValue: '',
+                searchEntity: 'name',
+                listresults: []
+            },
+            methods: {
+                getProductsByName: function (search) {
+                    if (search.length > 0) {
+                        $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search, (data) => {
+                            this.listresults = data;
+                        });
+                    } else {
+                        this.listresults = [];
+                    }
+                },
+            },
+            watch: {
+                searchValue: function () {
+                    this.getProductsByName(this.searchValue);
+                },
+                searchEntity: function () {
+                    this.getProductsByName(this.searchValue);
+                }
+            }
+        });
+
+        app7.getProductsByName(app7.searchValue);
+        $('#input').focus();
+    </script>
+</body>
+
+</html>

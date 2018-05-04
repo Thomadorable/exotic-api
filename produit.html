@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Détail du produit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+
+<body>
+
+    <div id="app-7" class="font-size-0">
+        <h1>#{{infosProduct.id}} {{infosProduct.nom}}</h1>
+        <h2>Thème | {{infosProduct.theme}}</h2>
+
+        <div class="half-bloc">
+            <h3>Description</h3>
+            <p>{{infosProduct.description}}</p>
+
+            <p><strong>{{infosProduct.echelle_prix}}</strong></p>
+
+            <p><strong>Code barre :</strong> {{infosProduct.code_barre}}</p>
+            <p><strong>Marque :</strong> {{infosProduct.marque}}</p>
+
+            <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
+                <h3>Catégories</h3>
+                <ul>
+                    <li v-for="cat in infosProduct.categories">
+                        {{ cat.nom }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="half-bloc" v-if="infosProduct.images && infosProduct.images.length > 0">
+            <h3>Photos</h3>
+
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="img in infosProduct.images" v-bind:style="{ backgroundImage: 'url(' + img.url + ')' }">
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-buttons swiper-button-next"></div>
+                <div class="swiper-buttons swiper-button-prev"></div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
+            <h3>Lieux</h3>
+            <ul>
+                <li v-for="lieu in infosProduct.localisation">
+                    {{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/swiper.min.js"></script>
+
+    <script>
+        var params = {};
+
+        if (location.search) {
+            var parts = location.search.substring(1).split('&');
+
+            for (var i = 0; i < parts.length; i++) {
+                var nv = parts[i].split('=');
+                if (!nv[0]) continue;
+                params[nv[0]] = nv[1] || true;
+            }
+        }
+
+        var app7 = new Vue({
+            el: '#app-7',
+            data: {
+                infosProduct: []
+            },
+            methods: {
+                getProductInfos: function (idProduct) {
+                    if (idProduct > 0) {
+                        $.get('//localhost:3000/api/product/' + idProduct, (data) => {
+                            if (data[0]) {
+                                this.infosProduct = data[0];
+                            }
+                        });
+                    }
+                },
+            }
+        });
+
+        var rand = Math.round(Math.random(10) * 99);
+
+        if (params && params.id) {
+            rand = params.id;
+        }
+
+        app7.getProductInfos(rand);
+
+        setTimeout(function () {
+            var swiper = new Swiper('.swiper-container', {
+                pagination: {
+                    el: '.swiper-pagination',
+                    dynamicBullets: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                loop: true,
+                autoplay: true,
+                speed: 500
+            });
+        }, 1000);
+    </script>
+</body>
+
+</html>
