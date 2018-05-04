@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const jsStringEscape = require('js-string-escape');
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -9,13 +10,14 @@ const con = mysql.createConnection({
 });
 
 function getProductsBy(where, res) {
-    let sql = "SELECT produit.id_produit, produit.nom, theme.nom AS 'id_theme', boutique.lieu AS 'boutique' FROM produit ";
+    let sql = "SELECT produit.id_produit, produit.nom, theme.nom AS 'id_theme' FROM produit ";
     sql += "INNER JOIN theme ON theme.id_theme = produit.id_theme ";
-    sql += "INNER JOIN localisation ON localisation.id_produit = produit.id_produit ";
-    sql += "INNER JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
-    sql += "WHERE " + where + "";
+    sql += "WHERE " + where + " ";
+    sql += "GROUP BY produit.id_produit";
 
+    console.log('#SQL : get products by');
     console.log(sql);
+    console.log('-----------------');
 
     con.query(sql, function (err, result, fields) {
         if (err) throw err;
@@ -30,30 +32,37 @@ function getProductsBy(where, res) {
 const express = require('express')
 const app = express()
 
+// SEARCH BY NAME
 app.get('/api/search/products/name/:search', function (req, res) {
     let search = req.params.search;
+    search = jsStringEscape(search);
+
     getProductsBy('produit.nom LIKE "%' +search+ '%"', res);
 })
 
+// SEARCH BY THEME
 app.get('/api/search/products/theme/:search', function (req, res) {
     let search = req.params.search;
-    
-    con.query("SELECT id_theme FROM theme WHERE nom LIKE '%" +search+ "%'", function (err, result, fields) {
+    search = jsStringEscape(search);
+
+    let sql = "SELECT id_theme FROM theme WHERE nom LIKE '%" + search + "%'";
+    con.query(sql, function (err, result, fields) {
         if (err) throw err;
             if (result.length > 0) {
+                console.log('result ok');
                 let idThemes = '';
                 for (let index = 0; index < result.length; index++) {
                     idThemes += result[index].id_theme + ', ';
                 }
     
                 idThemes = idThemes.substring(0, idThemes.length - 2);
-    
+                
+                console.log('still ok ?');
                 getProductsBy('produit.id_theme IN ('+ idThemes + ') ', res);
             } else {
                 res.setHeader("Access-Control-Allow-Origin", "*");
                 res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                 res.setHeader('Content-Type', 'application/json');
-
                 res.send(JSON.stringify([]));
             }
     });
@@ -62,7 +71,8 @@ app.get('/api/search/products/theme/:search', function (req, res) {
 // TODO : Search by location ?
 app.get('/api/search/products/location/:search', function (req, res) {
     let search = req.params.search;
-    
+    search = jsStringEscape(search);
+
     con.query("SELECT id_boutique FROM boutique WHERE nom LIKE '%" +search+ "%' OR lieu LIKE '%" +search+ "%'", function (err, result, fields) {
         if (err) throw err;
             if (result.length > 0) {
@@ -73,27 +83,7 @@ app.get('/api/search/products/location/:search', function (req, res) {
     
                 idBoutiques = idBoutiques.substring(0, idBoutiques.length - 2);
     
-                console.log(idBoutiques);
                 getProductsBy('produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique IN (' +idBoutiques+ ')) ', res);
-                
-
-                // con.query("SELECT id_produit FROM localisation WHERE id_boutique IN (" +idBoutiques+ ")", function (err, result, fields) {
-                //     if (err) throw err;
-                //         if (result.length > 0) {
-                //             res.setHeader("Access-Control-Allow-Origin", "*");
-                //             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                //             res.setHeader('Content-Type', 'application/json');
-            
-                //             res.send(JSON.stringify(result));
-                
-                //         } else {
-                //             res.setHeader("Access-Control-Allow-Origin", "*");
-                //             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                //             res.setHeader('Content-Type', 'application/json');
-            
-                //             res.send(JSON.stringify([2]));
-                //         }
-                // });
             } else {
                 res.setHeader("Access-Control-Allow-Origin", "*");
                 res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

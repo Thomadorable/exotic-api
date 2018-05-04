@@ -22,8 +22,7 @@
             <li>
                 <a v-bind:href="'produit.html?id=' + product.id_produit">
                 {{ product.nom }} <br>
-                Thème : {{product.id_theme}} <br>
-                Lieu : {{product.boutique}}
+                Thème : {{product.id_theme}} 
                 </a>
             </li>
         </ul>
@@ -44,6 +43,8 @@
             methods: {
                 getProductsByName: function (search) {
                     if (search.length > 0) {
+                    console.log('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search)
+                        
                         $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search, (data) => {
                             this.listresults = data;
                         });

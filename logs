@@ -1,0 +1,2 @@
+- Group by sur l'id produit pour retourner 1 résulat quand plusieurs thèmes correspondent
+- Escape string pour autoriser les apostrophe
