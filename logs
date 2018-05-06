@@ -19,6 +19,8 @@
 - touches clavier (recherche = scroll + recherche, echap = quitter recherche)
 - gérer des stats de produits visités
 - afficher les produits les plus visités
+- abort ajax pour éviter les décalage de résultats + libérer la mémoire
+- utilisation de la même function qui récupère les datas d'un produit pour toutes les requetes = résultats toujours uniformes 
 
 
 TODO :

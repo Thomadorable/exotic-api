@@ -35,15 +35,15 @@
                 <p class="success" v-else>Top <strong>9</strong> des produits <strong>les plus visités</strong></p>
     
                 <a v-bind:href="'produit.html?id=' + product.id_produit" class="result" v-for="(product, index) in listresults">
-                    <div class="product-cover" v-if="(product.image && product.image.length > 0)">
-                        <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.image + ')' }"></span>
+                    <div class="product-cover" v-if="(product.images && product.images.length > 0)">
+                        <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
                     </div>
                     <div class="product-cover" v-else>
                         <p class="results-no-img">No image available</p>
                     </div>
                     <span class="description">
                         <span v-html="highlight('#' + (index + 1) + ' ' + product.nom)" class="product-title"></span> <br>
-                        Thème : <span v-html="highlight(product.id_theme)"></span>
+                        Thème : <span v-html="highlight(product.theme)"></span>
                     </span>
                 </a>
     
@@ -67,7 +67,8 @@
                 resultsPerPage: 3 * 3,
                 nbResults: 0,
                 loading: 1,
-                popular: false
+                popular: false,
+                ajax: null
             },
             methods: {
                 getProductsByName: function (search) {
@@ -80,7 +81,12 @@
                     }
 
                     if (search.length > 0) {
-                        $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search, (data) => {
+                        if (this.ajax) {
+                            this.ajax.abort();
+                        }
+
+                        this.ajax = $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search, (data) => {
+                            console.log('search')
                             this.loading = 0;
                             this.popular = false;
                             let from = this.currentPage * this.resultsPerPage;
@@ -91,7 +97,11 @@
                     } else {
                         this.listresults = [];
                         
-                        $.get('//localhost:3000/api/products/popular', (data) => {
+                        if (this.ajax) {
+                            this.ajax.abort();
+                        }
+
+                        this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
                             this.loading = 0;
                             this.nbResults = 9;
                             this.popular = true;
@@ -187,13 +197,13 @@
         app7.getProductsByName(app7.searchValue);
         $('#input').focus();
 
-        // if ("geolocation" in navigator) {
-        //     navigator.geolocation.getCurrentPosition(function(position) {
-        //         console.log(position, position.coords.latitude, position.coords.longitude);
-        //     });
-        // } else {
-        //     console.log('Geoloc not found');
-        // }
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                console.log(position, position.coords.latitude, position.coords.longitude);
+            });
+        } else {
+            console.log('Geoloc not found');
+        }
 
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 27) {
