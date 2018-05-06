@@ -1,0 +1,21 @@
+<script>
+        // LAT FROM 48.81 TO 48.90
+        // LNG FROM 2.26 TO 2.42
+
+        let logs = '';
+
+        for (let index = 1; index < 101; index++) {
+            let randLAT = Math.floor(Math.random() * 1000);
+            let lat = (48.81 + (randLAT / 10000)).toFixed(4);
+
+
+            let randLNG = Math.floor(Math.random() * 1700);
+            let lng = (2.26 + (randLNG / 10000)).toFixed(4);
+
+            console.log(lat, lng);
+
+            logs = logs + ' UPDATE boutique SET lat = '+lat+', lng = '+lng+' WHERE id_boutique = ' + index + ';';
+        }
+    document.write(logs);
+
+</script>

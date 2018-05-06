@@ -1,0 +1,21 @@
+.map {
+    display: inline-block;
+    vertical-align: top;
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.results {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 430px);
+    margin-left: 30px;
+    height: 400px;
+    overflow: auto;
+}
+
+.results .result {
+    width: calc(100% / 2 - 20px);
+}

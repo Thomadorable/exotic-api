@@ -59,9 +59,12 @@ function getIdBoutiques(search, res, callback) {
 }
 
 function getFullProductInfos(where, res, callback) {
-
-    
-    let sql = "SELECT id_produit, produit.nom, description, echelle_prix, code_barre, theme.nom AS 'theme', marque.nom AS 'marque' FROM produit INNER JOIN theme ON theme.id_theme = produit.id_theme INNER JOIN marque ON marque.id_marque = produit.id_marque WHERE " + where;
+    let sql = "SELECT id_produit, produit.nom, description, echelle_prix, code_barre, theme.nom AS 'theme', "
+    sql += "marque.nom AS 'marque' ";
+    sql += "FROM produit ";
+    sql += "INNER JOIN theme ON theme.id_theme = produit.id_theme ";
+    sql += "INNER JOIN marque ON marque.id_marque = produit.id_marque " 
+    sql += "WHERE " + where;
     
     console.log('#SQL : get products by');
     console.log(sql);
@@ -87,7 +90,7 @@ function getFullProductInfos(where, res, callback) {
                             product.images = images;
                         }
 
-                        con.query("SELECT localisation.id_localisation, localisation.id_boutique, prix, stock, boutique.nom AS 'nom_boutique', boutique.lieu AS 'lieu_boutique', proprietaire.nom as 'nom_proprietaire' FROM localisation INNER JOIN boutique ON boutique.id_boutique = localisation.id_boutique INNER JOIN proprietaire ON proprietaire.id_proprietaire = boutique.id_proprietaire WHERE id_produit = " + productId, function (err, localisation, fields) {
+                        con.query("SELECT boutique.lat, boutique.lng, localisation.id_localisation, localisation.id_boutique, prix, stock, boutique.nom AS 'nom_boutique', boutique.lieu AS 'lieu_boutique', proprietaire.nom as 'nom_proprietaire' FROM localisation INNER JOIN boutique ON boutique.id_boutique = localisation.id_boutique INNER JOIN proprietaire ON proprietaire.id_proprietaire = boutique.id_proprietaire WHERE id_produit = " + productId, function (err, localisation, fields) {
                             if (err) throw err;
                             else if (localisation.length > 0) {
                             product.localisation = localisation;
@@ -186,6 +189,22 @@ app.get('/api/product/:id', function (req, res) {
 
 app.get('/api/products/popular', function (req, res) {
     getFullProductInfos('nb_visites > 0 ORDER BY nb_visites DESC LIMIT 0, 9', res);
+});
+
+app.get('/api/products/near/:lat/:lng/:limit', function (req, res) {
+    let lat = req.params.lat;
+    let lng = req.params.lng;
+    let limit = parseInt(req.params.limit);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+        sql = 'SELECT id_boutique, nom, lieu, lat, lng, (abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance FROM boutique ORDER BY distance ASC LIMIT ' + limit + ' , 8';
+        con.query(sql, function (err, results) {
+            if (err) throw err;
+            sendJSON(res, results);
+        });
+    } else {
+        sendJSON(res);
+    }
 });
 
 app.use(function (req, res, next) {

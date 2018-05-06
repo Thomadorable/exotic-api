@@ -12,28 +12,39 @@
 <body>
 
     <div id="app-7">
-        <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue">
-        <select id="" v-model="searchEntity">
-            <option value="all">Par nom, thème ou lieu</option>
-            <option value="name">Par nom</option>
-            <option value="theme">Par theme</option>
-            <option value="location">Par Lieu</option>
-        </select>
+        <header class="font-size-0">
+            <a href="map.html" class="find-me" title="Géolocalisation"><i class="fas fa-crosshairs"></i></a>
+            <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue" class="search-input search-input-icon">
+
+            <br>
+            <select id="" v-model="searchEntity">
+                <option value="all">Par nom, thème ou lieu</option>
+                <option value="name">Par nom</option>
+                <option value="theme">Par theme</option>
+                <option value="location">Par Lieu</option>
+            </select>
+        </header>
         <div v-if="loading === 1" class="loader"></div>
         <div class="show-after-loaded">
             <div v-if="nbResults === 0 && searchValue.length > 0 && loading === 0">
                 <p class="error">
-                    Aucun résultat pour la recherche « <strong>{{searchValue}}</strong> » 
+                    Aucun résultat pour la recherche «
+                    <strong>{{searchValue}}</strong> »
                 </p>
             </div>
             <div v-else-if="nbResults > 0" class="results">
                 <p class="success" v-if="!popular">
-                    <strong>{{nbResults}}</strong> résultat<span v-if="nbResults > 1">s</span>
-                    pour la recherche « <strong>{{searchValue}}</strong> » 
+                    <strong>{{nbResults}}</strong> résultat
+                    <span v-if="nbResults > 1">s</span>
+                    pour la recherche «
+                    <strong>{{searchValue}}</strong> »
                 </p>
 
-                <p class="success" v-else>Top <strong>9</strong> des produits <strong>les plus visités</strong></p>
-    
+                <p class="success" v-else>Top
+                    <strong>9</strong> des produits
+                    <strong>les plus visités</strong>
+                </p>
+
                 <a v-bind:href="'produit.html?id=' + product.id_produit" class="result" v-for="(product, index) in listresults">
                     <div class="product-cover" v-if="(product.images && product.images.length > 0)">
                         <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
@@ -42,17 +53,19 @@
                         <p class="results-no-img">No image available</p>
                     </div>
                     <span class="description">
-                        <span v-html="highlight('#' + (index + 1) + ' ' + product.nom)" class="product-title"></span> <br>
-                        Thème : <span v-html="highlight(product.theme)"></span>
+                        <span v-html="highlight('#' + (index + 1) + ' ' + product.nom)" class="product-title"></span>
+                        <br> Thème :
+                        <span v-html="highlight(product.theme)"></span>
                     </span>
                 </a>
-    
+
                 <button class="pagination-btn prev" v-on:click="prevPage" v-if="currentPage > 0">PREV</button>
                 <button class="pagination-btn next" v-on:click="nextPage" v-if="((currentPage + 1) * resultsPerPage) < nbResults">NEXT</button>
             </div>
         </div>
     </div>
 
+    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
 
@@ -85,18 +98,18 @@
                             this.ajax.abort();
                         }
 
-                        this.ajax = $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' + search, (data) => {
-                            console.log('search')
-                            this.loading = 0;
-                            this.popular = false;
-                            let from = this.currentPage * this.resultsPerPage;
-                            let to = (this.currentPage + 1) * this.resultsPerPage;
-                            this.listresults = data.slice(from, to);
-                            this.nbResults = data.length;
-                        });
+                        this.ajax = $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' +
+                            search, (data) => {
+                                this.loading = 0;
+                                this.popular = false;
+                                let from = this.currentPage * this.resultsPerPage;
+                                let to = (this.currentPage + 1) * this.resultsPerPage;
+                                this.listresults = data.slice(from, to);
+                                this.nbResults = data.length;
+                            });
                     } else {
                         this.listresults = [];
-                        
+
                         if (this.ajax) {
                             this.ajax.abort();
                         }
@@ -112,21 +125,21 @@
                     }
                 },
                 highlight: function (content) {
-                    if(!this.searchValue) {
+                    if (!this.searchValue) {
                         return content;
                     }
 
                     let regex = regexAccent(this.searchValue);
-                    
+
                     return content.replace(new RegExp(regex, "gi"), match => {
                         return '<span class="highlightText">' + match + '</span>';
                     });
                 },
                 prevPage: function () {
-                    this.currentPage --;
+                    this.currentPage--;
                 },
                 nextPage: function () {
-                    this.currentPage ++;
+                    this.currentPage++;
                 }
             },
             watch: {
@@ -139,7 +152,9 @@
                     this.getProductsByName(this.searchValue);
                 },
                 currentPage: function () {
-                    $('html, body').animate( { scrollTop: 0 }, 500 ); // Go
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500); // Go
                     this.getProductsByName(this.searchValue);
                 }
             },
@@ -159,7 +174,7 @@
             regex = regex.replace(new RegExp('[sš]', "gi"), '[sš]');
             regex = regex.replace(new RegExp('[yÿý]', "gi"), '[yÿý]');
             regex = regex.replace(new RegExp('[zž]', "gi"), '[zž]');
-            
+
             return regex;
         }
 
@@ -195,35 +210,33 @@
         }
 
         app7.getProductsByName(app7.searchValue);
-        $('#input').focus();
+        // $('#input').focus();
 
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                console.log(position, position.coords.latitude, position.coords.longitude);
-            });
-        } else {
-            console.log('Geoloc not found');
-        }
-
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.keyCode === 27) {
                 app7.searchValue = '';
             }
-     
+
             if ((event.ctrlKey || event.metaKey) && event.keyCode === 70) {
                 event.preventDefault();
                 if ($(window).scrollTop() > 300) {
-                    $('html, body').animate( { scrollTop: 0 }, 500 ); // Go
-                    setTimeout(function(){
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500); // Go
+                    setTimeout(function () {
                         $('#input').focus();
                     }, 300);
                 } else {
-                    $('html, body').animate( { scrollTop: 0 }, 500 ); // Go
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500); // Go
                     $('#input').focus();
                 }
             }
-         });
+        });
     </script>
+
+
 </body>
 
 </html>
