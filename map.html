@@ -4,15 +4,16 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Rechercher un produit</title>
+    <title>Rechercher une boutique</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/map.css">
 </head>
 
 <body>
+    <a href="index.html" class="back-home pagination-btn">Retour</a>
+
     <div id="app-map" class="font-size-0">
-        <a href="index.html" class="back-home pagination-btn">Retour</a>
 
         <div v-if="loading === 1" class="loader"></div>
         <header>
@@ -20,185 +21,46 @@
         </header>
         <div class="map"></div>
 
+        <!-- TODO : TEMPLATE THIS -->
         <div class="results">
-            <div class="result" 
-                v-for="(boutique, index) in listresults"
-                v-on:mouseenter="hoverBoutique" 
-                v-on:click="clickBoutique" 
-                v-bind:data-id="index"
-                v-bind:data-boutique="boutique.id_boutique" >
-                    <span class="description">
-                        <span class="product-title">{{boutique.nom}}</span>
-                        <br> Adresse :
-                        <span class="more-text">{{boutique.lieu}}</span> <br>
-                    </span>
-            </div>
-
-            <a href="" style="font-size:20px" v-on:click="getShopList">See more</a>
+            <a v-bind:href="'boutique.html?id=' + boutique.id_boutique" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique"
+                v-bind:data-id="index" v-bind:data-boutique="boutique.id_boutique">
+                <span class="description">
+                    <span class="product-title">{{boutique.nom}}</span>
+                    <br> Adresse :
+                    <span class="more-text">{{boutique.lieu}}</span>
+                    <br>
+                </span>
+            </a>
+            <a href="" style="font-size:20px" v-on:click="seeMore">See more</a>
         </div>
+
+
     </div>
 
 
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/map.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=mapp.initMap">
+    </script>
 
     <script>
-        const APIKEY = 'AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg';
-
-
-        // TODO : remove this test
-        navigator.geolocation.getCurrentPosition = function (callback) {
-            let position = {};
-            position.coords = {};
-            position.coords.latitude = 48.8077711;
-            position.coords.longitude = 2.3673933;
-            callback(position);
-        }
-
-        var app7 = new Vue({
-            el: '#app-map',
-            data: {
-                loading: 1,
-                location: 'Vous êtes situé...',
-                map: null,
-                infowindow: null,
-                listresults: [],
-                markers: [],
-                lat: null,
-                lng: null,
-                limit: 0
-            },
-            methods: {
-                initMap: function () {
-                    if ("geolocation" in navigator) {
-                        this.map = new google.maps.Map($('.map')[0], {
-                            zoom: 13,
-                            center: {
-                                lat: 48.8537, // Center of Paris
-                                lng: 2.3418 // Center of Paris
-                            }
-                        });
-
-                        this.infowindow = new google.maps.InfoWindow();
-
-                        this.getUserLocation();
-                    } else {
-                        this.location = 'La géolocalisation n\'est pas disponible';
-                        this.loading = 0;
-                    }
-                },
-                getUserLocation: function () {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        app7.loading = 0;
-                        app7.lat = position.coords.latitude;
-                        app7.lng = position.coords.longitude;
-
-                        app7.map.panTo({
-                            lat: app7.lat,
-                            lng: app7.lng
-                        });
-
-                        app7.map.addListener('click', function () {
-                            app7.infowindow.close();
-                        });
-
-                        app7.getNamePosition();
-                        app7.getShopList();
-                    });
-                },
-                getNamePosition: function () {
-                    let posDatasURL = 'https://maps.googleapis.com/maps/api/geocode/json?key=' +
-                        APIKEY;
-                    posDatasURL += '&latlng=' + app7.lat + ',' + app7.lng;
-
-                    $.get(posDatasURL, function (data) {
-                        let location = data.results[0].address_components;
-                        let city = null;
-                        let area = null;
-
-                        for (let i = 0; i < location.length; i++) {
-                            if (location[i].types[0] === 'locality') {
-                                city = location[i].long_name;
-                            }
-                            if (location[i].types[0] === 'administrative_area_level_1') {
-                                area = location[i].long_name;
-                            }
-                        }
-
-                        $('.search-input').text(area + ' - ' + city);
-                    });
-                },
-                getShopList: function (event) {
-                    if (event){
-                        event.preventDefault();
-                    }
-
-                    $.get('//localhost:3000/api/shop/near/' + app7.lat.toFixed(4) + '/' + app7.lng.toFixed(4) + '/' + app7.limit, (
-                        data) => {
-                        if (data.length > 0) {
-                            app7.listresults.push(...data);
-                            for (let index = 0; index < data.length; index++) {
-                                const boutique = data[index];
-                                console.log(boutique);
-
-                                let newMarker = new google.maps.Marker({
-                                    position: {
-                                        lat: boutique.lat,
-                                        lng: boutique.lng
-                                    },
-                                    map: app7.map,
-                                    animation: google.maps.Animation.DROP,
-                                    title:'#' + boutique.id_boutique + ' ' + boutique.nom,
-                                    idBoutique: boutique.id_boutique
-                                });
-
-                                app7.markers.push(newMarker);
-
-                                newMarker.addListener('click', function () {
-                                    app7.openModal(this);
-                                });
-                            }
-
-                            app7.limit = app7.limit + 6;
-                        }
-                    });
-                },
-                openModal: function (marker) {
-                    app7.map.panTo(marker.getPosition());
-
-                    app7.infowindow.setContent(
-                        '<style>div.content {color: orange} </style><div class="content"><a href="boutique.html?id=' + marker.idBoutique + '" style="font-size:12px">' + marker.title + '</a></div>'
-                    );
-                    
-                    app7.infowindow.open(app7.map, marker);
-                },
-                hoverBoutique: function (event) {
-                    event.preventDefault();
-                    let target = event.target;
-                    if (!$(target).hasClass('result')) {
-                        target = $(target).closest('.result')[0];
-                    }
-                    let id = target.getAttribute('data-id');
-
-                    app7.openModal(app7.markers[id]);
-                },
-                clickBoutique: function(event, event2) {
-                    event.preventDefault();
-                    let target = event.target;
-                    if (!$(target).hasClass('result')) {
-                        target = $(target).closest('.result')[0];
-                    }
-                    let idBoutique = target.getAttribute('data-boutique');
-                    
-                    window.location.href = 'boutique.html?id=' + idBoutique;
-                }
+        function getShopList(event) {
+            if (event) {
+                event.preventDefault();
             }
-        });
+            let url = '//localhost:3000/api/shop/near/';
+            url += mapp.lat.toFixed(4) + '/' + mapp.lng.toFixed(4) + '/' + mapp.limit;
+            $.get(url, (boutiques) => {
+                if (boutiques.length > 0) {
+                    mapp.limit = mapp.limit + 6;
+                    generateMarkers(boutiques);
+                }
+            });
+        }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=app7.initMap">
-    </script>
-
 </body>
 
 </html>

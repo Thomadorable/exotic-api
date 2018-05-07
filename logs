@@ -48,3 +48,8 @@ TODO :
 - responsive ?
 - limit côté back
 - finir la boutique (récupérer les produits)
+- templatiser le html des markers sur la carte
+- rassembler en 1 seule app vue la génération de carte
+- gérer mieux la pagination (optionnelle + retirer au bon moment)
+- stats sur les boutiques
+- meilleur loader product

@@ -183,9 +183,32 @@ app.get('/api/product/:id', function (req, res) {
             console.log(result.affectedRows + " record(s) updated");
         });
     });
-
-
 })
+
+app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
+    let lat = req.params.lat;
+    let lng = req.params.lng;
+    let idProduct = parseInt(req.params.idProduct);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+        sql = 'SELECT boutique.id_boutique, boutique.nom, boutique.lieu, boutique.lat, boutique.lng, ';
+        sql += '(abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance ';
+        sql += 'FROM localisation '
+        sql += 'LEFT JOIN boutique ON boutique.id_boutique = localisation.id_boutique '
+        sql += 'WHERE id_produit = ' + idProduct;
+        sql += ' ORDER BY distance ASC';
+
+        console.log('>>>>>>>>>>><');
+        console.log(sql);
+
+        con.query(sql, function (err, results) {
+            if (err) throw err;
+            sendJSON(res, results);
+        });
+    } else {
+        sendJSON(res);
+    }
+});
 
 app.get('/api/products/popular', function (req, res) {
     getFullProductInfos('nb_visites > 0 ORDER BY nb_visites DESC LIMIT 0, 9', res);

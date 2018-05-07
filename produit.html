@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/swiper.min.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/map.css">
 
 </head>
 
@@ -16,16 +17,22 @@
 
     <div id="app-7" class="font-size-0">
         <h1>#{{infosProduct.id_produit}} {{infosProduct.nom}}</h1>
-        <h2>Thème | <a v-bind:href="'index.html#theme-' + infosProduct.theme">{{infosProduct.theme}}</a></h2>
+        <h2>Thème |
+            <a v-bind:href="'index.html#theme-' + infosProduct.theme">{{infosProduct.theme}}</a>
+        </h2>
 
         <div class="half-bloc">
             <h3>Description</h3>
             <p>{{infosProduct.description}}</p>
 
-            <p><strong>{{infosProduct.echelle_prix}}</strong></p>
+            <p>
+                <strong>{{infosProduct.echelle_prix}}</strong>
+            </p>
 
-            <p><strong>Code barre :</strong> {{infosProduct.code_barre}}</p>
-            <p><strong>Marque :</strong> {{infosProduct.marque}}</p>
+            <p>
+                <strong>Code barre :</strong> {{infosProduct.code_barre}}</p>
+            <p>
+                <strong>Marque :</strong> {{infosProduct.marque}}</p>
 
             <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
                 <h3>Catégories</h3>
@@ -66,26 +73,39 @@
                 </li>
             </ul>
         </div>
-
-        
-
     </div>
 
 
+    <div id="app-map" class="font-size-0">
+
+        <div v-if="loading === 1" class="loader"></div>
+        <header>
+            <p class="search-input">{{location}}</p>
+        </header>
+        <div class="map"></div>
+
+        <!-- TODO : TEMPLATE THIS -->
+        <div class="results">
+            <a v-bind:href="'boutique.html?id=' + boutique.id_boutique" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique"
+                v-bind:data-id="index" v-bind:data-boutique="boutique.id_boutique">
+                <span class="description">
+                    <span class="product-title">{{boutique.nom}}</span>
+                    <br> Adresse :
+                    <span class="more-text">{{boutique.lieu}}</span>
+                    <br>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    </script>
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/map.js"></script>
     <script src="js/swiper.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=generateMap"></script>
 
     <script>
-        // TODO : remove this test
-        navigator.geolocation.getCurrentPosition = function (callback) {
-            let position = {};
-            position.coords = {};
-            position.coords.latitude = 48.8077711;
-            position.coords.longitude = 2.3673933;
-            callback(position);
-        }
-        
         var params = {};
 
         if (location.search) {
@@ -101,54 +121,48 @@
         var app7 = new Vue({
             el: '#app-7',
             data: {
-                infosProduct: []
+                infosProduct: [],
+                listBoutiques: [],
+                markers: [],
+                autoCenterMap: true
             },
             methods: {
-                getProductInfos: function (idProduct) {
-                    if (idProduct > 0) {
-                        $.get('//localhost:3000/api/product/' + idProduct, (data) => {
+                getProductInfos: function () {
+                    if (this.idProduct > 0) {
+                        $.get('//localhost:3000/api/product/' + this.idProduct, (data) => {
                             if (data[0]) {
                                 this.infosProduct = data[0];
-                                this.getUserLocation();
+                                app7.infosProduct.localisation = [];
                             }
                         });
-                    }
-                },
-                getUserLocation: function () {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        app7.lat = position.coords.latitude;
-                        app7.lng = position.coords.longitude;
-
-                        // app7.map.panTo({
-                        //     lat: app7.lat,
-                        //     lng: app7.lng
-                        // });
-
-                        // app7.map.addListener('click', function () {
-                        //     app7.infowindow.close();
-                        // });
-
-                        // app7.getNamePosition(); // TODO : get NAME
-                        app7.sortShopList();
-                    });
-                },
-                sortShopList: function () {
-                    let locations = app7.infosProduct.localisation;
-                    for (let index = 0; index < locations.length; index++) {
-                        const location = locations[index];
-                        console.log(Math.abs(app7.lat - location.lat) + Math.abs(app7.lng - location.lng));
                     }
                 }
             }
         });
+
+
+        function getShopList () {
+            console.log('here ??');
+            let url = '//localhost:3000/api/product/shop/';
+            url += + mapp.lat + '/' + mapp.lng + '/' + app7.idProduct;
+            $.get(url,
+                function (data) {
+                    console.log(data);
+                    generateMarkers(data, true);
+                    mapp.map.panTo({
+                        lat: data[0].lat,
+                        lng: data[0].lng
+                    });
+                });
+        }
 
         var rand = Math.round(Math.random(10) * 99);
 
         if (params && params.id) {
             rand = params.id;
         }
-
-        app7.getProductInfos(rand);
+        app7.idProduct = rand;
+        app7.getProductInfos();
 
         setTimeout(function () {
             var swiper = new Swiper('.swiper-container', {
