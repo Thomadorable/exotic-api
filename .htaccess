@@ -1,0 +1,5 @@
+Options +FollowSymlinks
+RewriteEngine on
+
+RewriteRule ^produit-([0-9]+).html$ produit.html [L]
+RewriteRule ^boutique-([0-9]+).html$ boutique.html [L]

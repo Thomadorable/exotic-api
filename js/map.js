@@ -102,7 +102,6 @@ function generateMarkers(locations, zoom = false) {
     }
     if (zoom && zoom === true && mapp.markers.length > 1) {
         setTimeout(function(){
-            console.log('autozoom !');
             mapp.map.fitBounds(bounds);
         }, 200);
     }
@@ -112,7 +111,7 @@ function openModal (marker) {
     mapp.map.panTo(marker.getPosition());
 
     mapp.infowindow.setContent(
-        '<style>div.content {color: orange} </style><div class="content"><a href="boutique.html?id=' + marker.idBoutique + '" style="font-size:12px">' + marker.title + '</a></div>'
+        '<style>div.content {color: orange} </style><div class="content"><a href="boutique-' + marker.idBoutique + '.html" style="font-size:12px">' + marker.title + '</a></div>'
     );
     
     mapp.infowindow.open(mapp.map, marker);

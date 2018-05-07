@@ -31,19 +31,21 @@
 - garder le mode de recherche dans l'url ?
 - route + front rechercher une boutique (par lieu ?)
 - finir la boutique (récupérer les produits)
+- url rewriting
+- Comment passer le paramètre id dans l'url ? utiliser node ?
+- stats sur les boutiques
+- API google Map : afficher map à partir d'une adresse
 
 
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
-- API google Map : afficher map à partir d'une adresse
 - API google Map : itinéraire ?
 - pagination des résultats
 - afficher tous les produits d'une catégorie
 - afficher tous les produits d'une même marque ?
 - rechercher par catégorie ?
 - rechercher par marque ?
-- Comment passer le paramètre id dans l'url ? utiliser node ?
 - sécuriser l'API
 - refacto getHashEntity (list des entity)
 - ajouter des loaders (photos + recherche)
@@ -52,4 +54,6 @@ TODO :
 - limites côté back
 - templatiser le html des markers sur la carte
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
-- stats sur les boutiques
+- utiliser les stats boutiques
+- récupérer le thème des boutiques
+- autocompletion

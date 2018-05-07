@@ -34,7 +34,7 @@
             <p>
                 <strong>Marque :</strong> {{infosProduct.marque}}</p>
 
-            <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
+            <div v-if="infosProduct.categories && infosProduct.categories.length > 0">
                 <h3>Catégories</h3>
                 <ul>
                     <li v-for="cat in infosProduct.categories">
@@ -63,15 +63,6 @@
 
         <div class="half-bloc product-cover" v-else>
             <p class="results-no-img">No image available</p>
-        </div>
-
-        <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
-            <h3>Boutiques</h3>
-            <ul>
-                <li v-for="lieu in infosProduct.localisation">
-                    <a v-bind:href="'boutique.html?id=' + lieu.id_boutique">{{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}</a>
-                </li>
-            </ul>
         </div>
     </div>
 
@@ -132,7 +123,9 @@
                         $.get('//localhost:3000/api/product/' + this.idProduct, (data) => {
                             if (data[0]) {
                                 this.infosProduct = data[0];
-                                app7.infosProduct.localisation = [];
+                            } else {
+                                $('#app-7').html('<p class="error">Ce produit n\'existe pas.</p>');
+                                $('#app-map').remove();
                             }
                         });
                     }
@@ -140,28 +133,37 @@
             }
         });
 
-
         function getShopList () {
-            console.log('here ??');
+            console.log(app7.infosProduct);
             let url = '//localhost:3000/api/product/shop/';
             url += + mapp.lat + '/' + mapp.lng + '/' + app7.idProduct;
             $.get(url,
                 function (data) {
-                    console.log(data);
-                    generateMarkers(data, true);
-                    mapp.map.panTo({
-                        lat: data[0].lat,
-                        lng: data[0].lng
-                    });
+                    if (data.length > 0) {
+                        generateMarkers(data, true);
+                        mapp.map.panTo({
+                            lat: data[0].lat,
+                            lng: data[0].lng
+                        });
+                    }
                 });
         }
 
-        var rand = Math.round(Math.random(10) * 99);
+        var idProduct = null;
+        let beginUrl = window.location.href.split('produit-')[1];
 
         if (params && params.id) {
-            rand = params.id;
+            idProduct = params.id;
         }
-        app7.idProduct = rand;
+
+        if (beginUrl) {
+            if (beginUrl.split('.')[0]) {
+                idProduct = beginUrl.split('.')[0];
+            }
+        }
+
+       
+        app7.idProduct = idProduct;
         app7.getProductInfos();
 
         setTimeout(function () {

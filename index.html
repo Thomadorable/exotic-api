@@ -34,8 +34,7 @@
             </div>
             <div v-else-if="nbResults > 0" class="results">
                 <p class="success" v-if="!popular">
-                    <strong>{{nbResults}}</strong> résultat
-                    <span v-if="nbResults > 1">s</span>
+                    <strong>{{nbResults}}</strong> résultat<span v-if="nbResults > 1">s</span>
                     pour la recherche «
                     <strong>{{searchValue}}</strong> »
                 </p>
@@ -45,7 +44,7 @@
                     <strong>les plus visités</strong>
                 </p>
 
-                <a v-bind:href="'produit.html?id=' + product.id_produit" class="result" v-for="(product, index) in listresults">
+                <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults">
                     <div class="product-cover" v-if="(product.images && product.images.length > 0)">
                         <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
                     </div>

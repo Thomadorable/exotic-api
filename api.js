@@ -110,7 +110,11 @@ function getFullProductInfos(where, res, callback) {
                 });
             }
         } else {
-            sendJSON(res);
+            if (callback && typeof (callback) === 'function') {
+                callback([]);
+            } else {
+                sendJSON(res);
+            }
         }
     });
 }
@@ -177,24 +181,28 @@ app.get('/api/product/:id', function (req, res) {
     let idProduct = req.params.id;
     let sql = "id_produit = " + idProduct + " LIMIT 0, 1";
 
-    getFullProductInfos(sql, res, function (products) {
-        let sql = "UPDATE produit SET nb_visites = nb_visites + 1 WHERE id_produit = " + idProduct;
-        con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log(result.affectedRows + " record(s) updated");
+    if (!isNaN(idProduct)) {
+        getFullProductInfos(sql, res, function (products) {
+            let sql = "UPDATE produit SET nb_visites = nb_visites + 1 WHERE id_produit = " + idProduct;
+            con.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log(result.affectedRows + " record(s) updated");
+            });
+    
+            sendJSON(res, products);
         });
-
-        sendJSON(res, products);
-    });
+    } else {
+        sendJSON(res);
+    }
 })
 
 // PRODUCT SHOP ORDER BY LOCATION
 app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
     let lat = req.params.lat;
     let lng = req.params.lng;
-    let idProduct = parseInt(req.params.idProduct);
+    let idProduct = req.params.idProduct;
 
-    if (!isNaN(lat) && !isNaN(lng)) {
+    if (!isNaN(lat) && !isNaN(lng) && !isNaN(idProduct)) {
         sql = 'SELECT boutique.id_boutique, boutique.nom, boutique.lieu, boutique.lat, boutique.lng, ';
         sql += '(abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance ';
         sql += 'FROM localisation '
@@ -215,9 +223,9 @@ app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
 app.get('/api/shop/near/:lat/:lng/:limit', function (req, res) {
     let lat = req.params.lat;
     let lng = req.params.lng;
-    let limit = parseInt(req.params.limit);
+    let limit = req.params.limit;
 
-    if (!isNaN(lat) && !isNaN(lng)) {
+    if (!isNaN(lat) && !isNaN(lng) && !isNaN(limit)) {
         sql = 'SELECT id_boutique, nom, lieu, lat, lng, (abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance FROM boutique ORDER BY distance ASC LIMIT ' + limit + ' , 8';
         con.query(sql, function (err, results) {
             if (err) throw err;
@@ -236,18 +244,30 @@ app.get('/api/products/popular', function (req, res) {
 
 // SHOP INFOS
 app.get('/api/shop/:id', function (req, res) {
-    let idBoutique = parseInt(req.params.id);
+    let idBoutique = req.params.id;
 
-    sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
-    con.query(sql, function (err, shopDatas) {
-        if (err) throw err;
-        let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
-        getFullProductInfos(sql, res, function(products){
-            shopDatas[0].products = products;
-            sendJSON(res, shopDatas);
+    if (!isNaN(idBoutique)) {
+        sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
+        con.query(sql, function (err, shopDatas) {
+            if (err) throw err;
+            let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
+            getFullProductInfos(sql, res, function(products){
+                if (products.length > 0) {
+                    shopDatas[0].products = products;
+                }
+
+                let sql = "UPDATE boutique SET nb_visites = nb_visites + 1 WHERE id_boutique = " + idBoutique;
+                con.query(sql, function (err, result) {
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                });
+
+                sendJSON(res, shopDatas);
+            });
         });
-    });
-
+    } else {
+        sendJSON(res);
+    }
 });
 
 app.use(function (req, res, next) {

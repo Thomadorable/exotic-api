@@ -108,9 +108,10 @@ header {
     background: white;
     font-family: Metropolis;
     font-size: 1.8rem;
-    line-height: 1.8rem;
-    transition: all ease 0.5s;   
     color: grey; 
+    width: 46px;
+    height: 46px;
+    transition: all ease 0.5s;   
 }
 
 .search-input:hover {

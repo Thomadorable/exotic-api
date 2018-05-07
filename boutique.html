@@ -17,18 +17,19 @@
 
     <div id="app-7" class="font-size-0">
         <h1>#{{infosBoutique.id_boutique}} {{infosBoutique.nom}}</h1>
-        <!-- <h2>Thème | <a v-bind:href="'index.html#theme-' + infosBoutique.theme">{{infosBoutique.theme}}</a></h2> -->
-  
-        <iframe
-            width="600"
-            height="450"
-            frameborder="0" style="border:0"
-            v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + infosBoutique.lieu">
+        <h2>Thèmes
+            <span v-for="theme in infosBoutique.themes">
+                | <a v-bind:href="'index.html#theme-' + theme">{{theme}}</a>
+            </span>
+        </h2>
+
+
+        <iframe width="600" height="450" frameborder="0" style="border:0" v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + infosBoutique.lieu">
         </iframe>
 
         <h2>Liste des produits</h2>
 
-        <a v-bind:href="'produit.html?id=' + product.id_produit" class="result" v-for="(product, index) in infosBoutique.products">
+        <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in infosBoutique.products">
             <div class="product-cover" v-if="(product.images && product.images.length > 0)">
                 <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
             </div>
@@ -70,11 +71,40 @@
             methods: {
                 getShopInfos: function (idProduct) {
                     if (idProduct > 0) {
-                        $.get('//localhost:3000/api/shop/' + idProduct, (data) => {
-                            console.log(data[0])
-                            
+                        let url = '//localhost:3000/api/shop/' + idProduct;
+                        $.get(url, (data) => {
                             if (data[0]) {
                                 this.infosBoutique = data[0];
+                                let themes = [];
+                                for (let index = 0; index < this.infosBoutique.products.length; index++) {
+                                    const element = this.infosBoutique.products[index];
+                                    if (!themes[element.theme]) {
+                                        themes[element.theme] = 0;
+                                    }
+                                    themes[element.theme] += 1;
+                                }
+
+                                var sortable = [];
+                                for (var nb in themes) {
+                                    sortable.push([nb, themes[nb]]);
+                                }
+
+                                console.log(sortable);
+
+                                sortable.sort(function (a, b) {
+                                    return b[1] - a[1];
+                                });
+
+                                sortable = sortable.map(function (theme) {
+                                    return theme[0];
+                                });
+
+                                this.infosBoutique.themes = sortable;
+
+                            } else {
+                                $('#app-7').html(
+                                    '<p class="error">Cette boutique n\'existe pas.</p>');
+                                $('#app-map').remove();
                             }
                         });
                     }
@@ -82,13 +112,20 @@
             }
         });
 
-        var rand = Math.round(Math.random(10) * 99);
+        var idBoutique = null;
+        let beginUrl = window.location.href.split('boutique-')[1];
 
         if (params && params.id) {
-            rand = params.id;
+            idBoutique = params.id;
         }
 
-        app7.getShopInfos(rand);
+        if (beginUrl) {
+            if (beginUrl.split('.')[0]) {
+                idBoutique = beginUrl.split('.')[0];
+            }
+        }
+
+        app7.getShopInfos(idBoutique);
     </script>
 </body>
 
