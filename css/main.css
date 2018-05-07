@@ -203,6 +203,15 @@ a:hover {
     transform: scale(1.15);
 }
 
+.result .more-text {
+    line-height: 2rem;
+}
+
+.result a {
+    display: inline-block;
+    margin-top: 10px;
+}
+
 .product-cover {
     height: 17vw;
     overflow: hidden;
@@ -252,6 +261,7 @@ a:hover {
     border-color: #292929;
     background: #292929;
     color: white;
+    text-decoration: none;
 }
 
 .pagination-btn.prev {
@@ -260,6 +270,12 @@ a:hover {
 
 .pagination-btn.next {
     right: 10px;
+}
+
+.back-home {
+    font-size: 1.4rem;
+    top: 50px;
+    bottom: auto;
 }
 
 
@@ -297,4 +313,14 @@ a:hover {
 
 .swiper-pagination-bullet-active {
     background: #f99c02;
+}
+
+
+
+
+/* BOUTIQUE  */
+
+iframe {
+    display: block;
+    margin: 50px auto;
 }

@@ -21,12 +21,14 @@
 - afficher les produits les plus visités
 - abort ajax pour éviter les décalage de résultats + libérer la mémoire
 - utilisation de la même function qui récupère les datas d'un produit pour toutes les requetes = résultats toujours uniformes 
-
+- lien vers la boutique
+- Géolocalisation de l'user
+- Pouvoir retourner à la recherche sur une fiche produit
+- début page boutique
 
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
-- Pouvoir retourner à la recherche sur une fiche produit
 - API google Map : afficher map à partir d'une adresse
 - API google Map : itinéraire ?
 - pagination des résultats
@@ -39,10 +41,10 @@ TODO :
 - garder le mode de recherche dans l'url ?
 - garder la page dans l'url ?
 - route info boutique + front ?
-- Géolocalisation de l'user
 - route + front rechercher une boutique (par lieu ?)
 - refacto getHashEntity (list des entity)
 - ajouter des loaders (photos + recherche)
 - ne pas sélectionner un tri, mais cocher plutôt
 - responsive ?
 - limit côté back
+- finir la boutique (récupérer les produits)

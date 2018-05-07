@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <a href="index.html" class="back-home pagination-btn">Retour</a>
 
     <div id="app-7" class="font-size-0">
         <h1>#{{infosProduct.id_produit}} {{infosProduct.nom}}</h1>
@@ -58,16 +59,10 @@
         </div>
 
         <div v-if="infosProduct.localisation && infosProduct.localisation.length > 0">
-            <h3>Lieux</h3>
+            <h3>Boutiques</h3>
             <ul>
                 <li v-for="lieu in infosProduct.localisation">
-                    {{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}
-                    <iframe
-                        width="600"
-                        height="450"
-                        frameborder="0" style="border:0"
-                        v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + lieu.lieu_boutique">
-                    </iframe>
+                    <a v-bind:href="'boutique.html?id=' + lieu.id_boutique">{{lieu.nom_boutique}} ({{lieu.lieu_boutique}}) : {{lieu.stock}} restants à {{lieu.prix}}</a>
                 </li>
             </ul>
         </div>
@@ -82,6 +77,15 @@
     <script src="js/swiper.min.js"></script>
 
     <script>
+        // TODO : remove this test
+        navigator.geolocation.getCurrentPosition = function (callback) {
+            let position = {};
+            position.coords = {};
+            position.coords.latitude = 48.8077711;
+            position.coords.longitude = 2.3673933;
+            callback(position);
+        }
+        
         var params = {};
 
         if (location.search) {
@@ -105,10 +109,36 @@
                         $.get('//localhost:3000/api/product/' + idProduct, (data) => {
                             if (data[0]) {
                                 this.infosProduct = data[0];
+                                this.getUserLocation();
                             }
                         });
                     }
                 },
+                getUserLocation: function () {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        app7.lat = position.coords.latitude;
+                        app7.lng = position.coords.longitude;
+
+                        // app7.map.panTo({
+                        //     lat: app7.lat,
+                        //     lng: app7.lng
+                        // });
+
+                        // app7.map.addListener('click', function () {
+                        //     app7.infowindow.close();
+                        // });
+
+                        // app7.getNamePosition(); // TODO : get NAME
+                        app7.sortShopList();
+                    });
+                },
+                sortShopList: function () {
+                    let locations = app7.infosProduct.localisation;
+                    for (let index = 0; index < locations.length; index++) {
+                        const location = locations[index];
+                        console.log(Math.abs(app7.lat - location.lat) + Math.abs(app7.lng - location.lng));
+                    }
+                }
             }
         });
 

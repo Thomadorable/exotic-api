@@ -12,6 +12,8 @@
 
 <body>
     <div id="app-map" class="font-size-0">
+        <a href="index.html" class="back-home pagination-btn">Retour</a>
+
         <div v-if="loading === 1" class="loader"></div>
         <header>
             <p class="search-input">{{location}}</p>
@@ -19,16 +21,18 @@
         <div class="map"></div>
 
         <div class="results">
-            <a href="url" class="result" 
+            <div class="result" 
                 v-for="(boutique, index) in listresults"
-                v-on:click="hoverBoutique" 
-                v-bind:data-id="index" >
+                v-on:mouseenter="hoverBoutique" 
+                v-on:click="clickBoutique" 
+                v-bind:data-id="index"
+                v-bind:data-boutique="boutique.id_boutique" >
                     <span class="description">
                         <span class="product-title">{{boutique.nom}}</span>
                         <br> Adresse :
-                        <span>{{boutique.lieu}}</span>
+                        <span class="more-text">{{boutique.lieu}}</span> <br>
                     </span>
-            </a>
+            </div>
 
             <a href="" style="font-size:20px" v-on:click="getShopList">See more</a>
         </div>
@@ -130,7 +134,7 @@
                         event.preventDefault();
                     }
 
-                    $.get('//localhost:3000/api/products/near/' + app7.lat.toFixed(4) + '/' + app7.lng.toFixed(4) + '/' + app7.limit, (
+                    $.get('//localhost:3000/api/shop/near/' + app7.lat.toFixed(4) + '/' + app7.lng.toFixed(4) + '/' + app7.limit, (
                         data) => {
                         if (data.length > 0) {
                             app7.listresults.push(...data);
@@ -145,7 +149,8 @@
                                     },
                                     map: app7.map,
                                     animation: google.maps.Animation.DROP,
-                                    title:'#' + boutique.id_boutique + ' ' + boutique.nom
+                                    title:'#' + boutique.id_boutique + ' ' + boutique.nom,
+                                    idBoutique: boutique.id_boutique
                                 });
 
                                 app7.markers.push(newMarker);
@@ -163,7 +168,7 @@
                     app7.map.panTo(marker.getPosition());
 
                     app7.infowindow.setContent(
-                        '<style>div.content {color: orange} </style><div class="content">' + marker.title + '</div>'
+                        '<style>div.content {color: orange} </style><div class="content"><a href="boutique.html?id=' + marker.idBoutique + '" style="font-size:12px">' + marker.title + '</a></div>'
                     );
                     
                     app7.infowindow.open(app7.map, marker);
@@ -176,10 +181,18 @@
                     }
                     let id = target.getAttribute('data-id');
 
-                    console.log(id);
-
                     app7.openModal(app7.markers[id]);
                 },
+                clickBoutique: function(event, event2) {
+                    event.preventDefault();
+                    let target = event.target;
+                    if (!$(target).hasClass('result')) {
+                        target = $(target).closest('.result')[0];
+                    }
+                    let idBoutique = target.getAttribute('data-boutique');
+                    
+                    window.location.href = 'boutique.html?id=' + idBoutique;
+                }
             }
         });
     </script>
