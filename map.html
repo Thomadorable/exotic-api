@@ -23,7 +23,7 @@
 
         <!-- TODO : TEMPLATE THIS -->
         <div class="results">
-            <a v-bind:href="'boutique.html?id=' + boutique.id_boutique" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique"
+            <a v-bind:href="'boutique.html?id=' + boutique.id_boutique" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique" title="Voir la boutique"
                 v-bind:data-id="index" v-bind:data-boutique="boutique.id_boutique">
                 <span class="description">
                     <span class="product-title">{{boutique.nom}}</span>

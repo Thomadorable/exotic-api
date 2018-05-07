@@ -2,13 +2,13 @@ const APIKEY = 'AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg';
 
 
 // TODO : remove this test
-// navigator.geolocation.getCurrentPosition = function (callback) {
-//     let position = {};
-//     position.coords = {};
-//     position.coords.latitude = 48.8077711;
-//     position.coords.longitude = 2.3673933;
-//     callback(position);
-// }
+navigator.geolocation.getCurrentPosition = function (callback) {
+    let position = {};
+    position.coords = {};
+    position.coords.latitude = 48.8077711;
+    position.coords.longitude = 2.3673933;
+    callback(position);
+}
 
 
 function generateMap() {
@@ -55,6 +55,7 @@ function getNamePosition() {
         let location = data.results[0].address_components;
         let city = null;
         let area = null;
+        let postal = null;
 
         for (let i = 0; i < location.length; i++) {
             if (location[i].types[0] === 'locality') {
@@ -63,9 +64,13 @@ function getNamePosition() {
             if (location[i].types[0] === 'administrative_area_level_1') {
                 area = location[i].long_name;
             }
+
+            if (location[i].types[0] === 'postal_code') {
+                postal = location[i].long_name;
+            }
         }
 
-        $('.search-input').text(area + ' - ' + city);
+        $('.search-input').text(area + ' - ' + city + ' (' + postal + ')');
     });
 }
 
@@ -95,7 +100,7 @@ function generateMarkers(locations, zoom = false) {
         loc = new google.maps.LatLng(newMarker.position.lat(), newMarker.position.lng());
         bounds.extend(loc);
     }
-    if (zoom && zoom === true) {
+    if (zoom && zoom === true && mapp.markers.length > 1) {
         setTimeout(function(){
             console.log('autozoom !');
             mapp.map.fitBounds(bounds);

@@ -25,6 +25,22 @@
             frameborder="0" style="border:0"
             v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + infosBoutique.lieu">
         </iframe>
+
+        <h2>Liste des produits</h2>
+
+        <a v-bind:href="'produit.html?id=' + product.id_produit" class="result" v-for="(product, index) in infosBoutique.products">
+            <div class="product-cover" v-if="(product.images && product.images.length > 0)">
+                <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
+            </div>
+            <div class="product-cover" v-else>
+                <p class="results-no-img">No image available</p>
+            </div>
+            <span class="description">
+                <span class="product-title">{{product.nom}}</span>
+                <br> Thème :
+                <span class="more-text">{{product.theme}}</span>
+            </span>
+        </a>
     </div>
 
 
@@ -32,7 +48,6 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
-    <script src="js/swiper.min.js"></script>
 
     <script>
         var params = {};
@@ -53,7 +68,7 @@
                 infosBoutique: []
             },
             methods: {
-                getProductInfos: function (idProduct) {
+                getShopInfos: function (idProduct) {
                     if (idProduct > 0) {
                         $.get('//localhost:3000/api/shop/' + idProduct, (data) => {
                             console.log(data[0])
@@ -73,23 +88,7 @@
             rand = params.id;
         }
 
-        app7.getProductInfos(rand);
-
-        setTimeout(function () {
-            var swiper = new Swiper('.swiper-container', {
-                pagination: {
-                    el: '.swiper-pagination',
-                    dynamicBullets: true,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                loop: true,
-                autoplay: true,
-                speed: 500
-            });
-        }, 1000);
+        app7.getShopInfos(rand);
     </script>
 </body>
 

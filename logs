@@ -25,6 +25,13 @@
 - Géolocalisation de l'user
 - Pouvoir retourner à la recherche sur une fiche produit
 - début page boutique
+- rassembler en 1 seule app vue la génération de carte
+- meilleur loader product
+- route info boutique + front ?
+- garder le mode de recherche dans l'url ?
+- route + front rechercher une boutique (par lieu ?)
+- finir la boutique (récupérer les produits)
+
 
 TODO :
 - refacto sql by id theme + sql by id location
@@ -38,18 +45,11 @@ TODO :
 - rechercher par marque ?
 - Comment passer le paramètre id dans l'url ? utiliser node ?
 - sécuriser l'API
-- garder le mode de recherche dans l'url ?
-- garder la page dans l'url ?
-- route info boutique + front ?
-- route + front rechercher une boutique (par lieu ?)
 - refacto getHashEntity (list des entity)
 - ajouter des loaders (photos + recherche)
 - ne pas sélectionner un tri, mais cocher plutôt
 - responsive ?
-- limit côté back
-- finir la boutique (récupérer les produits)
+- limites côté back
 - templatiser le html des markers sur la carte
-- rassembler en 1 seule app vue la génération de carte
-- gérer mieux la pagination (optionnelle + retirer au bon moment)
+- gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
 - stats sur les boutiques
-- meilleur loader product

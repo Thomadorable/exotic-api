@@ -90,7 +90,8 @@ header {
     border-radius: 3px;
     background: white;
     font-family: Metropolis;
-    font-size: 1.4rem;    
+    font-size: 1.4rem;   
+    transition: all ease 0.3s; 
 }
 
 .search-input-icon {
@@ -108,7 +109,12 @@ header {
     font-family: Metropolis;
     font-size: 1.8rem;
     line-height: 1.8rem;
-    transition: all ease 0.5s;    
+    transition: all ease 0.5s;   
+    color: grey; 
+}
+
+.search-input:hover {
+    border-color: silver;
 }
 
 .find-me svg {
@@ -118,9 +124,8 @@ header {
 }
 
 .find-me:hover {
-    background: #292929;
-    color: white;
-    border-color: transparent;
+    color: #292929;
+    border-color: silver;
 }
 
 .error,
@@ -276,8 +281,8 @@ a:hover {
     font-size: 1.4rem;
     top: 50px;
     bottom: auto;
+    z-index: 2;
 }
-
 
 .half-bloc {
     margin-top: 40px;

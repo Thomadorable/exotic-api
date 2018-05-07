@@ -41,7 +41,6 @@ function getIdThemes(search, res, callback) {
 }
 
 function getIdBoutiques(search, res, callback) {
-    console.log('get id boutiques !');
     let sql = "SELECT id_boutique FROM boutique WHERE nom LIKE '%" + search + "%' OR lieu LIKE '%" + search + "%'";
     con.query(sql, function (err, result, fields) {
         if (err) throw err;
@@ -99,12 +98,12 @@ function getFullProductInfos(where, res, callback) {
                             }
                             products.push(product);
 
-                            if (callback && typeof (callback) === 'function') {
-                                callback();
-                            }
-
                             if (index === (results.length - 1)) {
-                                sendJSON(res, products);
+                                if (callback && typeof (callback) === 'function') {
+                                    callback(products);
+                                } else {
+                                    sendJSON(res, products);
+                                }
                             }
                         });
                     });
@@ -173,18 +172,23 @@ app.get('/api/search/products/all/:search', function (req, res) {
     });
 })
 
+// GET PRODUCT BY ID
 app.get('/api/product/:id', function (req, res) {
     let idProduct = req.params.id;
+    let sql = "id_produit = " + idProduct + " LIMIT 0, 1";
 
-    getFullProductInfos("id_produit = " + idProduct + " LIMIT 0, 1", res, function () {
+    getFullProductInfos(sql, res, function (products) {
         let sql = "UPDATE produit SET nb_visites = nb_visites + 1 WHERE id_produit = " + idProduct;
         con.query(sql, function (err, result) {
             if (err) throw err;
             console.log(result.affectedRows + " record(s) updated");
         });
+
+        sendJSON(res, products);
     });
 })
 
+// PRODUCT SHOP ORDER BY LOCATION
 app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
     let lat = req.params.lat;
     let lng = req.params.lng;
@@ -198,9 +202,6 @@ app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
         sql += 'WHERE id_produit = ' + idProduct;
         sql += ' ORDER BY distance ASC';
 
-        console.log('>>>>>>>>>>><');
-        console.log(sql);
-
         con.query(sql, function (err, results) {
             if (err) throw err;
             sendJSON(res, results);
@@ -210,10 +211,7 @@ app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
     }
 });
 
-app.get('/api/products/popular', function (req, res) {
-    getFullProductInfos('nb_visites > 0 ORDER BY nb_visites DESC LIMIT 0, 9', res);
-});
-
+// FIND SHOP BY LOCATION
 app.get('/api/shop/near/:lat/:lng/:limit', function (req, res) {
     let lat = req.params.lat;
     let lng = req.params.lng;
@@ -230,14 +228,26 @@ app.get('/api/shop/near/:lat/:lng/:limit', function (req, res) {
     }
 });
 
+
+// POPULAR PRODUCTS
+app.get('/api/products/popular', function (req, res) {
+    getFullProductInfos('nb_visites > 0 ORDER BY nb_visites DESC LIMIT 0, 9', res);
+});
+
+// SHOP INFOS
 app.get('/api/shop/:id', function (req, res) {
     let idBoutique = parseInt(req.params.id);
 
     sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
-    con.query(sql, function (err, results) {
+    con.query(sql, function (err, shopDatas) {
         if (err) throw err;
-        sendJSON(res, results);
+        let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
+        getFullProductInfos(sql, res, function(products){
+            shopDatas[0].products = products;
+            sendJSON(res, shopDatas);
+        });
     });
+
 });
 
 app.use(function (req, res, next) {
