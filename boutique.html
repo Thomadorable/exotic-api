@@ -76,6 +76,7 @@
                             if (data[0]) {
                                 this.infosBoutique = data[0];
                                 let themes = [];
+                                let nbThemes = 0;
                                 for (let index = 0; index < this.infosBoutique.products.length; index++) {
                                     const element = this.infosBoutique.products[index];
                                     if (!themes[element.theme]) {
@@ -89,15 +90,16 @@
                                     sortable.push([nb, themes[nb]]);
                                 }
 
-                                console.log(sortable);
-
                                 sortable.sort(function (a, b) {
                                     return b[1] - a[1];
                                 });
 
-                                sortable = sortable.map(function (theme) {
+
+                                sortable = sortable.map(function (theme, index) {
                                     return theme[0];
                                 });
+
+                                sortable = sortable.splice(0, 3);
 
                                 this.infosBoutique.themes = sortable;
 

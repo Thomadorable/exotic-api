@@ -162,8 +162,12 @@ app.get('/api/products/search', function (req, res) {
                     }
         
                     sql = sql.substring(0, sql.length - 3);
-            
-                    getFullProductInfos(sql, res);
+
+                    if (sql.length === 0) {
+                        sendJSON(res);
+                    } else {
+                        getFullProductInfos(sql, res);
+                    }
                 });
             });
         } else {
