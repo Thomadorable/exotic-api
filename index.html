@@ -13,16 +13,28 @@
 
     <div id="app-7">
         <header class="font-size-0">
-            <a href="map.html" class="find-me" title="Géolocalisation"><i class="fas fa-crosshairs"></i></a>
+            <a href="map.html" class="find-me" title="Géolocalisation">
+                <i class="fas fa-crosshairs"></i>
+            </a>
             <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue" class="search-input search-input-icon">
 
             <br>
-            <select id="" v-model="searchEntity">
+            <!-- <select id="" v-model="searchEntity">
                 <option value="all">Par nom, thème ou lieu</option>
                 <option value="name">Par nom</option>
                 <option value="theme">Par theme</option>
                 <option value="location">Par Lieu</option>
-            </select>
+            </select> -->
+
+            <p>
+                <input type="checkbox" id="jack" value="name" v-model="filters">
+                <label for="jack">Nom</label>
+                <input type="checkbox" id="john" value="location" v-model="filters">
+                <label for="john">Lieu</label>
+                <input type="checkbox" id="mike" value="theme" v-model="filters">
+                <label for="mike">Thème</label>
+            </p>
+
         </header>
         <div v-if="loading === 1" class="loader"></div>
         <div class="show-after-loaded">
@@ -34,7 +46,8 @@
             </div>
             <div v-else-if="nbResults > 0" class="results">
                 <p class="success" v-if="!popular">
-                    <strong>{{nbResults}}</strong> résultat<span v-if="nbResults > 1">s</span>
+                    <strong>{{nbResults}}</strong> résultat
+                    <span v-if="nbResults > 1">s</span>
                     pour la recherche «
                     <strong>{{searchValue}}</strong> »
                 </p>
@@ -64,7 +77,8 @@
         </div>
     </div>
 
-    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR"
+        crossorigin="anonymous"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
 
@@ -73,7 +87,7 @@
             el: '#app-7',
             data: {
                 searchValue: getHashSearch(),
-                searchEntity: getHashEntity(),
+                filters: ['name', 'location', 'theme'],
                 listresults: [],
                 currentPage: 0,
                 resultsPerPage: 3 * 3,
@@ -86,26 +100,27 @@
                 getProductsByName: function (search) {
                     this.loading = 1;
 
-                    if (this.searchEntity !== 'all') {
-                        window.location.hash = this.searchEntity + '-' + this.searchValue;
-                    } else {
-                        window.location.hash = this.searchValue;
-                    }
+                    // if (this.searchEntity !== 'all') {
+                    //     window.location.hash = this.searchEntity + '-' + this.searchValue;
+                    // } else {
+                    //     window.location.hash = this.searchValue;
+                    // }
 
-                    if (search.length > 0) {
+                    if (search.length > 0 && this.filters.length > 0) {
                         if (this.ajax) {
                             this.ajax.abort();
                         }
-
-                        this.ajax = $.get('//localhost:3000/api/search/products/' + this.searchEntity + '/' +
-                            search, (data) => {
-                                this.loading = 0;
-                                this.popular = false;
-                                let from = this.currentPage * this.resultsPerPage;
-                                let to = (this.currentPage + 1) * this.resultsPerPage;
-                                this.listresults = data.slice(from, to);
-                                this.nbResults = data.length;
-                            });
+                        let filters = this.filters.join(',');
+                        let url = '//localhost:3000/api/products/search';
+                        url += '?query=' + search + '&filters=' + filters + '';
+                        this.ajax = $.get(url, (data) => {
+                            this.loading = 0;
+                            this.popular = false;
+                            let from = this.currentPage * this.resultsPerPage;
+                            let to = (this.currentPage + 1) * this.resultsPerPage;
+                            this.listresults = data.slice(from, to);
+                            this.nbResults = data.length;
+                        });
                     } else {
                         this.listresults = [];
 
@@ -146,7 +161,7 @@
                     this.currentPage = 0;
                     this.getProductsByName(this.searchValue);
                 },
-                searchEntity: function () {
+                filters: function () {
                     this.currentPage = 0;
                     this.getProductsByName(this.searchValue);
                 },
@@ -194,19 +209,19 @@
             }
         }
 
-        function getHashEntity() {
-            if (window.location.hash) {
-                let hash = getHash();
-                let array = ['all', 'name', 'theme', 'location'];
-                if (hash.length === 2 && array.indexOf(hash[0]) !== -1) {
-                    return hash[0];
-                } else {
-                    return 'all';
-                }
-            } else {
-                return 'all';
-            }
-        }
+        // function getHashEntity() {
+        //     if (window.location.hash) {
+        //         let hash = getHash();
+        //         let array = ['all', 'name', 'theme', 'location'];
+        //         if (hash.length === 2 && array.indexOf(hash[0]) !== -1) {
+        //             return hash[0];
+        //         } else {
+        //             return 'all';
+        //         }
+        //     } else {
+        //         return 'all';
+        //     }
+        // }
 
         app7.getProductsByName(app7.searchValue);
 

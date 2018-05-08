@@ -35,7 +35,8 @@
 - Comment passer le paramètre id dans l'url ? utiliser node ?
 - stats sur les boutiques
 - API google Map : afficher map à partir d'une adresse
-
+- refonte des routes de la recherche (passage des filtres en paramètre)
+- update front avec la nouvelle route
 
 TODO :
 - refacto sql by id theme + sql by id location
@@ -57,3 +58,5 @@ TODO :
 - utiliser les stats boutiques
 - récupérer le thème des boutiques
 - autocompletion
+- ne pas ajax si aucune différence front search
+- gérer le hash dans l'url avec les nouveaux filtres
