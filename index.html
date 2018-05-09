@@ -40,8 +40,7 @@
             </div>
             <div v-else-if="nbResults > 0" class="results">
                 <p class="success" v-if="!popular">
-                    <strong>{{nbResults}}</strong> résultat
-                    <span v-if="nbResults > 1">s</span>
+                    <strong>{{nbResults}}</strong> résultat<span v-if="nbResults > 1">s</span>
                     pour la recherche «
                     <strong>{{searchValue}}</strong> »
                 </p>
@@ -59,7 +58,7 @@
                         <p class="results-no-img">No image available</p>
                     </div>
                     <span class="description">
-                        <span v-html="highlight('#' + (index + 1) + ' ' + product.nom)" class="product-title"></span>
+                        <span v-html="highlight('#' + product.id_produit + ' ' + product.nom)" class="product-title"></span>
                         <br> Thème :
                         <span v-html="highlight(product.theme)" class="more-text"></span>
                     </span>

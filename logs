@@ -40,6 +40,7 @@
 - amélioration des filtres en front
 - ne pas ajax poplar s'ils sont déjà affichés
 - gérer le hash dans l'url avec les nouveaux filtres
+- récupérer le thème des boutiques
 
 
 TODO :
@@ -60,5 +61,5 @@ TODO :
 - templatiser le html des markers sur la carte
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
 - utiliser les stats boutiques
-- récupérer le thème des boutiques
 - autocompletion
+- améliorer la récup thème boutiques
