@@ -46,20 +46,20 @@
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
-- API google Map : itinéraire ?
-- pagination des résultats
+- ajouter des loaders (photos + recherche)
+- responsive ?
+- templatiser le html des markers sur la carte
+- utiliser les stats boutiques
+- autocompletion
+- améliorer la récup thème boutiques
+- gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
+- limites côté back
 - afficher tous les produits d'une catégorie
 - afficher tous les produits d'une même marque ?
 - rechercher par catégorie ?
 - rechercher par marque ?
-- sécuriser l'API
-- refacto getHashEntity (list des entity)
-- ajouter des loaders (photos + recherche)
-- ne pas sélectionner un tri, mais cocher plutôt
-- responsive ?
-- limites côté back
-- templatiser le html des markers sur la carte
-- gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
-- utiliser les stats boutiques
-- autocompletion
-- améliorer la récup thème boutiques
+- sécuriser l'API - token ??
+- API google Map : boutique
+- mettre du contenu fake
+- calculer le prix moyen soi-même
+- gérer les boutiques sans produits et les produits sans boutiques surtout

@@ -59,8 +59,12 @@
                     </div>
                     <span class="description">
                         <span v-html="highlight('#' + product.id_produit + ' ' + product.nom)" class="product-title"></span>
-                        <br> Thème :
-                        <span v-html="highlight(product.theme)" class="more-text"></span>
+                            <br> Prix : <strong v-if="product.min">
+                                <span v-if="product.max > product.min">{{product.min}}€ - {{product.max}}€</span>
+                                <span v-else>{{product.avg}}€</span>
+                            </strong>
+                            <span v-else>Indisponnible</span>
+                        <br> Thème : <span v-html="highlight(product.theme)" class="more-text"></span>
                     </span>
                 </a>
 
@@ -103,6 +107,8 @@
                         let url = '//localhost:3000/api/products/search';
                         url += '?query=' + search + '&filters=' + filters + '';
 
+                        console.log(url);
+
 
                         if (this.filters.length === listFilters.length) {
                             window.location.hash = this.searchValue;
@@ -128,8 +134,39 @@
                             this.loading = 0;
                         } else {
                             this.listresults = [];
+
+                        console.log('//localhost:3000/api/products/popular');
+                            
                             
                             this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
+                        
+                                
+                                for (let indexProduct = 0; indexProduct < data.length; indexProduct++) {
+                                    let locations = data[indexProduct].localisation;
+
+                                    if (locations && typeof(locations) !== 'undefined') {
+                                        let max = getPrice(locations[0].prix);
+                                        let min = max;
+                                        let total = max;
+                                        
+                                        for (var index = 1; index < locations.length; index++) {
+                                            const location = locations[index];
+                                            let price = getPrice(location.prix);
+                                            if (price > max) {
+                                                max = price;
+                                            } else if (price < min) {
+                                                min = price;
+                                            }
+                                            total += price;
+                                        }
+                                        let avg = total / index;
+
+                                        data[indexProduct].min = min;
+                                        data[indexProduct].max = max;
+                                        data[indexProduct].avg = avg;
+                                    }
+                                }
+
                                 this.loading = 0;
                                 this.nbResults = 9;
                                 this.popular = true;
@@ -144,6 +181,8 @@
                     if (!this.searchValue) {
                         return content;
                     }
+
+                    console.log(content);
 
                     let regex = regexAccent(this.searchValue);
 
@@ -208,8 +247,6 @@
                 hashes = getHash(); 
 
                 filters = hashes.splice(0, hashes.length - 1);
-
-                console.log(filters.length);
             }
 
             if (filters.length === 0) {
@@ -217,6 +254,10 @@
             }
 
             return [hashes[0], filters];
+        }
+
+        function getPrice(price) {
+            return parseFloat(price.replace('€', ''));
         }
 
         app7.getProductsByName(app7.searchValue);
@@ -243,6 +284,7 @@
                 }
             }
         });
+
     </script>
 
 </body>

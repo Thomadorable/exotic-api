@@ -74,9 +74,12 @@
                         let url = '//localhost:3000/api/shop/' + idProduct;
                         $.get(url, (data) => {
                             if (data[0]) {
+
                                 this.infosBoutique = data[0];
-                                let themes = [];
+                                let themes = {};
                                 let nbThemes = 0;
+
+                                // Foreach all themes and count occurences
                                 for (let index = 0; index < this.infosBoutique.products.length; index++) {
                                     const element = this.infosBoutique.products[index];
                                     if (!themes[element.theme]) {
@@ -84,24 +87,16 @@
                                     }
                                     themes[element.theme] += 1;
                                 }
-
-                                var sortable = [];
-                                for (var nb in themes) {
-                                    sortable.push([nb, themes[nb]]);
-                                }
-
-                                sortable.sort(function (a, b) {
-                                    return b[1] - a[1];
+                                
+                                // Use the key to get nb values
+                                var sorted = Object.keys(themes).sort(function(a, b) {
+                                    return themes[b] - themes[a];
                                 });
+                                
+                                // Limit nb results
+                                sorted = sorted.splice(0, 3);
 
-
-                                sortable = sortable.map(function (theme, index) {
-                                    return theme[0];
-                                });
-
-                                sortable = sortable.splice(0, 3);
-
-                                this.infosBoutique.themes = sortable;
+                                this.infosBoutique.themes = sorted;
 
                             } else {
                                 $('#app-7').html(
