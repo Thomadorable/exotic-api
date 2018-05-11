@@ -253,34 +253,6 @@
                     produit.min = Math.min.apply(null, prices);     
                 }
             });
-
-            console.log(data);
-
-            // for (let indexProduct = 0; indexProduct < data.length; indexProduct++) {
-            //     let locations = data[indexProduct].localisation;
-
-            //     if (locations && typeof(locations) !== 'undefined') {
-            //         let max = getPrice(locations[0].prix);
-            //         let min = max;
-            //         let total = max;
-                    
-            //         for (var index = 1; index < locations.length; index++) {
-            //             const location = locations[index];
-            //             let price = getPrice(location.prix);
-            //             if (price > max) {
-            //                 max = price;
-            //             } else if (price < min) {
-            //                 min = price;
-            //             }
-            //             total += price;
-            //         }
-            //         let avg = total / index;
-
-            //         data[indexProduct].min = min;
-            //         data[indexProduct].max = max;
-            //         data[indexProduct].avg = avg;
-            //     }
-            // }
         }
         app7.getProductsByName(app7.searchValue);
 
