@@ -41,6 +41,8 @@
 - ne pas ajax poplar s'ils sont déjà affichés
 - gérer le hash dans l'url avec les nouveaux filtres
 - récupérer le thème des boutiques
+- min / max prix produit
+- amélioration de la gestion des filtres (0 filtre) + highlight au bon moment
 
 
 TODO :
@@ -63,3 +65,4 @@ TODO :
 - mettre du contenu fake
 - calculer le prix moyen soi-même
 - gérer les boutiques sans produits et les produits sans boutiques surtout
+- ne pas passer tout le data dans la récup prix

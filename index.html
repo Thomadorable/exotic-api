@@ -58,13 +58,13 @@
                         <p class="results-no-img">No image available</p>
                     </div>
                     <span class="description">
-                        <span v-html="highlight('#' + product.id_produit + ' ' + product.nom)" class="product-title"></span>
+                        <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
                             <br> Prix : <strong v-if="product.min">
                                 <span v-if="product.max > product.min">{{product.min}}€ - {{product.max}}€</span>
-                                <span v-else>{{product.avg}}€</span>
+                                <span v-else>{{product.min}}€</span>
                             </strong>
                             <span v-else>Indisponnible</span>
-                        <br> Thème : <span v-html="highlight(product.theme)" class="more-text"></span>
+                        <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
                     </span>
                 </a>
 
@@ -117,6 +117,8 @@
                         }
 
                         this.ajax = $.get(url, (data) => {
+                            getPriceData(data);
+
                             this.loading = 0;
                             this.popular = false;
                             let from = this.currentPage * this.resultsPerPage;
@@ -124,7 +126,7 @@
                             this.listresults = data.slice(from, to);
                             this.nbResults = data.length;
                         });
-                    } else {
+                    } else if(this.searchValue.length === 0) {
 
                         if (this.ajax) {
                             this.ajax.abort();
@@ -139,33 +141,7 @@
                             
                             
                             this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
-                        
-                                
-                                for (let indexProduct = 0; indexProduct < data.length; indexProduct++) {
-                                    let locations = data[indexProduct].localisation;
-
-                                    if (locations && typeof(locations) !== 'undefined') {
-                                        let max = getPrice(locations[0].prix);
-                                        let min = max;
-                                        let total = max;
-                                        
-                                        for (var index = 1; index < locations.length; index++) {
-                                            const location = locations[index];
-                                            let price = getPrice(location.prix);
-                                            if (price > max) {
-                                                max = price;
-                                            } else if (price < min) {
-                                                min = price;
-                                            }
-                                            total += price;
-                                        }
-                                        let avg = total / index;
-
-                                        data[indexProduct].min = min;
-                                        data[indexProduct].max = max;
-                                        data[indexProduct].avg = avg;
-                                    }
-                                }
+                                getPriceData(data);
 
                                 this.loading = 0;
                                 this.nbResults = 9;
@@ -175,14 +151,17 @@
                         }
 
                         window.location.hash = '';
+                    } else {
+                        this.loading = 0;
+                        this.nbResults = 0;
+                        this.popular = false;
+                        this.listresults = [];
                     }
                 },
-                highlight: function (content) {
-                    if (!this.searchValue) {
+                highlight: function (content, filter) {
+                    if (!this.searchValue || !this.isActive(filter)) {
                         return content;
                     }
-
-                    console.log(content);
 
                     let regex = regexAccent(this.searchValue);
 
@@ -260,6 +239,49 @@
             return parseFloat(price.replace('€', ''));
         }
 
+        function getPriceData(data) {
+
+            data.map(function(produit){
+                let locations = produit.localisation;
+                
+                if (locations && typeof(locations) !== 'undefined') {
+                    let prices = locations.map(function(location){
+                        return getPrice(location.prix);
+                    });
+
+                    produit.max = Math.max.apply(null, prices);     
+                    produit.min = Math.min.apply(null, prices);     
+                }
+            });
+
+            console.log(data);
+
+            // for (let indexProduct = 0; indexProduct < data.length; indexProduct++) {
+            //     let locations = data[indexProduct].localisation;
+
+            //     if (locations && typeof(locations) !== 'undefined') {
+            //         let max = getPrice(locations[0].prix);
+            //         let min = max;
+            //         let total = max;
+                    
+            //         for (var index = 1; index < locations.length; index++) {
+            //             const location = locations[index];
+            //             let price = getPrice(location.prix);
+            //             if (price > max) {
+            //                 max = price;
+            //             } else if (price < min) {
+            //                 min = price;
+            //             }
+            //             total += price;
+            //         }
+            //         let avg = total / index;
+
+            //         data[indexProduct].min = min;
+            //         data[indexProduct].max = max;
+            //         data[indexProduct].avg = avg;
+            //     }
+            // }
+        }
         app7.getProductsByName(app7.searchValue);
 
         document.addEventListener('keydown', function (event) {
