@@ -52,9 +52,10 @@
 
                 <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults">
                     <div class="product-cover" v-if="(product.images && product.images.length > 0)">
-                        <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
+                        <span class="product-cover-img" v-bind:data-image="product.images[0].url"></span>
+                        <div class="loader"></div>
                     </div>
-                    <div class="product-cover" v-else>
+                    <div v-else>
                         <p class="results-no-img">No image available</p>
                     </div>
                     <span class="description">
@@ -103,28 +104,38 @@
                         if (this.ajax) {
                             this.ajax.abort();
                         }
+                        let from = this.currentPage * this.resultsPerPage;
+                        
+                        console.log('from =>', from);
+                        
                         let filters = this.filters.join(',');
                         let url = '//localhost:3000/api/products/search';
-                        url += '?query=' + search + '&filters=' + filters + '';
-
-                        console.log(url);
-
+                        url += '?query=' + search + '&filters=' + filters;
+                        url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
 
                         if (this.filters.length === listFilters.length) {
                             window.location.hash = this.searchValue;
                         } else {
                             window.location.hash = this.filters.join('-') + '-' + this.searchValue;
                         }
+                        
+
+                        console.log(url);
 
                         this.ajax = $.get(url, (data) => {
-                            getPriceData(data);
+
+                            if (data.products) {
+                                getPriceData(data.products);
+                                this.nbResults = data.nbResults;
+                                this.listresults = data.products;
+                            } else {
+                                this.nbResults = 0;
+                                this.listresults = [];
+                            }
 
                             this.loading = 0;
                             this.popular = false;
-                            let from = this.currentPage * this.resultsPerPage;
-                            let to = (this.currentPage + 1) * this.resultsPerPage;
-                            this.listresults = data.slice(from, to);
-                            this.nbResults = data.length;
+                            
                         });
                     } else if(this.searchValue.length === 0) {
 
@@ -141,12 +152,12 @@
                             
                             
                             this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
-                                getPriceData(data);
+                                getPriceData(data.products);
 
                                 this.loading = 0;
                                 this.nbResults = 9;
                                 this.popular = true;
-                                this.listresults = data;
+                                this.listresults = data.products;
                             });
                         }
 
@@ -197,6 +208,24 @@
             },
             mounted: function () {
                 $('.show-after-loaded').fadeIn();
+
+                setTimeout(function(){
+                    let images = $('.product-cover-img');
+
+                    for (let index = 0; index < images.length; index++) {
+                        const image = images[index];
+                        let background = new Image();
+                        background.onload = function () {
+                            $(image).next('.loader').fadeOut(300);
+                            $(image).css({
+                                'background-image': 'url(' + background.src + ')',
+                                'opacity': 1
+                            });
+                        };
+                        console.log('waiting for : ', image.getAttribute('data-image'));
+                        background.src = image.getAttribute('data-image');
+                    }
+                }, 500)
             }
         });
 
@@ -240,7 +269,6 @@
         }
 
         function getPriceData(data) {
-
             data.map(function(produit){
                 let locations = produit.localisation;
                 
@@ -278,7 +306,6 @@
                 }
             }
         });
-
     </script>
 
 </body>

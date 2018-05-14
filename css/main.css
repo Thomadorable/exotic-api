@@ -74,7 +74,7 @@ html {
 }
 
 body {
-    background: #F5F5F5;
+    background: whitesmoke;
     padding: 50px;
     color: #292929;
     max-width: 960px;
@@ -197,6 +197,7 @@ a:hover {
     height: 40px;
     -webkit-animation: spin 0.8s linear infinite;
     animation: spin 0.8s linear infinite;
+    background: whitesmoke;
     z-index:3;
 }
 
@@ -235,7 +236,7 @@ a:hover {
 }
 
 .result:hover .product-cover-img {
-    transform: scale(1.15);
+    transform: scale(1.1);
 }
 
 .result .more-text {
@@ -249,18 +250,28 @@ a:hover {
 
 .product-cover {
     height: 17vw;
+    max-height: 267px;
     overflow: hidden;
+    position: relative;
+}
+
+.product-cover .loader {
+    background: white;
+    top: calc(50% - 20px);
 }
 
 .product-cover-img {
     display: block;
     background-size: cover;
+    background-position: center center;
     transition: all ease 0.5s;
     height: 100%;
+    opacity: 0;
 }
 
 .results-no-img {
     line-height: 17vw;
+    max-height: 267px;
     margin: 0;
     text-align: center;
     text-transform: uppercase;
@@ -358,4 +369,31 @@ a:hover {
 iframe {
     display: block;
     margin: 50px auto;
+}
+
+@media screen and (max-width: 640px) {
+    body {
+        padding: 50px 20px;
+    }
+
+    .result {
+        width: 100%;
+        margin: 10px 0 0;
+    }
+
+    .product-cover {
+        height: 37vw;
+    }
+
+    .results-no-img {
+        line-height: 37vw;
+    }
+
+    .pagination-btn.prev {
+        left: 0;
+    }
+    
+    .pagination-btn.next {
+        right: 0;
+    }
 }

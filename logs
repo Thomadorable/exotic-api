@@ -1,3 +1,4 @@
+DONE
 - Group by sur l'id produit pour retourner 1 résulat quand plusieurs thèmes correspondent
 - Escape string pour autoriser les apostrophe
 - no résult front 
@@ -43,17 +44,20 @@
 - récupérer le thème des boutiques
 - min / max prix produit
 - amélioration de la gestion des filtres (0 filtre) + highlight au bon moment
+- add front img loader
+- début responsive
+- gérer les boutiques sans produits 
+- limites + pagination en back pour les produits
 
 
 TODO :
 - refacto sql by id theme + sql by id location
 - rendre la recherche plus flex ?? (en mode elastic search - à voir)
-- ajouter des loaders (photos + recherche)
 - responsive ?
 - templatiser le html des markers sur la carte
 - utiliser les stats boutiques
-- autocompletion
-- améliorer la récup thème boutiques
+- autocompletion ?
+- améliorer la récup list thème boutiques
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
 - limites côté back
 - afficher tous les produits d'une catégorie
@@ -64,5 +68,11 @@ TODO :
 - API google Map : boutique
 - mettre du contenu fake
 - calculer le prix moyen soi-même
-- gérer les boutiques sans produits et les produits sans boutiques surtout
+- gérer les produits sans boutiques
 - ne pas passer tout le data dans la récup prix
+- commenter tout le code front
+- commenter l'api
+- traduire la BDD
+- refacto API.js paramètres
+- améliorer le loader image qui marche pas tout le temps
+- utiliser la liste thème + la liste catégories

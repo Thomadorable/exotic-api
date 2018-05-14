@@ -23,8 +23,14 @@
 
         <!-- TODO : TEMPLATE THIS -->
         <div class="results">
-            <a v-bind:href="'boutique-' + boutique.id_boutique + '.html'" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique" title="Voir la boutique"
-                v-bind:data-id="index" v-bind:data-boutique="boutique.id_boutique">
+            <a class="result" 
+                v-for="(boutique, index) in listBoutiques" 
+                v-on:mouseenter="hoverBoutique" 
+                v-bind:href="'boutique-' + boutique.id_boutique + '.html'" 
+                v-bind:data-id="index" 
+                v-bind:data-boutique="boutique.id_boutique"
+                title="Voir la boutique">
+
                 <span class="description">
                     <span class="product-title">{{boutique.nom}}</span>
                     <br> Adresse :
@@ -32,10 +38,11 @@
                     <br>
                 </span>
             </a>
-            <a href="" style="font-size:20px" v-on:click="seeMore">See more</a>
         </div>
 
-
+        <span style="font-size:20px">{{listBoutiques.length}}</span>
+        
+        <a href="" style="font-size:20px" v-on:click="seeMore">See more</a>
     </div>
 
 
@@ -51,8 +58,11 @@
             if (event) {
                 event.preventDefault();
             }
-            let url = '//localhost:3000/api/shop/near/';
-            url += mapp.lat.toFixed(4) + '/' + mapp.lng.toFixed(4) + '/' + mapp.limit;
+            let url = '//localhost:3000/api/shop/near?';
+            url += 'lat=' + mapp.lat.toFixed(4) + '&lng=' + mapp.lng.toFixed(4) + '&limit=' + mapp.limit;
+
+            console.log(url);
+
             $.get(url, (boutiques) => {
                 if (boutiques.length > 0) {
                     mapp.limit = mapp.limit + 6;
