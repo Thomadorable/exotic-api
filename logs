@@ -68,7 +68,7 @@ TODO :
 - API google Map : boutique
 - mettre du contenu fake
 - calculer le prix moyen soi-même
-- gérer les produits sans boutiques
+- gérer les produits sans boutiques (ex produit 3)
 - ne pas passer tout le data dans la récup prix
 - commenter tout le code front
 - commenter l'api
