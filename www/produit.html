@@ -68,24 +68,32 @@
 
 
     <div id="app-map" class="font-size-0">
+        <p v-if="noShop" class="error">Aucune boutique ne vend ce produit pour l'instant</p>
+        <div v-else>
+            <div v-if="loading === 1" class="loader"></div>
+            <header>
+                <p class="search-input">{{location}}</p>
+            </header>
+            <div class="map"></div>
 
-        <div v-if="loading === 1" class="loader"></div>
-        <header>
-            <p class="search-input">{{location}}</p>
-        </header>
-        <div class="map"></div>
+            <!-- TODO : TEMPLATE THIS -->
+            <div class="results" v-if="listBoutiques.length > 0">
+                <a class="result" 
+                    v-for="(boutique, index) in listBoutiques"
+                    v-bind:href="'boutique.html?id=' + boutique.id_boutique"
+                    v-on:mouseenter="hoverBoutique"
+                    title="Voir la boutique"
+                    v-bind:data-id="index"
+                    v-bind:data-boutique="boutique.id_boutique">
 
-        <!-- TODO : TEMPLATE THIS -->
-        <div class="results">
-            <a v-bind:href="'boutique.html?id=' + boutique.id_boutique" class="result" v-for="(boutique, index) in listBoutiques" v-on:mouseenter="hoverBoutique"  title="Voir la boutique"
-                v-bind:data-id="index" v-bind:data-boutique="boutique.id_boutique">
-                <span class="description">
-                    <span class="product-title">{{boutique.nom}}</span>
-                    <br> Adresse :
-                    <span class="more-text">{{boutique.lieu}}</span>
-                    <br>
-                </span>
-            </a>
+                    <span class="description">
+                        <span class="product-title">{{boutique.nom}}</span>
+                        <br> Adresse :
+                        <span class="more-text">{{boutique.lieu}}</span>
+                        <br>
+                    </span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -134,7 +142,6 @@
         });
 
         function getShopList () {
-            console.log(app7.infosProduct);
             let url = '//localhost:3000/api/product/shop/';
             url += + mapp.lat + '/' + mapp.lng + '/' + app7.idProduct;
             $.get(url,
@@ -145,6 +152,8 @@
                             lat: data[0].lat,
                             lng: data[0].lng
                         });
+                    } else {
+                        mapp.noShop = true;
                     }
                 });
         }

@@ -91,7 +91,7 @@ function getQueryInfos(where, callback) {
 }
 
 function getFullProductInfos(where, limitBegin, limiteEnd, res, callback) {
-    let sql = "SELECT id_produit, produit.nom, description, echelle_prix, code_barre, theme.nom AS 'theme', "
+    let sql = "SELECT id_produit, produit.nom, description, code_barre, theme.nom AS 'theme', "
     sql += "marque.nom AS 'marque' ";
     sql += "FROM produit ";
     sql += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
@@ -182,6 +182,10 @@ app.get('/api/products/search', function (req, res) {
     let begin = req.query.from;
     let nbProducts = req.query.nbProducts;
     let query = req.query.query;
+
+    begin = begin ? begin : 0;
+    nbProducts = nbProducts ? nbProducts : 20;
+    
 
     if (filters && typeof (filters) !== 'undefined' && query && typeof (query) !== 'undefined') {
         filters = filters.split(',');

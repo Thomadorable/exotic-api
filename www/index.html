@@ -55,9 +55,7 @@
                         <span class="product-cover-img" v-bind:data-image="product.images[0].url"></span>
                         <div class="loader"></div>
                     </div>
-                    <div v-else>
-                        <p class="results-no-img">No image available</p>
-                    </div>
+                    <div v-else v-html="notavailable()"></div>
                     <span class="description">
                         <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
                             <br> Prix : <strong v-if="product.min">
@@ -188,6 +186,9 @@
                 },
                 isActive: function(filter) {
                     return this.filters.indexOf(filter) !== -1;
+                },
+                notavailable: function() {
+                    return '<p class="results-no-img">No image available</p>';
                 }
             },
             watch: {
@@ -208,25 +209,28 @@
             },
             mounted: function () {
                 $('.show-after-loaded').fadeIn();
+            },
+            updated: function () {
+                let images = $('.product-cover-img');
 
-                setTimeout(function(){
-                    let images = $('.product-cover-img');
-
-                    for (let index = 0; index < images.length; index++) {
-                        const image = images[index];
-                        let background = new Image();
-                        background.onload = function () {
-                            $(image).next('.loader').fadeOut(300);
-                            $(image).css({
-                                'background-image': 'url(' + background.src + ')',
-                                'opacity': 1
-                            });
-                        };
-                        console.log('waiting for : ', image.getAttribute('data-image'));
-                        background.src = image.getAttribute('data-image');
+                for (let index = 0; index < images.length; index++) {
+                    const image = images[index];
+                    let background = new Image();
+                    background.onload = function () {
+                        $(image).next('.loader').fadeOut(300);
+                        $(image).css({
+                            'background-image': 'url(' + background.src + ')',
+                            'opacity': 1
+                        });
+                    };
+                    background.onerror = function(event) {
+                        // TODO : ne pas mettre ça en dur
+                        $(image).closest('.product-cover').html(app7.notavailable()).removeClass('product-cover');
                     }
-                }, 500)
-            }
+                    console.log('waiting for : ', image.getAttribute('data-image'));
+                    background.src = image.getAttribute('data-image');
+                }
+            } 
         });
 
         function regexAccent(regex) {

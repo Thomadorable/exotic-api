@@ -150,12 +150,17 @@ header {
     color: #f99c02;
     border-radius: 15px;
     cursor: pointer;
+    transition: all ease 0.3s;
 }
 
 .filters label.active {
     border: 1px solid #f99c02;
     background: #f99c02;
     color: white;
+}
+
+.filters label:hover {
+    opacity: 0.8;
 }
 
 .error,

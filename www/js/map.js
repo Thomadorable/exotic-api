@@ -124,7 +124,8 @@ var mapp = new Vue({
         location: 'Vous êtes situé...',
         listBoutiques: [],
         markers: [],
-        limit: 0
+        limit: 0,
+        noShop: false
     },
     methods: {
         initMap: function () {
