@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Lun 14 Mai 2018 à 23:09
+-- Généré le :  Mar 15 Mai 2018 à 17:24
 -- Version du serveur :  5.5.42
 -- Version de PHP :  7.0.8
 
@@ -89,7 +89,7 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (52, 'Spencer-O''Keefe', '2142 Clemons Terrace', 5, 48.8355, 2.4285, 0),
 (53, 'Ledner and Sons', '65 Rieder Crossing', 86, 48.8767, 2.2794, 0),
 (54, 'Lakin-Bradtke', '64124 Victoria Alley', 57, 48.8647, 2.3275, 0),
-(55, 'Emmerich-Littel', '27458 Oakridge Drive', 26, 48.8737, 2.377, 1),
+(55, 'Emmerich-Littel', '27458 Oakridge Drive', 26, 48.8737, 2.377, 2),
 (56, 'Adams-Price', '1368 Milwaukee Crossing', 78, 48.8491, 2.4267, 0),
 (57, 'McCullough-Cronin', '39394 Myrtle Parkway', 30, 48.8433, 2.3435, 0),
 (58, 'Hermann Group', '01129 Declaration Crossing', 9, 48.8324, 2.428, 0),
@@ -105,7 +105,7 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (68, 'Willms-Larkin', '89 Paget Crossing', 85, 48.8679, 2.3731, 0),
 (69, 'Barton, Crona and Johns', '59146 Pierstorff Alley', 57, 48.8413, 2.3027, 0),
 (70, 'Jaskolski-Lynch', '0818 Manitowish Junction', 26, 48.8187, 2.4265, 0),
-(71, 'Lehner, Carroll and Nienow', '7 Rue de Caumartin, 75009 Paris', 2, 48.909, 2.3476, 120),
+(71, 'Lehner, Carroll and Nienow', '7 Rue de Caumartin, 75009 Paris', 2, 48.909, 2.3476, 132),
 (72, 'Beatty Inc', '496 Rockefeller Point', 58, 48.8235, 2.2988, 0),
 (73, 'Hodkiewicz Inc', '35 Hayes Street', 52, 48.8591, 2.3096, 0),
 (74, 'Cummings, Lesch and Marquardt', '2 Jenifer Avenue', 11, 48.8153, 2.2834, 0),
@@ -115,7 +115,7 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (78, 'Purdy Inc', '8600 Weeping Birch Plaza', 53, 48.8143, 2.4241, 0),
 (79, 'Halvorson, Bruen and Kling', '55 Nova Center', 49, 48.8437, 2.389, 0),
 (80, 'Cronin, Howe and Zemlak', '9830 Wayridge Street', 92, 48.8507, 2.3193, 0),
-(81, 'Mohr-Kris', '343 Chive Place', 61, 48.8893, 2.3835, 0),
+(81, 'Mohr-Kris', '343 Chive Place', 61, 48.8893, 2.3835, 1),
 (82, 'Stroman-Spinka', '28236 Laurel Plaza', 52, 48.8299, 2.3661, 0),
 (83, 'Ledner, Towne and Jerde', '5238 Mallard Drive', 89, 48.8694, 2.28, 0),
 (84, 'Carroll-Douglas', '0908 Maple Wood Park', 43, 48.8301, 2.3775, 0),
@@ -166,7 +166,7 @@ CREATE TABLE `categorisation` (
   `id_categorisation` int(11) NOT NULL,
   `id_categorie` int(11) NOT NULL,
   `id_produit` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `categorisation`
@@ -279,7 +279,8 @@ INSERT INTO `categorisation` (`id_categorisation`, `id_categorie`, `id_produit`)
 (104, 2, 105),
 (105, 2, 106),
 (106, 2, 107),
-(107, 2, 108);
+(107, 2, 108),
+(108, 3, 103);
 
 -- --------------------------------------------------------
 
@@ -495,16 +496,16 @@ CREATE TABLE `produit` (
 --
 
 INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_theme`, `id_marque`, `nb_visites`) VALUES
-(1, 'Pasta - Orzo, Dry', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', '8474989205', 1, 0, 22),
-(2, 'Mangue asiatique', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '123456789', 1, 0, 270),
-(3, 'Neckerchief Blck', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.\r\n\r\nVestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.', '5275610009', 3, 0, 2),
-(4, 'Island Oasis - Banana Daiquiri', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '8502808761', 4, 0, 8),
-(5, 'Beets - Candy Cane, Organic', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\r\n\r\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '5630882198', 5, 0, 2),
-(6, 'Orange Roughy 6/8 Oz', 'Fusce consequat. Nulla nisl. Nunc nisl.\r\n\r\nDuis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', '3938444177', 6, 0, 19),
+(1, 'Pasta - Orzo, Dry', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', '8474989205', 1, 0, 25),
+(2, 'Mangue asiatique', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '123456789', 1, 0, 289),
+(3, 'Neckerchief Blck', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.\r\n\r\nVestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.', '5275610009', 3, 0, 3),
+(4, 'Island Oasis - Banana Daiquiri', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '8502808761', 4, 0, 11),
+(5, 'Beets - Candy Cane, Organic', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\r\n\r\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '5630882198', 5, 0, 3),
+(6, 'Orange Roughy 6/8 Oz', 'Fusce consequat. Nulla nisl. Nunc nisl.\r\n\r\nDuis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', '3938444177', 6, 0, 20),
 (7, 'Flour - Masa De Harina Mexican', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.\r\n\r\nMaecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '2809068615', 35, 0, 2),
 (8, 'Nantucket Apple Juice', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '9818078829', 35, 0, 2),
 (9, 'Soup - Campbells - Chicken Noodle', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.\r\n\r\nQuisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '1659335310', 35, 0, 0),
-(10, 'Waffle Stix', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.\r\n\r\nNullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', '7652393272', 10, 0, 0),
+(10, 'Waffle Stix', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.\r\n\r\nNullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', '7652393272', 10, 0, 1),
 (11, 'Placemat - Scallop, White', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.\r\n\r\nProin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '6566343253', 11, 0, 2),
 (12, 'Pea - Snow', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.\r\n\r\nMauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.\r\n\r\nNullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', '2021890376', 12, 0, 0),
 (13, 'Cheese - Swiss', 'In congue. Etiam justo. Etiam pretium iaculis justo.', '4357953650', 13, 0, 0),
@@ -531,7 +532,7 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 (34, 'Rice - Basmati', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.\r\n\r\nDuis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.\r\n\r\nIn sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', '4605088482', 34, 0, 0),
 (35, 'Icecream Cone - Areo Chocolate', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', '5592146930', 35, 0, 0),
 (36, 'Smoked Tongue', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.\r\n\r\nQuisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '0720093023', 36, 0, 1),
-(37, 'Seedlings - Mix, Organic', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.\r\n\r\nVestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', '7566251651', 37, 0, 0),
+(37, 'Seedlings - Mix, Organic', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.\r\n\r\nVestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', '7566251651', 37, 0, 1),
 (38, 'Wine - Marlbourough Sauv Blanc', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.\r\n\r\nProin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '4661318358', 38, 0, 0),
 (39, 'Pepsi, 355 Ml', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', '8676389535', 39, 0, 0),
 (40, 'Container - Clear 32 Oz', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', '1062612906', 40, 0, 0),
@@ -560,11 +561,11 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 (63, 'Thyme - Dried', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', '9803685147', 63, 0, 0),
 (64, 'Venison - Striploin', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.\r\n\r\nMaecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '5888149470', 64, 0, 1),
 (65, 'Squash - Sunburst', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\r\n\r\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.\r\n\r\nFusce consequat. Nulla nisl. Nunc nisl.', '4131504499', 65, 0, 0),
-(66, 'Coffee - Flavoured', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '2611039402', 66, 0, 0),
+(66, 'Coffee - Flavoured', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '2611039402', 66, 0, 1),
 (67, 'Tomato Paste', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\r\n\r\nEtiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\r\n\r\nPraesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', '5804691384', 67, 0, 0),
 (68, 'Pastrami', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', '1209812002', 68, 0, 0),
 (69, 'Mushroom - Lg - Cello', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', '0819725706', 69, 0, 0),
-(70, 'Savory', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', '3423839740', 70, 0, 1),
+(70, 'Savory', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', '3423839740', 70, 0, 2),
 (71, 'Dawn Professionl Pot And Pan', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\r\n\r\nEtiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', '4851483392', 71, 0, 0),
 (72, 'Raisin - Golden', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', '4475129974', 72, 0, 1),
 (73, 'Beef - Kobe Striploin', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.\r\n\r\nSed ante. Vivamus tortor. Duis mattis egestas metus.\r\n\r\nAenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.', '4856750542', 73, 0, 0),
@@ -592,16 +593,16 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 (95, 'Pants Custom Dry Clean', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.\r\n\r\nDuis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.\r\n\r\nMauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '6903726691', 95, 0, 1),
 (96, 'Duck - Fat', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\r\n\r\nEtiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', '5518586760', 96, 0, 0),
 (97, 'Raspberries - Frozen', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.\r\n\r\nFusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.\r\n\r\nSed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', '6281109430', 97, 0, 1),
-(98, 'Bar Nature Valley', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.\r\n\r\nDuis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.\r\n\r\nMauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '8386046120', 98, 0, 0),
+(98, 'Bar Nature Valley', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.\r\n\r\nDuis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.\r\n\r\nMauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '8386046120', 98, 0, 1),
 (99, 'Rambutan', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.\r\n\r\nFusce consequat. Nulla nisl. Nunc nisl.\r\n\r\nDuis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', '6145599332', 99, 0, 0),
 (100, 'Soup - Knorr, Veg / Beef', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.', '5546916281', 100, 0, 0),
-(101, 'Ananas', 'L’ananas est fragile et se conserve mal, il faut donc le consommer rapidement après l’achat. Le réfrigérateur est fortement déconseillé car l’ananas supporte mal le froid. Un endroit plutôt humide, tempéré à 18-20°C lui convient tout à fait. Il se congèle parfaitement.', '777777777', 101, 0, 139),
+(101, 'Ananas', 'L’ananas est fragile et se conserve mal, il faut donc le consommer rapidement après l’achat. Le réfrigérateur est fortement déconseillé car l’ananas supporte mal le froid. Un endroit plutôt humide, tempéré à 18-20°C lui convient tout à fait. Il se congèle parfaitement.', '777777777', 101, 0, 143),
 (102, 'Anone', 'L’anone est un fruit exotique à la forme d’une poire ronde bosselée. Sa pulpe blanche très juteuse est douce, très parfumée et sucrée. Sa saveur rappelle celle du clou de girofle ou de la cannelle. Une vraie touche d’exotisme que nous vous conseillons de découvrir tout au long de la saison hivernale.', '777777777', 101, 0, 103),
-(103, 'Avocat tropical', 'L’avocat est un fruit fragile. Mieux vaut l’acheter encore dur pour le faire mûrir chez soi. Pour le faire mûrir, vous pouvez l’envelopper dans du papier journal à température ambiante ou le placer dans un sac plastique avec une pomme près d’une source de chaleur.', '777777777', 101, 0, 104),
-(104, 'Banane', 'Il existe deux sortes de bananes : les bananes fruits et les bananes légumes. Les bananes fruits sont très sucrées et il en existe des centaines de variétés. Les plus courantes sont : la Grande Naine, la Gros Michel, la Poyo et la Cavendish. Elles sont longues et jaunes à tâches brunes mais aussi courtes et violacées.Les bananes légumes, appelées bananes plantains, sont plus grosses et moins sucrées.', '777777777', 1, 0, 101),
+(103, 'Avocat tropical', 'L’avocat est un fruit fragile. Mieux vaut l’acheter encore dur pour le faire mûrir chez soi. Pour le faire mûrir, vous pouvez l’envelopper dans du papier journal à température ambiante ou le placer dans un sac plastique avec une pomme près d’une source de chaleur.', '777777777', 101, 0, 112),
+(104, 'Banane', 'Il existe deux sortes de bananes : les bananes fruits et les bananes légumes. Les bananes fruits sont très sucrées et il en existe des centaines de variétés. Les plus courantes sont : la Grande Naine, la Gros Michel, la Poyo et la Cavendish. Elles sont longues et jaunes à tâches brunes mais aussi courtes et violacées.Les bananes légumes, appelées bananes plantains, sont plus grosses et moins sucrées.', '777777777', 1, 0, 103),
 (105, 'Figue', 'Les figues sont naturellement pourvues d’épines sur la peau. Elles sont généralement débarrassées de celles-ci au moment de l’achat. Si ce n’est pas le cas, il convient de les manipuler avec précaution. Pour la déguster, on coupe la figue en deux  dans le sens de la longueur, et on prélève la chair à la cuillère, en prenant soin d’enlever les graines. Si le fruit a encore ses piquants, il est conseillé de le saisir à l’aide d’une fourchette pour le manipuler.', '777777777', 102, 0, 103),
-(106, 'Noix de coco', 'L’eau de la noix de coco est désaltérante si elle est servie fraîche. Pour la récupérer, rien de plus simple : il suffit de percer 2 des 3 yeux à l’extrémité de la noix.On peut aussi utiliser son eau pour pocher du poisson ou encore cuire du riz !La pulpe se mange nature, séchée et râpée pour confectionner des desserts : des flans, des gratins, des gâteaux, des cakes, des tartes, des glaces, etc.La noix de coco est souvent utilisée en accompagnement pour donner une petite touche d’exotisme au poulet ou à l’agneau par exemple.', '777777777', 20, 0, 103),
-(107, 'Grenade', 'Une grenade qui a l’air lourde en raison de sa taille, est probablement remplie de jus. Optez de préférence pour les fruits brillants et ne prenez pas les fruits dont l’écorce est dure ou sèche.', '777777777', 1, 0, 101),
+(106, 'Noix de coco', 'L’eau de la noix de coco est désaltérante si elle est servie fraîche. Pour la récupérer, rien de plus simple : il suffit de percer 2 des 3 yeux à l’extrémité de la noix.On peut aussi utiliser son eau pour pocher du poisson ou encore cuire du riz !La pulpe se mange nature, séchée et râpée pour confectionner des desserts : des flans, des gratins, des gâteaux, des cakes, des tartes, des glaces, etc.La noix de coco est souvent utilisée en accompagnement pour donner une petite touche d’exotisme au poulet ou à l’agneau par exemple.', '777777777', 20, 0, 104),
+(107, 'Grenade', 'Une grenade qui a l’air lourde en raison de sa taille, est probablement remplie de jus. Optez de préférence pour les fruits brillants et ne prenez pas les fruits dont l’écorce est dure ou sèche.', '777777777', 1, 0, 117),
 (108, 'Kumquat', 'L’écorce a un goût sucré alors que la chair a une saveur acidulée à âpre. L’écorce est comestible, les pépins aussi. Le fruit est souvent utilisé en marmelade. Découpé en tranches, il peut être incorporé dans des salades, être utilisé en garniture de cocktails (percer des trous ou trancher), de thé (froid ou chaud). En accompagnement de viande grillée ou braisée. Trempé dans du chocolat et présenté dans son ensemble en tant que bonbon. Les kumquats peuvent être utilisés dans tous les cas de figure où vous utiliseriez des oranges.', '777777777', 103, 0, 102);
 
 -- --------------------------------------------------------
@@ -841,7 +842,7 @@ INSERT INTO `theme` (`id_theme`, `nom`) VALUES
 (100, 'China'),
 (101, 'Amérique du sud'),
 (102, 'Antillais'),
-(103, 'Amérique du nord\r\n');
+(103, 'Amérique du nord');
 
 --
 -- Index pour les tables exportées
@@ -928,7 +929,7 @@ ALTER TABLE `categorie`
 -- AUTO_INCREMENT pour la table `categorisation`
 --
 ALTER TABLE `categorisation`
-  MODIFY `id_categorisation` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=108;
+  MODIFY `id_categorisation` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=109;
 --
 -- AUTO_INCREMENT pour la table `localisation`
 --
