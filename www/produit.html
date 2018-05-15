@@ -37,8 +37,8 @@
             <div v-if="infosProduct.categories && infosProduct.categories.length > 0">
                 <h3>Catégories</h3>
                 <ul>
-                    <li v-for="cat in infosProduct.categories">
-                        {{ cat.nom }}
+                    <li v-for="category in infosProduct.categories">
+                        {{ category }}
                     </li>
                 </ul>
             </div>
@@ -50,7 +50,7 @@
 
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide" v-for="img in infosProduct.images" v-bind:style="{ backgroundImage: 'url(' + img.url + ')' }">
+                    <div class="swiper-slide" v-for="img in infosProduct.images" v-bind:style="{ backgroundImage: 'url(' + img + ')' }">
                     </div>
                 </div>
                 <!-- Add Arrows -->
@@ -128,9 +128,10 @@
             methods: {
                 getProductInfos: function () {
                     if (this.idProduct > 0) {
+                        console.log('//localhost:3000/api/product/' + this.idProduct);
                         $.get('//localhost:3000/api/product/' + this.idProduct, (data) => {
-                            if (data[0]) {
-                                this.infosProduct = data[0];
+                            if (data.nb_results > 0) {
+                                this.infosProduct = data.products[0];
                             } else {
                                 $('#app-7').html('<p class="error">Ce produit n\'existe pas.</p>');
                                 $('#app-map').remove();

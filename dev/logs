@@ -52,6 +52,15 @@ DONE
 - fix loader sur les images à chaque update de résultats
 - gérer les produits sans boutiques (ex produit #3)
 - mettre du contenu fake
+- mieux gérer le non affichage des images onerror
+- ne pas passer tout le data dans la récup prix
+- calculer l'échelle de prix en back ?
+- refacto toute la requete produit SQL
+- récupérer la liste totale des thèmes
+- récupérer la liste totale des catégories
+- récupérer la liste totale des prix
+- décomposer le having + mettre à jour le nb de résultats
+- rendre les filtres utiles
 
 
 TODO :
@@ -71,11 +80,13 @@ TODO :
 - sécuriser l'API - token ??
 - API google Map : boutique = trajet
 - calculer le prix moyen des prix ? (utile ?)
-- ne pas passer tout le data dans la récup prix
 - commenter tout le code front
 - commenter le code api
-- traduire la BDD
+- traduire la BDD ?
 - refacto API.js paramètres
 - utiliser la liste thème + la liste catégories
-- calculer l'échelle de prix en back ?
-- mieux gérer le non affichage des images onerror
+- trier par prix
+- utiliser le propriétaire ?
+- ne pas charger les images déjà chargées
+- supprimer le 999
+- récupérer la vraie liste des catégories / thèmes

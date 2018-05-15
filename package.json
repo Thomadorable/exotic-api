@@ -1,23 +1,21 @@
 {
-  "name": "exotic",
+  "name": "exotic-api",
   "version": "1.0.0",
-  "description": "Produits exotiques",
-  "main": "app.js",
+  "description": "- $ npm install - $ node api.js",
+  "main": "api.js",
   "dependencies": {
-    "express": "^4.16.3",
-    "mysql": "^2.15.0"
+    "js-string-escape": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node api.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Thomadorable/exotic-api.git"
   },
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Thomadorable/exotic-api/issues"
   },

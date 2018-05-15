@@ -2,13 +2,13 @@ const APIKEY = 'AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg';
 
 
 // TODO : remove this test
-navigator.geolocation.getCurrentPosition = function (callback) {
-    let position = {};
-    position.coords = {};
-    position.coords.latitude = 48.8077711;
-    position.coords.longitude = 2.3673933;
-    callback(position);
-}
+// navigator.geolocation.getCurrentPosition = function (callback) {
+//     let position = {};
+//     position.coords = {};
+//     position.coords.latitude = 48.8077711;
+//     position.coords.longitude = 2.3673933;
+//     callback(position);
+// }
 
 
 function generateMap() {

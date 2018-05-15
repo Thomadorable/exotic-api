@@ -28,10 +28,26 @@
                 <input type="checkbox" id="theme" value="theme" v-model="filters">
                 <label for="theme" v-bind:class="{ active: isActive('theme')}">Thème</label>
             </p>
-
         </header>
         <div v-if="loading === 1" class="loader"></div>
         <div class="show-after-loaded">
+            <div v-if="!popular">
+                <h3>Filtrer</h3>
+                <select class="themes" v-model="filterTheme" v-on:change="filterChange">
+                    <option value="default">Thème</option>
+                    <option v-bind:value="theme" v-for="theme in listresults.all_themes">{{theme}}</option>
+                </select>
+    
+                <select class="categories" v-model="filterCategory" v-on:change="filterChange">
+                    <option value="default">Catégorie</option>
+                    <option v-bind:value="category" v-for="category in listresults.all_categories">{{category}}</option>
+                </select>
+
+                <p class="filters">
+                    <label class="active" v-for="theme in themes" v-on:click="updateFilter('themes', theme)">{{theme}}</label>
+                    <label class="active" v-for="category in categories" v-on:click="updateFilter('categories', category)">{{category}}</label>
+                </p>
+            </div>
             <div v-if="nbResults === 0 && searchValue.length > 0 && loading === 0">
                 <p class="error">
                     Aucun résultat pour la recherche «
@@ -50,17 +66,18 @@
                     <strong>les plus visités</strong>
                 </p>
 
-                <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults">
+                <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
                     <div class="product-cover" v-if="(product.images && product.images.length > 0)">
-                        <span class="product-cover-img" v-bind:data-image="product.images[0].url"></span>
+                        <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
                         <div class="loader"></div>
                     </div>
                     <div v-else v-html="notavailable()"></div>
                     <span class="description">
                         <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
-                            <br> Prix : <strong v-if="product.min">
-                                <span v-if="product.max > product.min">{{product.min}}€ - {{product.max}}€</span>
-                                <span v-else>{{product.min}}€</span>
+                            <br> Prix : 
+                            <strong v-if="product.price">
+                                <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
+                                <span v-else>{{product.price.min}}€</span>
                             </strong>
                             <span v-else>Indisponnible</span>
                         <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
@@ -92,7 +109,11 @@
                 nbResults: 0,
                 loading: 1,
                 popular: false,
-                ajax: null
+                ajax: null,
+                filterTheme: 'default',
+                filterCategory: 'default',
+                themes: [],
+                categories: []
             },
             methods: {
                 getProductsByName: function (search) {
@@ -104,12 +125,13 @@
                         }
                         let from = this.currentPage * this.resultsPerPage;
                         
-                        console.log('from =>', from);
-                        
                         let filters = this.filters.join(',');
+                        let categories = this.categories.join(',');
+
                         let url = '//localhost:3000/api/products/search';
                         url += '?query=' + search + '&filters=' + filters;
                         url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
+                        url +='&categories=' + categories;
 
                         if (this.filters.length === listFilters.length) {
                             window.location.hash = this.searchValue;
@@ -123,9 +145,8 @@
                         this.ajax = $.get(url, (data) => {
 
                             if (data.products) {
-                                getPriceData(data.products);
-                                this.nbResults = data.nbResults;
-                                this.listresults = data.products;
+                                this.nbResults = data.nb_results;
+                                this.listresults = data;
                             } else {
                                 this.nbResults = 0;
                                 this.listresults = [];
@@ -150,12 +171,10 @@
                             
                             
                             this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
-                                getPriceData(data.products);
-
                                 this.loading = 0;
                                 this.nbResults = 9;
                                 this.popular = true;
-                                this.listresults = data.products;
+                                this.listresults = data;
                             });
                         }
 
@@ -189,6 +208,28 @@
                 },
                 notavailable: function() {
                     return '<p class="results-no-img">No image available</p>';
+                },
+                filterChange: function(event) {
+                    let filter = event.target.className;
+                    let value = event.target.value;
+                    
+                    let indexItem = this[filter].indexOf(value);
+
+                    this.updateFilter(filter, value);
+                },
+                updateFilter: function(filter, value) {
+                    let indexItem = this[filter].indexOf(value);
+
+                    if (indexItem === -1) {
+                        this[filter].push(value);
+                    } else {
+                        this[filter].splice(indexItem, 1);
+                    }
+
+                    this.filterTheme = 'default';
+                    this.filterCategory = 'default';
+
+                    this.getProductsByName(this.searchValue);
                 }
             },
             watch: {
@@ -221,10 +262,9 @@
                         $(image).css({
                             'background-image': 'url(' + background.src + ')',
                             'opacity': 1
-                        });
+                        }).removeClass('loading');
                     };
                     background.onerror = function(event) {
-                        // TODO : ne pas mettre ça en dur
                         $(image).closest('.product-cover').html(app7.notavailable()).removeClass('product-cover');
                     }
                     console.log('waiting for : ', image.getAttribute('data-image'));
@@ -268,24 +308,6 @@
             return [hashes[0], filters];
         }
 
-        function getPrice(price) {
-            return parseFloat(price.replace('€', ''));
-        }
-
-        function getPriceData(data) {
-            data.map(function(produit){
-                let locations = produit.localisation;
-                
-                if (locations && typeof(locations) !== 'undefined') {
-                    let prices = locations.map(function(location){
-                        return getPrice(location.prix);
-                    });
-
-                    produit.max = Math.max.apply(null, prices);     
-                    produit.min = Math.min.apply(null, prices);     
-                }
-            });
-        }
         app7.getProductsByName(app7.searchValue);
 
         document.addEventListener('keydown', function (event) {

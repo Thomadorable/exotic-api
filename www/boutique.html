@@ -31,7 +31,7 @@
 
         <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in infosBoutique.products">
             <div class="product-cover" v-if="(product.images && product.images.length > 0)">
-                <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0].url + ')' }"></span>
+                <span class="product-cover-img" v-bind:style="{ backgroundImage: 'url(' + product.images[0] + ')', opacity: 1 }"></span>
             </div>
             <div class="product-cover" v-else>
                 <p class="results-no-img">No image available</p>
@@ -80,6 +80,8 @@
                                 this.infosBoutique = data[0];
                                 let themes = {};
                                 let nbThemes = 0;
+
+                                console.log(this.infosBoutique.products)
 
                                 // Foreach all themes and count occurences
                                 for (let index = 0; index < this.infosBoutique.products.length; index++) {
