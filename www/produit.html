@@ -72,7 +72,7 @@
         <div v-else>
             <div v-if="loading === 1" class="loader"></div>
             <header>
-                <p class="search-input">{{location}}</p>
+                <h3>{{location}}</h3>
             </header>
             <div class="map"></div>
 
@@ -105,19 +105,9 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=generateMap"></script>
 
     <script>
-        var params = {};
-
-        if (location.search) {
-            var parts = location.search.substring(1).split('&');
-
-            for (var i = 0; i < parts.length; i++) {
-                var nv = parts[i].split('=');
-                if (!nv[0]) continue;
-                params[nv[0]] = nv[1] || true;
-            }
-        }
-
-        var app7 = new Vue({
+        var domain = 'http://81.57.199.69:3000';
+        
+        var productApp = new Vue({
             el: '#app-7',
             data: {
                 infosProduct: [],
@@ -128,7 +118,7 @@
             methods: {
                 getProductInfos: function () {
                     if (this.idProduct > 0) {
-                        $.get('//localhost:3000/api/product?id=' + this.idProduct, (data) => {
+                        $.get(domain + '/api/product?id=' + this.idProduct, (data) => {
                             if (data.nb_results > 0) {
                                 this.infosProduct = data.products[0];
                             } else {
@@ -138,12 +128,41 @@
                         });
                     }
                 }
+            },
+            mounted: function() {
+                console.log('mounted !');
+                var idProduct = null;
+                var beginUrl = window.location.href.split('produit-')[1];
+
+                if (beginUrl) {
+                    if (beginUrl.split('.')[0]) {
+                        idProduct = beginUrl.split('.')[0];
+                    }
+                }
+            
+                this.idProduct = idProduct;
+                this.getProductInfos();
+            },
+            updated: function () {
+                new Swiper('.swiper-container', {
+                    pagination: {
+                        el: '.swiper-pagination',
+                        dynamicBullets: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    loop: true,
+                    autoplay: true,
+                    speed: 500
+                });
             }
         });
 
         function getShopList () {
-            let url = '//localhost:3000/api/product/shop/';
-            url += + mapp.lat + '/' + mapp.lng + '/' + app7.idProduct;
+            var url = domain + '/api/product/shop/';
+            url += + mapp.lat + '/' + mapp.lng + '/' + productApp.idProduct;
             $.get(url,
                 function (data) {
                     if (data.length > 0) {
@@ -157,39 +176,6 @@
                     }
                 });
         }
-
-        var idProduct = null;
-        let beginUrl = window.location.href.split('produit-')[1];
-
-        if (params && params.id) {
-            idProduct = params.id;
-        }
-
-        if (beginUrl) {
-            if (beginUrl.split('.')[0]) {
-                idProduct = beginUrl.split('.')[0];
-            }
-        }
-
-       
-        app7.idProduct = idProduct;
-        app7.getProductInfos();
-
-        setTimeout(function () {
-            var swiper = new Swiper('.swiper-container', {
-                pagination: {
-                    el: '.swiper-pagination',
-                    dynamicBullets: true,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                loop: true,
-                autoplay: true,
-                speed: 500
-            });
-        }, 1000);
     </script>
 </body>
 

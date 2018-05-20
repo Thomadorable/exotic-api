@@ -67,11 +67,14 @@ DONE
 - fix erreur de join dans la liste des catégories / thèmes
 - filtrer par thème en front + back
 - affichage des catégories en front
+- héberger l'API sur la raspberri
+- héberger le front sur mon serveur
+- héberger la typo
+- use flex for full height
 
 
 TODO :
 - refacto sql by id theme + sql by id location
-- rendre la recherche plus flex ?? (en mode elastic search - à voir)
 - responsive ?
 - templatiser le html des markers sur la carte
 - utiliser les stats boutiques

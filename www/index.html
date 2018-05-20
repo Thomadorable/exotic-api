@@ -12,12 +12,13 @@
 <body>
     <div id="app-7">
         <header class="font-size-0">
+            <h1 class="title">Exotic-API</h1>
             <a href="map.html" class="find-me" title="Géolocalisation">
                 <i class="fas fa-crosshairs"></i>
             </a>
             <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue" class="search-input search-input-icon">
 
-            <p class="filters">
+            <p class="filters" v-if="searchValue.length > 0">
                 <input type="checkbox" id="name" value="name" v-model="filters">
                 <label for="name" v-bind:class="{ active: isActive('name')}">Nom</label>
 
@@ -57,7 +58,7 @@
                     <strong>{{searchValue}}</strong> »
                 </p>
             </div>
-            <div v-else-if="nbResults > 0" class="results">
+            <div v-else-if="nbResults > 0">
                 <p class="success" v-if="!popular">
                     <strong>{{nbResults}}</strong> résultat<span v-if="nbResults > 1">s</span>
                     pour la recherche «
@@ -69,31 +70,33 @@
                     <strong>les plus visités</strong>
                 </p>
 
-                <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
-                    <div class="product-cover" v-if="(product.images && product.images.length > 0)">
-                        <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
-                        <div class="loader"></div>
-                    </div>
-                    <div v-else v-html="notavailable()"></div>
-                    <span class="description">
-                        <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
-                            <br> Prix : 
-                            <strong v-if="product.price">
-                                <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
-                                <span v-else>{{product.price.min}}€</span>
-                            </strong>
-                            <span v-else>Indisponnible</span>
-                        <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
-                        <br> <span v-if="product.categories.length > 0">
-                            Catégories : <span v-for="(category, index) in product.categories" class="more-text">
-                            {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                <div class="results">
+                    <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
+                        <div class="product-cover" v-if="(product.images && product.images.length > 0)">
+                            <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
+                            <div class="loader"></div>
+                        </div>
+                        <div v-else v-html="notavailable()"></div>
+                        <span class="description">
+                            <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
+                                <br> Prix : 
+                                <strong v-if="product.price">
+                                    <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
+                                    <span v-else>{{product.price.min}}€</span>
+                                </strong>
+                                <span v-else>Indisponnible</span>
+                            <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
+                            <br> <span v-if="product.categories.length > 0">
+                                Catégorie<span v-if="product.categories.length > 1">s</span> : <span v-for="(category, index) in product.categories" class="more-text">
+                                {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                                </span>
                             </span>
                         </span>
-                    </span>
-                </a>
+                    </a>
 
-                <button class="pagination-btn prev" v-on:click="prevPage" v-if="currentPage > 0">PREV</button>
-                <button class="pagination-btn next" v-on:click="nextPage" v-if="((currentPage + 1) * resultsPerPage) < nbResults">NEXT</button>
+                    <button class="pagination-btn prev" v-on:click="prevPage" v-if="currentPage > 0">PREV</button>
+                    <button class="pagination-btn next" v-on:click="nextPage" v-if="((currentPage + 1) * resultsPerPage) < nbResults">NEXT</button>
+                </div>
             </div>
         </div>
     </div>
@@ -105,6 +108,7 @@
 
     <script>
         let listFilters = ['name', 'location', 'theme'];
+        let domain = 'http://81.57.199.69:3000';
 
         let app7 = new Vue({
             el: '#app-7',
@@ -137,7 +141,7 @@
                         let categories = this.categories.join(',');
                         let themes = this.themes.join(',');
 
-                        let url = '//localhost:3000/api/products/search';
+                        let url = domain + '/api/products/search';
                         url += '?query=' + search + '&filters=' + filters;
                         url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
                         if (categories.length > 0) {
@@ -180,7 +184,7 @@
                         } else {
                             this.listresults = [];
 
-                            this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
+                            this.ajax = $.get(domain + '/api/products/popular', (data) => {
                                 this.loading = 0;
                                 this.nbResults = 9;
                                 this.popular = true;
