@@ -2,6 +2,9 @@ const mysql = require('mysql');
 const jsStringEscape = require('js-string-escape');
 const express = require('express');
 const app = express();
+const https = require('https');
+const http = require('http');
+const fs = require('fs')
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -408,4 +411,14 @@ app.use(function (req, res, next) {
     sendJSON(res, notFound);
 });
 
-app.listen(3000);
+var options = {
+    key: fs.readFileSync('keys/private.key.pem'),
+    cert: fs.readFileSync('keys/domain.cert.pem')
+};
+
+// http.createServer(app).listen(3000);
+https.createServer(options, app).listen(3000);
+
+
+// app.listen(3000);
+  

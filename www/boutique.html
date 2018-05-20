@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/swiper.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/map.css">
-
+    <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 
 <body>
@@ -52,6 +52,7 @@
 
     <script>
         var params = {};
+        var domain = 'https://81.57.199.69:3000';
 
         if (location.search) {
             var parts = location.search.substring(1).split('&');
@@ -71,7 +72,7 @@
             methods: {
                 getShopInfos: function (idProduct) {
                     if (idProduct > 0) {
-                        let url = '//localhost:3000/api/shop/' + idProduct;
+                        let url = domain + '/api/shop/' + idProduct;
                         $.get(url, (data) => {
                             if (data[0]) {
 
