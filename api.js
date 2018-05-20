@@ -17,7 +17,11 @@ function sendJSON(res, result) {
     res.setHeader('Content-Type', 'application/json');
 
     if (!result) {
-        result = [];
+        result = [{
+            status: 404
+        }];
+    } else {
+        result.status = 202;
     }
 
     res.send(JSON.stringify(result));
@@ -93,9 +97,7 @@ function splitResult(result) {
     }
 }
 
-function getMoreDatas(where, having, callback) {
-    having = having.replace('categories', 'all_categories');
-
+function getMoreDatas(where, callback) {
     let sql = "SELECT GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'all_categories', ";
     sql += "GROUP_CONCAT(DISTINCT localisation.prix SEPARATOR ';') as 'all_prices', "
     sql += "GROUP_CONCAT(DISTINCT theme.nom SEPARATOR ';') as 'all_themes' "
@@ -106,7 +108,6 @@ function getMoreDatas(where, having, callback) {
     sql += "LEFT JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
     sql += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
     sql += "WHERE " + where + " ";
-    sql += having;
 
     console.log('more infos ---->');
     console.log(sql);
@@ -117,7 +118,7 @@ function getMoreDatas(where, having, callback) {
 }
 
 function getFullProductInfos(where, having, limitBegin, limiteEnd, res, callback) {
-    let sql = "SELECT SQL_CALC_FOUND_ROWS produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
+    let sql = "SELECT produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
     sql += "theme.nom AS 'theme', ";
     sql += "marque.nom AS 'marque', ";
     sql += "GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'categories', ";
@@ -132,26 +133,23 @@ function getFullProductInfos(where, having, limitBegin, limiteEnd, res, callback
     sql += "LEFT JOIN categorie ON categorie.id_categorie = categorisation.id_categorie ";
     sql += "LEFT JOIN localisation ON localisation.id_produit = produit.id_produit ";
     sql += "LEFT JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
+   
     sql += "WHERE " + where + " ";
     sql += "GROUP BY produit.id_produit ";
     sql += having;
-    sql += "ORDER BY produit.nb_visites DESC ";
-    sql += "LIMIT " + limitBegin + ", " + limiteEnd + " ";
+    sql += " ORDER BY produit.nb_visites DESC ";
+    
+    let limit = "LIMIT " + limitBegin + ", " + limiteEnd + " ";
 
+    let sqlLimited = sql + limit;
+    
     console.log('#SQL : get products by');
-    console.log(sql);
+    console.log(sqlLimited);
     console.log('-----------------');
 
-
-
-    con.query(sql, function (err, products, fields) {
+    con.query(sqlLimited, function (err, products, fields) {
         if (err) throw err;
         else if (products.length > 0) {
-
-            con.query("SELECT FOUND_ROWS() as nb_results;", function(err, count, fields){
-                datas.nb_results = count[0].nb_results;
-            });
-
             let listThemes = [];
             let listCategories = [];
             let minPrice = 0;
@@ -180,25 +178,39 @@ function getFullProductInfos(where, having, limitBegin, limiteEnd, res, callback
 
                 delete product.nb_results;
                 delete product.prices;
+                delete product.photos;
 
                 getShopByProduct(productID, function(localisations){
                     product.localisations = localisations;
 
                     if (index === (products.length - 1)) {
-                        getMoreDatas(where, having, function(moreDatas){
-                            if (moreDatas && moreDatas[0]) {
-                                datas.all_categories = splitResult(moreDatas[0].all_categories);
-                                datas.all_prices = splitResult(moreDatas[0].all_prices);
-                                datas.all_themes = splitResult(moreDatas[0].all_themes);
-                            }
-                           
-                            datas.products = products;
 
-                            if (callback && typeof (callback) === 'function') {
-                                callback(datas);
-                            } else {
-                                sendJSON(res, datas);
+                        // Get list of all products without pagination limit
+                        con.query(sql, function (err, allProducts, fields) {
+                            let listIDProduct = '0';
+
+                            datas.nb_results = allProducts.length;
+
+                            if (allProducts && allProducts.length > 0) {
+                                listIDProduct = allProducts.map(y => y.id_produit);
+                                listIDProduct = listIDProduct.join(',');
                             }
+
+                            getMoreDatas('produit.id_produit IN (' + listIDProduct + ')', function(moreDatas){
+                                if (moreDatas && moreDatas[0]) {
+                                    datas.all_categories = splitResult(moreDatas[0].all_categories);
+                                    datas.all_prices = splitResult(moreDatas[0].all_prices);
+                                    datas.all_themes = splitResult(moreDatas[0].all_themes);
+                                }
+                               
+                                datas.products = products;
+    
+                                if (callback && typeof (callback) === 'function') {
+                                    callback(datas);
+                                } else {
+                                    sendJSON(res, datas);
+                                }
+                            });
                         });
                     }
                 });
@@ -210,18 +222,19 @@ function getFullProductInfos(where, having, limitBegin, limiteEnd, res, callback
 
 }
 
-// SEARCH BY ALL
+// ROUTE #1 SEARCH BY ALL
 app.get('/api/products/search', function (req, res) {
     let filters = req.query.filters;
     let begin = req.query.from;
     let nbProducts = req.query.nbProducts;
     let query = req.query.query;
     let categories = req.query.categories;
+    let theme = req.query.theme;
 
     begin = begin ? begin : 0;
     nbProducts = nbProducts ? nbProducts : 20;
 
-    if (filters && typeof (filters) !== 'undefined' && query && typeof (query) !== 'undefined') {
+    if (typeof (filters) !== 'undefined' && typeof (query) !== 'undefined') {
         filters = filters.split(',');
 
         query = jsStringEscape(query);
@@ -249,32 +262,17 @@ app.get('/api/products/search', function (req, res) {
         
                     where = where.substring(0, where.length - 3); // Remove last 'or'
 
-                    // If we have 0 filter matching (with 0 idTheme or 0 idBoutique for ex)
-                    if (where.length === 0) {
-                        sendJSON(res);
-                    } else {
-                        // Else get products infos
-                        let having = '';
-                        
+                    if (typeof (theme) !== 'undefined') {
+                        theme = jsStringEscape(theme);
+                        where = "(" + where + ") AND theme.nom LIKE '%" + theme + "%' "
+                    }
 
-                        if (categories && typeof (categories) !== 'undefined') {
-                            categories = categories.split(',');
-
-                            if (categories.length > 0) {
-                                having = 'HAVING ';
-
-                                console.log(categories);
-
-                                for (let index = 0; index < categories.length; index++) {
-                                    const category = categories[index];
-                                    having += 'categories LIKE "%' +category+ '%" AND '
-                                }
-
-                                having = having.substring(0, having.length - 4); // Remove last 'and '
-                            }
-                        }
-
+                    if (where.length > 0) {
+                        let having = filterByCategories(categories);
                         getFullProductInfos(where, having, begin, nbProducts, res);
+                    } else {
+                        // If we have 0 filter matching (with 0 idTheme or 0 idBoutique for ex)
+                        sendJSON(res);
                     }
                 });
             });
@@ -284,14 +282,35 @@ app.get('/api/products/search', function (req, res) {
     } else {
         sendJSON(res);
     }
-})
+});
 
-// GET PRODUCT BY ID
-app.get('/api/product/:id', function (req, res) {
-    let idProduct = req.params.id;
-    let sql = "produit.id_produit = " + idProduct;
+function filterByCategories(categories) {
+    let having = '';
+    if (categories && typeof (categories) !== 'undefined') {
+        categories = categories.split(',');
+
+        if (categories.length > 0) {
+            having = 'HAVING ';
+
+            for (let index = 0; index < categories.length; index++) {
+                const category = categories[index];
+                having += 'categories LIKE "%' +category+ '%" AND '
+            }
+
+            having = having.substring(0, having.length - 4); // Remove last 'and '
+        }
+    }
+
+    return having;
+}
+
+// ROUTE #2 GET PRODUCT BY ID
+app.get('/api/product', function (req, res) {
+    let idProduct = req.query.id;
 
     if (!isNaN(idProduct)) {
+
+        let sql = "produit.id_produit = " + idProduct;
         getFullProductInfos(sql, '', 0, 1, res, function (products) {
             let sql = "UPDATE produit SET nb_visites = nb_visites + 1 WHERE id_produit = " + idProduct;
             con.query(sql, function (err, result) {
@@ -383,10 +402,10 @@ app.get('/api/shop/:id', function (req, res) {
 });
 
 app.use(function (req, res, next) {
-    // res.setHeader('Content-Type', 'text/plain');
-    // res.status(404).send('Page introuvable !');
-    console.log('Page introuvable !');
-    sendJSON(res);
+    let notFound = [{
+        status: 404
+    }]
+    sendJSON(res, notFound);
 });
 
 app.listen(3000);

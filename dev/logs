@@ -61,6 +61,12 @@ DONE
 - récupérer la liste totale des prix
 - décomposer le having + mettre à jour le nb de résultats
 - rendre les filtres utiles
+- récupérer la vraie liste des catégories / thèmes
+- rechercher par catégorie ?
+- limites côté back
+- fix erreur de join dans la liste des catégories / thèmes
+- filtrer par thème en front + back
+- affichage des catégories en front
 
 
 TODO :
@@ -72,10 +78,8 @@ TODO :
 - autocompletion ?
 - améliorer la récup list thème boutiques
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
-- limites côté back
 - afficher tous les produits d'une catégorie
 - afficher tous les produits d'une même marque ?
-- rechercher par catégorie ?
 - rechercher par marque ?
 - sécuriser l'API - token ??
 - API google Map : boutique = trajet
@@ -84,9 +88,7 @@ TODO :
 - commenter le code api
 - traduire la BDD ?
 - refacto API.js paramètres
-- utiliser la liste thème + la liste catégories
 - trier par prix
 - utiliser le propriétaire ?
 - ne pas charger les images déjà chargées
 - supprimer le 999
-- récupérer la vraie liste des catégories / thèmes

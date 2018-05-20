@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <div id="app-7">
         <header class="font-size-0">
             <a href="map.html" class="find-me" title="Géolocalisation">
@@ -35,12 +34,16 @@
                 <h3>Filtrer</h3>
                 <select class="themes" v-model="filterTheme" v-on:change="filterChange">
                     <option value="default">Thème</option>
-                    <option v-bind:value="theme" v-for="theme in listresults.all_themes">{{theme}}</option>
+                    <option v-bind:value="theme" 
+                    v-for="theme in listresults.all_themes" 
+                    v-if="themes.indexOf(theme) === -1">{{theme}}</option>
                 </select>
-    
+
                 <select class="categories" v-model="filterCategory" v-on:change="filterChange">
                     <option value="default">Catégorie</option>
-                    <option v-bind:value="category" v-for="category in listresults.all_categories">{{category}}</option>
+                    <option v-bind:value="category" 
+                    v-for="category in listresults.all_categories"
+                    v-if="categories.indexOf(category) === -1">{{category}}</option>
                 </select>
 
                 <p class="filters">
@@ -81,6 +84,11 @@
                             </strong>
                             <span v-else>Indisponnible</span>
                         <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
+                        <br> <span v-if="product.categories.length > 0">
+                            Catégories : <span v-for="(category, index) in product.categories" class="more-text">
+                            {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                            </span>
+                        </span>
                     </span>
                 </a>
 
@@ -127,18 +135,23 @@
                         
                         let filters = this.filters.join(',');
                         let categories = this.categories.join(',');
+                        let themes = this.themes.join(',');
 
                         let url = '//localhost:3000/api/products/search';
                         url += '?query=' + search + '&filters=' + filters;
                         url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
-                        url +='&categories=' + categories;
+                        if (categories.length > 0) {
+                            url +='&categories=' + categories;
+                        }
+                        if (themes.length > 0) {
+                            url +='&theme=' + themes;
+                        }
 
                         if (this.filters.length === listFilters.length) {
                             window.location.hash = this.searchValue;
                         } else {
                             window.location.hash = this.filters.join('-') + '-' + this.searchValue;
                         }
-                        
 
                         console.log(url);
 
@@ -167,9 +180,6 @@
                         } else {
                             this.listresults = [];
 
-                        console.log('//localhost:3000/api/products/popular');
-                            
-                            
                             this.ajax = $.get('//localhost:3000/api/products/popular', (data) => {
                                 this.loading = 0;
                                 this.nbResults = 9;
@@ -267,7 +277,6 @@
                     background.onerror = function(event) {
                         $(image).closest('.product-cover').html(app7.notavailable()).removeClass('product-cover');
                     }
-                    console.log('waiting for : ', image.getAttribute('data-image'));
                     background.src = image.getAttribute('data-image');
                 }
             } 
