@@ -235,6 +235,26 @@ function sha256(data) {
     return crypto.createHash("sha256").update(data, 'utf8').digest('hex');
 }
 
+function filterByCategories(categories) {
+    let having = '';
+    if (categories && typeof (categories) !== 'undefined') {
+        categories = categories.split(',');
+
+        if (categories.length > 0) {
+            having = 'HAVING ';
+
+            for (let index = 0; index < categories.length; index++) {
+                const category = categories[index];
+                having += 'categories LIKE "%' +category+ '%" AND '
+            }
+
+            having = having.substring(0, having.length - 4); // Remove last 'and '
+        }
+    }
+
+    return having;
+}
+
 
 // GENERATE TOKEN
 app.get('/token', function (req, res) {
@@ -389,26 +409,6 @@ app.get('/api/products/search', function (req, res) {
     }
 });
 
-function filterByCategories(categories) {
-    let having = '';
-    if (categories && typeof (categories) !== 'undefined') {
-        categories = categories.split(',');
-
-        if (categories.length > 0) {
-            having = 'HAVING ';
-
-            for (let index = 0; index < categories.length; index++) {
-                const category = categories[index];
-                having += 'categories LIKE "%' +category+ '%" AND '
-            }
-
-            having = having.substring(0, having.length - 4); // Remove last 'and '
-        }
-    }
-
-    return having;
-}
-
 // ROUTE #2 GET PRODUCT BY ID
 app.get('/api/product', function (req, res) {
     let idProduct = req.query.id;
@@ -436,7 +436,12 @@ app.get('/api/product/shop', function (req, res) {
     let lng = req.query.lng;
     let idProduct = req.query.idProduct;
 
-    if (!isNaN(lat) && !isNaN(lng) && !isNaN(idProduct)) {
+    if (!isNaN(lat) && !isNaN(lng) && !isNaN(idProduct) && idProduct > 0) {
+        // avoid &limit= (with blank value)
+        if (limit == 0) limit = 0;
+        if (lat == 0) lat = 0;
+        if (lng == 0) lng = 0;
+        
         sql = 'SELECT boutique.id_boutique, boutique.nom, boutique.lieu, boutique.lat, boutique.lng, ';
         sql += '(abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance ';
         sql += 'FROM localisation '
@@ -463,26 +468,33 @@ app.get('/api/products/popular', function (req, res) {
 app.get('/api/shop', function (req, res) {
     let idBoutique = req.query.id;
 
-    if (!isNaN(idBoutique)) {
+    if (!isNaN(idBoutique) && idBoutique > 0) {
         sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
         con.query(sql, function (err, shopDatas) {
             if (err) throw err;
             
             let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
             getFullProductInfos(sql, '', 0, 999, res, function(data){
-                shopDatas[0].products = [];
+                if (shopDatas && shopDatas[0]) {
+                    shopDatas[0].products = [];
 
-                if (data && data.products && data.products.length > 0) {
-                    shopDatas[0].products = data.products;
+                    if (data && data.products && data.products.length > 0) {
+                        shopDatas[0].products = data.products;
+                    }
+    
+                    let sql = "UPDATE boutique SET nb_visites = nb_visites + 1 WHERE id_boutique = " + idBoutique;
+                    con.query(sql, function (err, result) {
+                        if (err) throw err;
+                        console.log(result.affectedRows + " record(s) updated");
+                    });
+
+                    sendJSON(res, shopDatas);
+                    
+                } else {
+                    sendJSON(res);
                 }
+                
 
-                let sql = "UPDATE boutique SET nb_visites = nb_visites + 1 WHERE id_boutique = " + idBoutique;
-                con.query(sql, function (err, result) {
-                    if (err) throw err;
-                    console.log(result.affectedRows + " record(s) updated");
-                });
-
-                sendJSON(res, shopDatas);
             });
         });
     } else {
@@ -497,6 +509,11 @@ app.get('/api/shop/near', function (req, res) {
     let limit = req.query.limit;
 
     if (!isNaN(lat) && !isNaN(lng) && !isNaN(limit) && limit >= 0) {
+        // avoid &limit= (with blank value)
+        if (limit == 0) limit = 0;
+        if (lat == 0) lat = 0;
+        if (lng == 0) lng = 0;
+
         sql = 'SELECT id_boutique, nom, lieu, lat, lng, (abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance FROM boutique ORDER BY distance ASC LIMIT ' + limit + ' , 8';
         con.query(sql, function (err, results) {
             if (err) throw err;
