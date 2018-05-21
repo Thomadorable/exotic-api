@@ -329,10 +329,10 @@ app.get('/api/product', function (req, res) {
 })
 
 // GET PRODUCT SHOPS, ORDER BY LOCATION
-app.get('/api/product/shop/:lat/:lng/:idProduct', function (req, res) {
-    let lat = req.params.lat;
-    let lng = req.params.lng;
-    let idProduct = req.params.idProduct;
+app.get('/api/product/shop', function (req, res) {
+    let lat = req.query.lat;
+    let lng = req.query.lng;
+    let idProduct = req.query.idProduct;
 
     if (!isNaN(lat) && !isNaN(lng) && !isNaN(idProduct)) {
         sql = 'SELECT boutique.id_boutique, boutique.nom, boutique.lieu, boutique.lat, boutique.lng, ';
@@ -375,8 +375,8 @@ app.get('/api/products/popular', function (req, res) {
 });
 
 // SHOP INFOS
-app.get('/api/shop/:id', function (req, res) {
-    let idBoutique = req.params.id;
+app.get('/api/shop', function (req, res) {
+    let idBoutique = req.query.id;
 
     if (!isNaN(idBoutique)) {
         sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;

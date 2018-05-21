@@ -71,6 +71,8 @@ DONE
 - héberger le front sur mon serveur
 - héberger la typo
 - use flex for full height
+- retirer le js des fichiers html
+- certificat SSL / https
 
 
 TODO :
@@ -95,4 +97,3 @@ TODO :
 - utiliser le propriétaire ?
 - ne pas charger les images déjà chargées
 - supprimer le 999
-- certificat SSL / https

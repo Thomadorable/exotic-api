@@ -15,7 +15,7 @@
 <body>
     <a href="index.html" class="back-home pagination-btn">Retour</a>
 
-    <div id="app-7" class="font-size-0">
+    <div id="app-product" class="font-size-0">
         <h1>#{{infosProduct.id_produit}} {{infosProduct.nom}}</h1>
         <h2>Thème |
             <a v-bind:href="'index.html#theme-' + infosProduct.theme">{{infosProduct.theme}}</a>
@@ -72,7 +72,7 @@
         <div v-else>
             <div v-if="loading === 1" class="loader"></div>
             <header>
-                <h3>{{location}}</h3>
+                <h3 class="located">{{location}}</h3>
             </header>
             <div class="map"></div>
 
@@ -80,7 +80,7 @@
             <div class="results" v-if="listBoutiques.length > 0">
                 <a class="result" 
                     v-for="(boutique, index) in listBoutiques"
-                    v-bind:href="'boutique.html?id=' + boutique.id_boutique"
+                    v-bind:href="'boutique-' + boutique.id_boutique + '.html'"
                     v-on:mouseenter="hoverBoutique"
                     title="Voir la boutique"
                     v-bind:data-id="index"
@@ -100,81 +100,27 @@
     </script>
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/map.js"></script>
     <script src="js/swiper.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=generateMap"></script>
 
     <script>
-        var domain = 'https://81.57.199.69:3000';
-        
-        var productApp = new Vue({
-            el: '#app-7',
-            data: {
-                infosProduct: [],
-                listBoutiques: [],
-                markers: [],
-                autoCenterMap: true
-            },
-            methods: {
-                getProductInfos: function () {
-                    if (this.idProduct > 0) {
-                        $.get(domain + '/api/product?id=' + this.idProduct, (data) => {
-                            if (data.nb_results > 0) {
-                                this.infosProduct = data.products[0];
-                            } else {
-                                $('#app-7').html('<p class="error">Ce produit n\'existe pas.</p>');
-                                $('#app-map').remove();
-                            }
-                        });
-                    }
-                }
-            },
-            mounted: function() {
-                console.log('mounted !');
-                var idProduct = null;
-                var beginUrl = window.location.href.split('produit-')[1];
-
-                if (beginUrl) {
-                    if (beginUrl.split('.')[0]) {
-                        idProduct = beginUrl.split('.')[0];
-                    }
-                }
-            
-                this.idProduct = idProduct;
-                this.getProductInfos();
-            },
-            updated: function () {
-                new Swiper('.swiper-container', {
-                    pagination: {
-                        el: '.swiper-pagination',
-                        dynamicBullets: true,
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    loop: true,
-                    autoplay: true,
-                    speed: 500
-                });
-            }
-        });
-
         function getShopList () {
-            var url = domain + '/api/product/shop/';
-            url += + mapp.lat + '/' + mapp.lng + '/' + productApp.idProduct;
-            $.get(url,
-                function (data) {
-                    if (data.length > 0) {
-                        generateMarkers(data, true);
-                        mapp.map.panTo({
-                            lat: data[0].lat,
-                            lng: data[0].lng
-                        });
-                    } else {
-                        mapp.noShop = true;
-                    }
-                });
+            var url = domain + '/api/product/shop?lat=';
+            url += + mapp.lat + '&lng=' + mapp.lng + '&idProduct=' + productApp.idProduct;
+            $.get(url, function (data) {
+                console.log(url);
+                if (data.length > 0) {
+                    generateMarkers(data, true);
+                    mapp.map.panTo({
+                        lat: data[0].lat,
+                        lng: data[0].lng
+                    });
+                } else {
+                    mapp.noShop = true;
+                }
+            });
         }
     </script>
 </body>

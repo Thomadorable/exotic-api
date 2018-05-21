@@ -18,7 +18,7 @@
 
         <div v-if="loading === 1" class="loader"></div>
         <header>
-            <h3>{{location}}</h3>
+            <h3 class="located">{{location}}</h3>
         </header>
         <div class="map"></div>
 
@@ -50,13 +50,12 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/map.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=mapp.initMap">
     </script>
 
     <script>
-        var domain = 'https://81.57.199.69:3000';
-        
         function getShopList(event) {
             if (event) {
                 event.preventDefault();

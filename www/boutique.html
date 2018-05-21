@@ -49,21 +49,9 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/main.js"></script>
 
     <script>
-        var params = {};
-        var domain = 'https://81.57.199.69:3000';
-
-        if (location.search) {
-            var parts = location.search.substring(1).split('&');
-
-            for (var i = 0; i < parts.length; i++) {
-                var nv = parts[i].split('=');
-                if (!nv[0]) continue;
-                params[nv[0]] = nv[1] || true;
-            }
-        }
-
         var app7 = new Vue({
             el: '#app-7',
             data: {
@@ -72,7 +60,7 @@
             methods: {
                 getShopInfos: function (idProduct) {
                     if (idProduct > 0) {
-                        let url = domain + '/api/shop/' + idProduct;
+                        let url = domain + '/api/shop?id=' + idProduct;
                         $.get(url, (data) => {
                             if (data[0]) {
 
@@ -111,23 +99,19 @@
                         });
                     }
                 },
+            },
+            mounted: function() {
+                var idBoutique = null;
+                let beginUrl = window.location.href.split('boutique-')[1];
+
+                if (beginUrl) {
+                    if (beginUrl.split('.')[0]) {
+                        idBoutique = beginUrl.split('.')[0];
+                    }
+                }
+                this.getShopInfos(idBoutique);
             }
         });
-
-        var idBoutique = null;
-        let beginUrl = window.location.href.split('boutique-')[1];
-
-        if (params && params.id) {
-            idBoutique = params.id;
-        }
-
-        if (beginUrl) {
-            if (beginUrl.split('.')[0]) {
-                idBoutique = beginUrl.split('.')[0];
-            }
-        }
-
-        app7.getShopInfos(idBoutique);
     </script>
 </body>
 
