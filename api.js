@@ -4,14 +4,15 @@ const express = require('express');
 const app = express();
 const https = require('https');
 const http = require('http');
-const fs = require('fs')
+const fs = require('fs');
+const conf = require('./conf.js');
 
 const con = mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "root",
-    database: "exotic",
-    port: "8889"
+    user: conf.user,
+    password: conf.password,
+    database: conf.database,
+    port: conf.port
 });
 
 function sendJSON(res, result) {
@@ -411,14 +412,15 @@ app.use(function (req, res, next) {
     sendJSON(res, notFound);
 });
 
-var options = {
-    key: fs.readFileSync('keys/private.key.pem'),
-    cert: fs.readFileSync('keys/domain.cert.pem')
-};
-
-// http.createServer(app).listen(3000);
-https.createServer(options, app).listen(3000);
-
-
-// app.listen(3000);
+if (conf.isProd) {
+    var options = {
+        key: fs.readFileSync('keys/private.key.pem'),
+        cert: fs.readFileSync('keys/domain.cert.pem')
+    };
+    
+    https.createServer(options, app).listen(3000);
+    // http.createServer(app).listen(3000);
+} else {
+    app.listen(3000);
+}
   

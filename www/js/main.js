@@ -1,8 +1,9 @@
 let domain = 'https://81.57.199.69:3000';
 
-// if (location.protocol != 'https:') {
-//     location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
-// }
+if (location.protocol != 'https:') {
+    // location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+    domain = '//localhost:3000';
+}
 
 
 if ($('#app-product').length > 0) {
