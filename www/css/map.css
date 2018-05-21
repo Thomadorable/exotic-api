@@ -20,6 +20,25 @@
     margin-bottom: 30px;
 }
 
+.map-shop {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.duration {
+    margin-bottom: 50px;
+}
+
+.shop-map {
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
+}
+
+.shop-map .filters {
+    margin-bottom: 15px;
+}
+
 .results {
     display: inline-block;
     vertical-align: top;

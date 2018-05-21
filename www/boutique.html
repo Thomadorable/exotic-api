@@ -15,7 +15,7 @@
 <body>
     <a href="index.html" class="back-home pagination-btn">Retour</a>
 
-    <div id="app-7" class="font-size-0">
+    <div id="app-shop" class="font-size-0">
         <h1>#{{infosBoutique.id_boutique}} {{infosBoutique.nom}}</h1>
         <h2>Thèmes
             <span v-for="theme in infosBoutique.themes">
@@ -23,9 +23,24 @@
             </span>
         </h2>
 
+        <div class="shop-map">
+            <div v-if="loading === 1" class="loader"></div>
+            
+         
 
-        <iframe width="600" height="450" frameborder="0" style="border:0" v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + infosBoutique.lieu">
-        </iframe>
+            <div id="map" class="map map-shop"></div>
+
+            <p class="filters"  >
+                <input type="radio" id="WALKING" value="WALKING" v-model="travelmode">
+                <label for="WALKING" v-bind:class="{active: travelmode === 'WALKING'}">À pied</label>
+
+                <input type="radio" id="DRIVING" value="DRIVING" v-model="travelmode">
+                <label for="DRIVING" v-bind:class="{active: travelmode === 'DRIVING'}">En voiture</label>
+            </p>
+
+            <p class="duration">Temps estimé : <strong>{{duration}}</strong></p>
+        </div>
+
 
         <h2 v-if="infosBoutique.products && infosBoutique.products.length > 0">Liste des produits</h2>
 
@@ -44,71 +59,10 @@
         </a>
     </div>
 
-
-
-
     <script src="js/jquery.min.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/main.js"></script>
-
-    <script>
-        var app7 = new Vue({
-            el: '#app-7',
-            data: {
-                infosBoutique: []
-            },
-            methods: {
-                getShopInfos: function (idProduct) {
-                    if (idProduct > 0) {
-                        let url = domain + '/api/shop?id=' + idProduct;
-                        $.get(url + token, (data) => {
-                            console.log(url + token);
-                            if (data[0]) {
-                                this.infosBoutique = data[0];
-                                let themes = {};
-                                let nbThemes = 0;
-
-                                // Foreach all themes and count occurences
-                                for (let index = 0; index < this.infosBoutique.products.length; index++) {
-                                    const element = this.infosBoutique.products[index];
-                                    if (!themes[element.theme]) {
-                                        themes[element.theme] = 0;
-                                    }
-                                    themes[element.theme] += 1;
-                                }
-                                
-                                // Use the key to get nb values
-                                var sorted = Object.keys(themes).sort(function(a, b) {
-                                    return themes[b] - themes[a];
-                                });
-                                
-                                // Limit nb results
-                                sorted = sorted.splice(0, 3);
-
-                                this.infosBoutique.themes = sorted;
-
-                            } else {
-                                $('#app-7').html(
-                                    '<p class="error">Cette boutique n\'existe pas.</p>');
-                                $('#app-map').remove();
-                            }
-                        });
-                    }
-                },
-            },
-            mounted: function() {
-                var idBoutique = null;
-                let beginUrl = window.location.href.split('boutique-')[1];
-
-                if (beginUrl) {
-                    if (beginUrl.split('.')[0]) {
-                        idBoutique = beginUrl.split('.')[0];
-                    }
-                }
-                this.getShopInfos(idBoutique);
-            }
-        });
-    </script>
+    <script src="js/map.js"></script>
 </body>
 
 </html>

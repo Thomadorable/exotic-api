@@ -1,4 +1,5 @@
 const APIKEY = 'AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg';
+const tokenMaps = 'AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k';
 
 
 // TODO : remove this test
@@ -117,39 +118,144 @@ function openModal (marker) {
     mapp.infowindow.open(mapp.map, marker);
 }
 
-var mapp = new Vue({
-    el: '#app-map',
-    data: {
-        loading: 1,
-        location: 'Vous êtes situé...',
-        listBoutiques: [],
-        markers: [],
-        limit: 0,
-        noShop: false
-    },
-    methods: {
-        initMap: function () {
-            console.log('INIT MAP')
-            if ("geolocation" in navigator) {
-                generateMap();
-                
-            } else {
-                this.location = 'La géolocalisation n\'est pas disponible';
-                this.loading = 0;
-            }
+if ($('#app-map').length > 0) {
+    var mapp = new Vue({
+        el: '#app-map',
+        data: {
+            loading: 1,
+            location: 'Vous êtes situé...',
+            listBoutiques: [],
+            markers: [],
+            limit: 0,
+            noShop: false
         },
-        hoverBoutique: function (event) {
-            event.preventDefault();
-            let target = event.target;
-            if (!$(target).hasClass('result')) {
-                target = $(target).closest('.result')[0];
+        methods: {
+            initMap: function () {
+                if ("geolocation" in navigator) {
+                    generateMap();
+                    
+                } else {
+                    this.location = 'La géolocalisation n\'est pas disponible';
+                    this.loading = 0;
+                }
+            },
+            hoverBoutique: function (event) {
+                event.preventDefault();
+                let target = event.target;
+                if (!$(target).hasClass('result')) {
+                    target = $(target).closest('.result')[0];
+                }
+                let id = target.getAttribute('data-id');
+                openModal(mapp.markers[id]);
+            },
+            seeMore: function(event){
+                event.preventDefault();
+                getShopList();
             }
-            let id = target.getAttribute('data-id');
-            openModal(mapp.markers[id]);
-        },
-        seeMore: function(event){
-            event.preventDefault();
-            getShopList();
         }
-    }
-});
+    });
+}
+
+
+if ($('#app-shop').length > 0) {
+    var shopMap = new Vue({
+        el: '#app-shop',
+        data: {
+            infosBoutique: [],
+            loading: 1,
+            lat: null,
+            lng: null,
+            travelmode: 'WALKING',
+            duration: 'Géolocalisation en cours'
+        },
+        methods: {
+            getShopInfos: function (idProduct) {
+                if (idProduct > 0) {
+                    let url = domain + '/api/shop?id=' + idProduct;
+                    $.get(url + token, (data) => {
+                        if (data[0]) {
+                            this.infosBoutique = data[0];
+                            let themes = {};
+                            let nbThemes = 0;
+
+                            // Foreach all themes and count occurences
+                            for (let index = 0; index < this.infosBoutique.products.length; index++) {
+                                const element = this.infosBoutique.products[index];
+                                if (!themes[element.theme]) {
+                                    themes[element.theme] = 0;
+                                }
+                                themes[element.theme] += 1;
+                            }
+                            
+                            // Use the key to get nb values
+                            var sorted = Object.keys(themes).sort(function(a, b) {
+                                return themes[b] - themes[a];
+                            });
+                            
+                            // Limit nb results
+                            sorted = sorted.splice(0, 3);
+
+                            this.infosBoutique.themes = sorted;
+
+                            let $iframe = "<script async defer src='https://maps.googleapis.com/maps/api/js?key=" + tokenMaps + "&callback=shopMap.initDirection'></script>"
+                            $('body').append($iframe);
+
+                        } else {
+                            $('#app-shop').html('<p class="error">Cette boutique n\'existe pas.</p>');
+                        }
+                    });
+                }
+            },
+            initDirection: function() {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.loading = false;
+                        this.lat = position.coords.latitude;
+                        this.lng = position.coords.longitude;
+
+                        let map = new google.maps.Map(document.getElementById('map'));
+
+                        this.directionsDisplay = new google.maps.DirectionsRenderer;
+                        this.directionsDisplay.setMap(map);
+                    
+                        this.direction();
+                    });
+                } else {
+                    // TODO : si la location n'est pas dispo
+                }
+            },
+            direction: function() {
+                var directionsService = new google.maps.DirectionsService;
+                directionsService.route({
+                    origin: new google.maps.LatLng(this.lat, this.lng),
+                    destination: this.infosBoutique.lieu,
+                    travelMode: this.travelmode
+                }, (response, status) => {
+                    if (status === 'OK') {
+                        this.duration = response.routes[0].legs[0].duration.text;
+                        this.directionsDisplay.setDirections(response);
+                    } else {
+                        // TODO : get error
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                });
+            }
+        },
+        mounted: function() {
+            var idBoutique = null;
+            let beginUrl = window.location.href.split('boutique-')[1];
+
+            if (beginUrl) {
+                if (beginUrl.split('.')[0]) {
+                    idBoutique = beginUrl.split('.')[0];
+                }
+            }
+            this.getShopInfos(idBoutique);
+        },
+        watch: {
+            travelmode: function() {
+                this.direction();
+            }
+        }
+    });
+}

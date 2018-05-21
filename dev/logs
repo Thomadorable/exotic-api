@@ -73,27 +73,34 @@ DONE
 - use flex for full height
 - retirer le js des fichiers html
 - certificat SSL / https
+- token API
+- boutiques sans produit
+- API google Map : boutique = trajet
+- refacto boutique html (séparation js)
 
 
-TODO :
+
+OSEF :
 - refacto sql by id theme + sql by id location
 - responsive ?
-- templatiser le html des markers sur la carte
 - utiliser les stats boutiques
-- autocompletion ?
+
+- commenter tout le code front
+- commenter le code api
+- traduire la BDD ?
 - améliorer la récup list thème boutiques
+
+TODO :
+- templatiser le html des markers sur la carte
+- autocompletion ?
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
 - afficher tous les produits d'une catégorie
 - afficher tous les produits d'une même marque ?
 - rechercher par marque ?
-- sécuriser l'API - token ??
-- API google Map : boutique = trajet
 - calculer le prix moyen des prix ? (utile ?)
-- commenter tout le code front
-- commenter le code api
-- traduire la BDD ?
 - refacto API.js paramètres
 - trier par prix
 - utiliser le propriétaire ?
 - ne pas charger les images déjà chargées
 - supprimer le 999 => pagination des produits en boutique
+- jquery = charger maps après les dépendances
