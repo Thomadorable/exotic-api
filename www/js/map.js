@@ -4,7 +4,7 @@ const tokenMaps = 'AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k';
 
 // TODO : remove this test
 navigator.geolocation.getCurrentPosition = function (callback) {
-    let position = {};
+    var position = {};
     position.coords = {};
     position.coords.latitude = 48.8077711;
     position.coords.longitude = 2.3673933;
@@ -49,16 +49,16 @@ function getUserLocation() {
 }
 
 function getNamePosition() {
-    let posDatasURL = 'https://maps.googleapis.com/maps/api/geocode/json?key=' + APIKEY;
+    var posDatasURL = 'https://maps.googleapis.com/maps/api/geocode/json?key=' + APIKEY;
     posDatasURL += '&latlng=' + mapp.lat + ',' + mapp.lng;
 
     $.get(posDatasURL, function (data) {
-        let location = data.results[0].address_components;
-        let city = null;
-        let area = null;
-        let postal = null;
+        var location = data.results[0].address_components;
+        var city = null;
+        var area = null;
+        var postal = null;
 
-        for (let i = 0; i < location.length; i++) {
+        for (var i = 0; i < location.length; i++) {
             if (location[i].types[0] === 'locality') {
                 city = location[i].long_name;
             }
@@ -76,12 +76,12 @@ function getNamePosition() {
 }
 
 function generateMarkers(locations, zoom = false) {
-    let bounds  = new google.maps.LatLngBounds();
+    var bounds  = new google.maps.LatLngBounds();
     mapp.listBoutiques.push(...locations);
     
-    for (let index = 0; index < locations.length; index++) {
+    for (var index = 0; index < locations.length; index++) {
         const boutique = locations[index];
-        let newMarker = new google.maps.Marker({
+        var newMarker = new google.maps.Marker({
             position: {
                 lat: boutique.lat,
                 lng: boutique.lng
@@ -141,11 +141,11 @@ if ($('#app-map').length > 0) {
             },
             hoverBoutique: function (event) {
                 event.preventDefault();
-                let target = event.target;
+                var target = event.target;
                 if (!$(target).hasClass('result')) {
                     target = $(target).closest('.result')[0];
                 }
-                let id = target.getAttribute('data-id');
+                var id = target.getAttribute('data-id');
                 openModal(mapp.markers[id]);
             },
             seeMore: function(event){
@@ -171,15 +171,15 @@ if ($('#app-shop').length > 0) {
         methods: {
             getShopInfos: function (idProduct) {
                 if (idProduct > 0) {
-                    let url = domain + '/api/shop?id=' + idProduct;
+                    var url = domain + '/api/shop?id=' + idProduct;
                     $.get(url + token, (data) => {
                         if (data[0]) {
                             this.infosBoutique = data[0];
-                            let themes = {};
-                            let nbThemes = 0;
+                            var themes = {};
+                            var nbThemes = 0;
 
                             // Foreach all themes and count occurences
-                            for (let index = 0; index < this.infosBoutique.products.length; index++) {
+                            for (var index = 0; index < this.infosBoutique.products.length; index++) {
                                 const element = this.infosBoutique.products[index];
                                 if (!themes[element.theme]) {
                                     themes[element.theme] = 0;
@@ -197,7 +197,7 @@ if ($('#app-shop').length > 0) {
 
                             this.infosBoutique.themes = sorted;
 
-                            let $iframe = "<script async defer src='https://maps.googleapis.com/maps/api/js?key=" + tokenMaps + "&callback=shopMap.initDirection'></script>"
+                            var $iframe = "<script async defer src='https://maps.googleapis.com/maps/api/js?key=" + tokenMaps + "&callback=shopMap.initDirection'></script>"
                             $('body').append($iframe);
 
                         } else {
@@ -213,7 +213,7 @@ if ($('#app-shop').length > 0) {
                         this.lat = position.coords.latitude;
                         this.lng = position.coords.longitude;
 
-                        let map = new google.maps.Map(document.getElementById('map'));
+                        var map = new google.maps.Map(document.getElementById('map'));
 
                         this.directionsDisplay = new google.maps.DirectionsRenderer;
                         this.directionsDisplay.setMap(map);
@@ -243,7 +243,7 @@ if ($('#app-shop').length > 0) {
         },
         mounted: function() {
             var idBoutique = null;
-            let beginUrl = window.location.href.split('boutique-')[1];
+            var beginUrl = window.location.href.split('boutique-')[1];
 
             if (beginUrl) {
                 if (beginUrl.split('.')[0]) {

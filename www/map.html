@@ -60,7 +60,7 @@
             if (event) {
                 event.preventDefault();
             }
-            let url = domain + '/api/shop/near?';
+            var url = domain + '/api/shop/near?';
             url += 'lat=' + mapp.lat.toFixed(4) + '&lng=' + mapp.lng.toFixed(4) + '&limit=' + mapp.limit;
 
             console.log(url);

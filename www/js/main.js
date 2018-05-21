@@ -1,4 +1,4 @@
-let domain = 'https://81.57.199.69:3000';
+var domain = 'https://81.57.199.69:3000';
 const iToken = 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb';
 const token = '&token=' + iToken;
 
@@ -63,9 +63,9 @@ if ($('#app-product').length > 0) {
 }
 
 if ($('#app-search').length > 0) {
-    let listFilters = ['name', 'location', 'theme'];
-
-    let appSearch = new Vue({
+    var listFilters = ['name', 'location', 'theme'];
+    console.log('init appsearch');
+    var appSearch = new Vue({
         el: '#app-search',
         data: {
             searchValue: getHashes()[0],
@@ -83,21 +83,23 @@ if ($('#app-search').length > 0) {
             categories: []
         },
         methods: {
-            getProductsByName: function (search) {
+            getProductsByName: function () {
                 this.loading = 1;
 
-                if (search.length > 0 && this.filters.length > 0) {
+                console.log(this.searchValue);
+
+                if (this.searchValue.length > 0 && this.filters.length > 0) {
                     if (this.ajax) {
                         this.ajax.abort();
                     }
-                    let from = this.currentPage * this.resultsPerPage;
+                    var from = this.currentPage * this.resultsPerPage;
                     
-                    let filters = this.filters.join(',');
-                    let categories = this.categories.join(',');
-                    let themes = this.themes.join(',');
+                    var filters = this.filters.join(',');
+                    var categories = this.categories.join(',');
+                    var themes = this.themes.join(',');
 
-                    let url = domain + '/api/products/search';
-                    url += '?query=' + search + '&filters=' + filters;
+                    var url = domain + '/api/products/search';
+                    url += '?query=' + this.searchValue + '&filters=' + filters;
                     url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
                     if (categories.length > 0) {
                         url +='&categories=' + categories;
@@ -111,8 +113,6 @@ if ($('#app-search').length > 0) {
                     } else {
                         window.location.hash = this.filters.join('-') + '-' + this.searchValue;
                     }
-
-                    console.log(url);
 
                     this.ajax = $.get(url + token, (data) => {
 
@@ -129,7 +129,6 @@ if ($('#app-search').length > 0) {
                         
                     });
                 } else if(this.searchValue.length === 0) {
-
                     if (this.ajax) {
                         this.ajax.abort();
                     }
@@ -161,7 +160,10 @@ if ($('#app-search').length > 0) {
                     return content;
                 }
 
-                let regex = regexAccent(this.searchValue);
+                var value = this.searchValue.replace('*', '\\*').replace('(', '\\(').replace(')', '\\)');
+                value = escape(value);
+                var regex = regexAccent(value);
+
 
                 return content.replace(new RegExp(regex, "gi"), match => {
                     return '<span class="highlightText">' + match + '</span>';
@@ -180,15 +182,15 @@ if ($('#app-search').length > 0) {
                 return '<p class="results-no-img">No image available</p>';
             },
             filterChange: function(event) {
-                let filter = event.target.className;
-                let value = event.target.value;
+                var filter = event.target.className;
+                var value = event.target.value;
                 
-                let indexItem = this[filter].indexOf(value);
+                var indexItem = this[filter].indexOf(value);
 
                 this.updateFilter(filter, value);
             },
             updateFilter: function(filter, value) {
-                let indexItem = this[filter].indexOf(value);
+                var indexItem = this[filter].indexOf(value);
 
                 if (indexItem === -1) {
                     this[filter].push(value);
@@ -199,31 +201,31 @@ if ($('#app-search').length > 0) {
                 this.filterTheme = 'default';
                 this.filterCategory = 'default';
 
-                this.getProductsByName(this.searchValue);
+                this.getProductsByName();
             }
         },
         watch: {
             searchValue: function () {
                 this.currentPage = 0;
-                this.getProductsByName(this.searchValue);
+                this.getProductsByName();
             },
             filters: function () {
                 this.currentPage = 0;
-                this.getProductsByName(this.searchValue);
+                this.getProductsByName();
             },
             currentPage: function () {
                 $('html, body').animate({
                     scrollTop: 0
                 }, 500); // Go
-                this.getProductsByName(this.searchValue);
+                this.getProductsByName();
             }
         },
         mounted: function () {
-            this.getProductsByName(this.searchValue);
+            this.getProductsByName();
             $('.show-after-loaded').fadeIn();
         },
         updated: function () {
-            let images = $('.product-cover-img');
+            var images = $('.product-cover-img');
 
             for (let index = 0; index < images.length; index++) {
                 const image = images[index];
@@ -263,8 +265,8 @@ if ($('#app-search').length > 0) {
     }
 
     function getHashes() {
-        let filters = [];
-        let hashes = [''];
+        var filters = [];
+        var hashes = [''];
         if (window.location.hash) {
             hashes = getHash(); 
 

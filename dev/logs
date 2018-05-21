@@ -104,3 +104,6 @@ TODO :
 - ne pas charger les images déjà chargées
 - supprimer le 999 => pagination des produits en boutique
 - jquery = charger maps après les dépendances
+- checker token date de fin
+- pouvoir s'inscrire ?
+- retirer "let" dans le loading images

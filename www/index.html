@@ -80,18 +80,20 @@
                         <div v-else v-html="notavailable()"></div>
                         <span class="description">
                             <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
-                                <br> Prix : 
-                                <strong v-if="product.price">
-                                    <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
-                                    <span v-else>{{product.price.min}}€</span>
-                                </strong>
-                                <span v-else>Indisponnible</span>
+                            <!-- <br> Prix : 
+                            <strong v-if="product.price">
+                                <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
+                                <span v-else>{{product.price.min}}€</span>
+                            </strong>
+                            <span v-else>Indisponnible</span>
                             <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
-                            <br> <span v-if="product.categories.length > 0">
-                                Catégorie<span v-if="product.categories.length > 1">s</span> : <span v-for="(category, index) in product.categories" class="more-text">
-                                {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                            <br> 
+                            <span v-if="product.categories.length > 0">
+                                Catégorie<span v-if="product.categories.length > 1">s</span> : 
+                                <span v-for="(category, index) in product.categories" class="more-text">
+                                    {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
                                 </span>
-                            </span>
+                            </span> -->
                         </span>
                     </a>
 
@@ -109,27 +111,29 @@
     <script src="js/main.js"></script>
 
     <script>
-        document.addEventListener('keydown', function (event) {
-            if (event.keyCode === 27) {
-                appSearch.searchValue = '';
-            }
-
-            if ((event.ctrlKey || event.metaKey) && event.keyCode === 70) {
-                event.preventDefault();
-                if ($(window).scrollTop() > 300) {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 500); // Go
-                    setTimeout(function () {
-                        $('#input').focus();
-                    }, 300);
-                } else {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 500); // Go
-                    $('#input').focus();
+        $(function(){
+            document.addEventListener('keydown', function (event) {
+                if (event.keyCode === 27) {
+                    appSearch.searchValue = '';
                 }
-            }
+
+                if ((event.ctrlKey || event.metaKey) && event.keyCode === 70) {
+                    event.preventDefault();
+                    if ($(window).scrollTop() > 300) {
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 500); // Go
+                        setTimeout(function () {
+                            $('#input').focus();
+                        }, 300);
+                    } else {
+                        $('html, body').animate({
+                            scrollTop: 0
+                        }, 500); // Go
+                        $('#input').focus();
+                    }
+                }
+            });
         });
     </script>
 
