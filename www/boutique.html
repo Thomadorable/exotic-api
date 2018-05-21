@@ -27,7 +27,7 @@
         <iframe width="600" height="450" frameborder="0" style="border:0" v-bind:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k&q=' + infosBoutique.lieu">
         </iframe>
 
-        <h2>Liste des produits</h2>
+        <h2 v-if="infosBoutique.products && infosBoutique.products.length > 0">Liste des produits</h2>
 
         <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in infosBoutique.products">
             <div class="product-cover" v-if="(product.images && product.images.length > 0)">
@@ -61,16 +61,12 @@
                 getShopInfos: function (idProduct) {
                     if (idProduct > 0) {
                         let url = domain + '/api/shop?id=' + idProduct;
-                        $.get(url, (data) => {
+                        $.get(url + token, (data) => {
+                            console.log(url + token);
                             if (data[0]) {
-
-                                console.log(data[0]);
-
                                 this.infosBoutique = data[0];
                                 let themes = {};
                                 let nbThemes = 0;
-
-                                console.log(this.infosBoutique.products)
 
                                 // Foreach all themes and count occurences
                                 for (let index = 0; index < this.infosBoutique.products.length; index++) {

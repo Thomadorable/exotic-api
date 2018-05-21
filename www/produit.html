@@ -99,17 +99,17 @@
 
     </script>
     <script src="js/jquery.min.js"></script>
+    <script src="js/swiper.min.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/main.js"></script>
     <script src="js/map.js"></script>
-    <script src="js/swiper.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaRd_kdSXbVX7ewzWK82F8ujPSf5py2sg&amp;callback=generateMap"></script>
 
     <script>
         function getShopList () {
             var url = domain + '/api/product/shop?lat=';
             url += + mapp.lat + '&lng=' + mapp.lng + '&idProduct=' + productApp.idProduct;
-            $.get(url, function (data) {
+            $.get(url + token, function (data) {
                 console.log(url);
                 if (data.length > 0) {
                     generateMarkers(data, true);

@@ -1,4 +1,6 @@
 let domain = 'https://81.57.199.69:3000';
+const iToken = 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb';
+const token = '&token=' + iToken;
 
 if (location.protocol != 'https:') {
     // location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
@@ -18,7 +20,7 @@ if ($('#app-product').length > 0) {
         methods: {
             getProductInfos: function () {
                 if (this.idProduct > 0) {
-                    $.get(domain + '/api/product?id=' + this.idProduct, (data) => {
+                    $.get(domain + '/api/product?id=' + this.idProduct + token, (data) => {
                         if (data.nb_results > 0) {
                             this.infosProduct = data.products[0];
                         } else {
@@ -112,7 +114,7 @@ if ($('#app-search').length > 0) {
 
                     console.log(url);
 
-                    this.ajax = $.get(url, (data) => {
+                    this.ajax = $.get(url + token, (data) => {
 
                         if (data.products) {
                             this.nbResults = data.nb_results;
@@ -137,7 +139,8 @@ if ($('#app-search').length > 0) {
                     } else {
                         this.listresults = [];
 
-                        this.ajax = $.get(domain + '/api/products/popular', (data) => {
+
+                        this.ajax = $.get(domain + '/api/products/popular?token=' + iToken, (data) => {
                             this.loading = 0;
                             this.nbResults = 9;
                             this.popular = true;

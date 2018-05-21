@@ -6,6 +6,8 @@ const https = require('https');
 const http = require('http');
 const fs = require('fs');
 const conf = require('./conf.js');
+const crypto = require('crypto');
+
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -220,11 +222,110 @@ function getFullProductInfos(where, having, limitBegin, limiteEnd, res, callback
                 });
             }
         } else {
-            sendJSON(res);
+            if (callback && typeof (callback) === 'function') {
+                callback();
+            } else {
+                sendJSON(res);
+            }
         }
     });
-
 }
+
+function sha256(data) {
+    return crypto.createHash("sha256").update(data, 'utf8').digest('hex');
+}
+
+
+// GENERATE TOKEN
+app.get('/token', function (req, res) {
+    let usermail = req.query.usermail;
+    let mdp = req.query.mdp;
+    let forbidden = [{
+        status: 403,
+        message: "Invalid mail or password."
+    }];
+
+    if(typeof(usermail) !== 'undefined' && typeof(mdp) !== 'undefined') {
+        usermail = jsStringEscape(usermail);
+        mdp = sha256(jsStringEscape(mdp));
+        
+        const sql = "SELECT * FROM proprietaire WHERE mail = '" + usermail + "' AND mdp = '" + mdp + "' ";
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            if (result.length) {
+                const date = Date.now();
+                const user = result[0];
+                const userID = user.id_proprietaire;
+                const token = sha256(date + user.mail + date + user.mdp);
+
+                const tokenSQL = 'SELECT token FROM token WHERE id_proprietaire = ' + userID;
+
+                con.query(tokenSQL, function (err, tokens) {
+                    if (err) throw err;
+
+                    // Si l'utilisateur a déjà un token, on lui retourne
+                    if (tokens.length > 0) {
+                        let token = tokens[0].token;
+
+                        sendJSON(res, {
+                            token: token,
+                        });
+                    } else { // Sinon on lui créé
+                        let insertSQL = "INSERT INTO token SET token = '" + token + "', id_proprietaire = " + userID;
+                        insertSQL += ", debut = NOW(), fin = DATE_ADD(NOW(), INTERVAL 10 DAY) , nb_appel = 0";
+        
+                        con.query(insertSQL, function (err, result) {
+                            if (err) throw err;
+        
+                            sendJSON(res, {
+                                token: token,
+                            });
+                        });
+                    }
+
+                });
+
+                
+            } else {
+                sendJSON(res, forbidden);
+            }
+        });
+    } else {
+        sendJSON(res, forbidden);
+    }
+});
+
+
+// ALL OTHER ROUTES
+app.use(function (req, res, next) {
+    let token = req.query.token;
+    let forbidden = [{
+        status: 403,
+        message: "You need a valid token."
+    }];
+
+    if (typeof (token) !== 'undefined') {
+        token = jsStringEscape(token);
+
+        const sql = "UPDATE token SET nb_appel = nb_appel + 1 WHERE token = '" + token + "' ";
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+
+            if (result.changedRows > 0) {
+                next();
+            } else {
+                sendJSON(res, forbidden);
+            }
+        });
+
+        // next();
+    } else {
+        sendJSON(res, forbidden);
+    }
+    
+    
+    console.log('Visite du serveur sur : ', req.url);
+});
 
 // ROUTE #1 SEARCH BY ALL
 app.get('/api/products/search', function (req, res) {
@@ -352,23 +453,6 @@ app.get('/api/product/shop', function (req, res) {
     }
 });
 
-// FIND SHOP BY LOCATION
-app.get('/api/shop/near', function (req, res) {
-    let lat = req.query.lat;
-    let lng = req.query.lng;
-    let limit = req.query.limit;
-
-    if (!isNaN(lat) && !isNaN(lng) && !isNaN(limit) && limit >= 0) {
-        sql = 'SELECT id_boutique, nom, lieu, lat, lng, (abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance FROM boutique ORDER BY distance ASC LIMIT ' + limit + ' , 8';
-        con.query(sql, function (err, results) {
-            if (err) throw err;
-            sendJSON(res, results);
-        });
-    } else {
-        sendJSON(res);
-    }
-});
-
 
 // POPULAR PRODUCTS
 app.get('/api/products/popular', function (req, res) {
@@ -383,11 +467,12 @@ app.get('/api/shop', function (req, res) {
         sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
         con.query(sql, function (err, shopDatas) {
             if (err) throw err;
+            
             let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
             getFullProductInfos(sql, '', 0, 999, res, function(data){
                 shopDatas[0].products = [];
 
-                if (data.products.length > 0) {
+                if (data && data.products && data.products.length > 0) {
                     shopDatas[0].products = data.products;
                 }
 
@@ -399,6 +484,23 @@ app.get('/api/shop', function (req, res) {
 
                 sendJSON(res, shopDatas);
             });
+        });
+    } else {
+        sendJSON(res);
+    }
+});
+
+// FIND SHOP BY LOCATION
+app.get('/api/shop/near', function (req, res) {
+    let lat = req.query.lat;
+    let lng = req.query.lng;
+    let limit = req.query.limit;
+
+    if (!isNaN(lat) && !isNaN(lng) && !isNaN(limit) && limit >= 0) {
+        sql = 'SELECT id_boutique, nom, lieu, lat, lng, (abs(boutique.lat - ' + lat + ') + abs(boutique.lng - ' + lng + ')) as distance FROM boutique ORDER BY distance ASC LIMIT ' + limit + ' , 8';
+        con.query(sql, function (err, results) {
+            if (err) throw err;
+            sendJSON(res, results);
         });
     } else {
         sendJSON(res);

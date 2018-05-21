@@ -4,7 +4,10 @@
   "description": "- $ npm install - $ node api.js",
   "main": "api.js",
   "dependencies": {
-    "js-string-escape": "^1.0.1"
+    "crypto": "^1.0.1",
+    "express": "^4.16.3",
+    "js-string-escape": "^1.0.1",
+    "mysql": "^2.15.0"
   },
   "devDependencies": {},
   "scripts": {
