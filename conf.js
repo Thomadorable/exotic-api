@@ -2,9 +2,10 @@ const isProd = false;
 
 const localConfif = {
     user: "root",
-    password: "root",
+    //password: "",
     database: "exotic",
-    port: "8889"
+    //port: "8889"
+    port: "3306"
 };
 
 if (isProd) {
