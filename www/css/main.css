@@ -88,6 +88,14 @@ li {
     margin-left: 20px;
 }
 
+select {
+    width: 100%;
+}
+
+.text-xs {
+    font-size: 1.2rem;
+}
+
 html {
     font-size: 10px;
     font-family: Metro;
@@ -124,7 +132,7 @@ header {
 
 .search-input-icon {
     border-radius: 0 3px 3px 0;
-    width: calc(100% - 46px);
+    width: 500px;
 }
 
 .find-me {
@@ -159,7 +167,7 @@ header {
 }
 
 .filters {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .filters input {
@@ -170,6 +178,7 @@ header {
     display: inline-block;
     padding: 2px 15px 0;
     margin: 0 2px;
+    margin-bottom: 10px;
     border: 1px solid #f99c02;
     color: #f99c02;
     border-radius: 15px;
@@ -262,12 +271,27 @@ a:hover {
 }
 
 .results {
-    vertical-align: top;
-    display: inline-block;
-    width: calc(100% - 240px);
+    display: flex;
     flex-wrap: wrap;
     position: relative;
     padding-bottom: 40px;
+}
+
+.results-container {
+    display: inline-block;
+    vertical-align: top;
+}
+
+aside + .results-container {
+    width: calc(100% - 240px);
+}
+
+aside + .results-container .product-cover {
+    height: 15vw;
+}
+
+aside + .results-container .results-no-img {
+    line-height: 15vw;
 }
 
 .result {
@@ -300,7 +324,7 @@ a:hover {
 }
 
 .product-cover {
-    height: 14vw;
+    height: 22vw;
     max-height: 267px;
     border-radius: 3px 3px 0 0;
     overflow: hidden;
@@ -322,7 +346,7 @@ a:hover {
 }
 
 .results-no-img {
-    line-height: 14vw;
+    line-height: 22vw;
     max-height: 267px;
     margin: 0;
     text-align: center;
@@ -332,8 +356,9 @@ a:hover {
 }
 
 .description {
-    padding: 20px;
     display: block;
+    padding: 20px;
+    line-height: 2.2rem;
 }
 
 .product-title {
@@ -368,14 +393,6 @@ a:hover {
 
 .pagination-btn.next {
     right: 10px;
-}
-
-.float {
-    display: inline-block;
-    width: auto;
-    vertical-align: top;
-    margin-right: 30px;
-    min-height: 60px;
 }
 
 .back-home {

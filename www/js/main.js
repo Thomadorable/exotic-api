@@ -290,15 +290,18 @@ if ($('#app-search').length > 0) {
 
     $(window).scroll(function(){
         var $aside = $('.container-results aside');
-        var offset = $('.results').offset().top - 50;
-        
-        var scrollFromTop = $(document).scrollTop() - offset;
-        var distanceFromTop = $aside.offset().top - offset;
+        var $results = $('.results');
 
-        if (scrollFromTop >= 0) {
-            $aside.css('top', scrollFromTop);
-        } else {
-            $aside.css('top', 0);
+        if ($aside.length > 0 && $results.length > 0) {
+            var offset = $results.offset().top - 50;
+            var scrollFromTop = $(document).scrollTop() - offset;
+            var distanceFromTop = $aside.offset().top - offset;
+    
+            if (scrollFromTop >= 0) {
+                $aside.css('top', scrollFromTop);
+            } else {
+                $aside.css('top', 0);
+            }
         }
     });
 }

@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Rechercher un produit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/range.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" type="image/png" href="favicon.png" />
 </head>
@@ -57,7 +58,7 @@
             <div class="container-results">
                 <aside v-if="!popular">
                     <h3>Filtrer</h3>
-                    <p class="float">
+                    <p>
                         <select class="themes" v-model="filterTheme" v-on:change="filterChange">
                             <option value="default">Thème</option>
                             <option v-bind:value="theme" 
@@ -73,11 +74,11 @@
                         </select>
                     </p>
 
-                    <p class="float" v-if="!listresults.prices || (listresults.prices.max !== listresults.prices.min)">
+                    <p v-if="!listresults.prices || (listresults.prices.max !== listresults.prices.min)">
                         <label for="range">Prix maximum :</label> {{maxprice}} <br>
-                        {{listresults.prices && listresults.prices.min}}
+                        <span class="text-xs">{{listresults.prices && listresults.prices.min}}</span>
                         <input type="range" v-bind:min="listresults.prices && listresults.prices.min" v-bind:max="listresults.prices && listresults.prices.max" step="1" v-model="maxprice" id="range" v-on:change="changeMaxPrice">
-                        {{listresults.prices && listresults.prices.max}}
+                        <span class="text-xs">{{listresults.prices && listresults.prices.max}}</span>
                     </p>
 
                     <p class="filters" v-if="themes.length > 0 || categories.length > 0">
@@ -86,34 +87,36 @@
                         <label class="active" v-for="category in categories" v-on:click="updateFilter('categories', category)">{{category}}</label>
                     </p>
                 </aside>
-                <div v-if="nbResults > 0" class="results">
-                    <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
-                        <div class="product-cover" v-if="(product.images && product.images.length > 0)">
-                            <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
-                            <div class="loader"></div>
-                        </div>
-                        <div v-else v-html="notavailable()"></div>
-                        <span class="description">
-                            <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
-                            <br> Prix : 
-                            <strong v-if="product.price">
-                                <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
-                                <span v-else>{{product.price.min}}€</span>
-                            </strong>
-                            <span v-else>Indisponnible</span>
-                            <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
-                            <br> 
-                            <span v-if="product.categories.length > 0">
-                                Catégorie<span v-if="product.categories.length > 1">s</span> : 
-                                <span v-for="(category, index) in product.categories" class="more-text">
-                                    {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                <div v-if="nbResults > 0" class="results-container">
+                    <div class="results">
+                        <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
+                            <div class="product-cover" v-if="(product.images && product.images.length > 0)">
+                                <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
+                                <div class="loader"></div>
+                            </div>
+                            <div v-else v-html="notavailable()"></div>
+                            <span class="description">
+                                <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
+                                <br> Prix : 
+                                <strong v-if="product.price">
+                                    <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
+                                    <span v-else>{{product.price.min}}€</span>
+                                </strong>
+                                <span v-else>Indisponnible</span>
+                                <br> Thème : <span v-html="highlight(product.theme, 'theme')" class="more-text"></span>
+                                <br> 
+                                <span v-if="product.categories.length > 0">
+                                    Catégorie<span v-if="product.categories.length > 1">s</span> : 
+                                    <span v-for="(category, index) in product.categories" class="more-text">
+                                        {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                    </a>
-
-                    <button class="pagination-btn prev" v-on:click="prevPage" v-if="currentPage > 0">PREV</button>
-                    <button class="pagination-btn next" v-on:click="nextPage" v-if="((currentPage + 1) * resultsPerPage) < nbResults">NEXT</button>
+                        </a>
+    
+                        <button class="pagination-btn prev" v-on:click="prevPage" v-if="currentPage > 0">PREV</button>
+                        <button class="pagination-btn next" v-on:click="nextPage" v-if="((currentPage + 1) * resultsPerPage) < nbResults">NEXT</button>
+                    </div>
                 </div>
             </div>
         </div>

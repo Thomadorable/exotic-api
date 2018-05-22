@@ -77,10 +77,11 @@ DONE
 - boutiques sans produit
 - API google Map : boutique = trajet
 - refacto boutique html (séparation js)
+- filtrer selon le prix
 
 
 
-OSEF :
+PEUT-ÊTRE :
 - refacto sql by id theme + sql by id location
 - responsive ?
 - utiliser les stats boutiques
@@ -107,6 +108,5 @@ TODO :
 - checker token date de fin
 - pouvoir s'inscrire ?
 - retirer "let" dans le loading images
-- filtrer selon le prix
 - afficher [] quand 0 résult
 - compter le bon nombre de produit avec le filtre de prix
