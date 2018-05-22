@@ -107,3 +107,6 @@ TODO :
 - checker token date de fin
 - pouvoir s'inscrire ?
 - retirer "let" dans le loading images
+- filtrer selon le prix
+- afficher [] quand 0 résult
+- compter le bon nombre de produit avec le filtre de prix

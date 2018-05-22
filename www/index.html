@@ -20,6 +20,7 @@
             <input type="text" id="input" placeholder="Rechercher un produit" v-model="searchValue" class="search-input search-input-icon">
 
             <p class="filters" v-if="searchValue.length > 0">
+                Rechercher dans : <br>
                 <input type="checkbox" id="name" value="name" v-model="filters">
                 <label for="name" v-bind:class="{ active: isActive('name')}">Nom</label>
 
@@ -31,28 +32,9 @@
             </p>
         </header>
         <div v-if="loading === 1" class="loader"></div>
+
+
         <div class="show-after-loaded">
-            <div v-if="!popular">
-                <h3>Filtrer</h3>
-                <select class="themes" v-model="filterTheme" v-on:change="filterChange">
-                    <option value="default">Thème</option>
-                    <option v-bind:value="theme" 
-                    v-for="theme in listresults.all_themes" 
-                    v-if="themes.indexOf(theme) === -1">{{theme}}</option>
-                </select>
-
-                <select class="categories" v-model="filterCategory" v-on:change="filterChange">
-                    <option value="default">Catégorie</option>
-                    <option v-bind:value="category" 
-                    v-for="category in listresults.all_categories"
-                    v-if="categories.indexOf(category) === -1">{{category}}</option>
-                </select>
-
-                <p class="filters">
-                    <label class="active" v-for="theme in themes" v-on:click="updateFilter('themes', theme)">{{theme}}</label>
-                    <label class="active" v-for="category in categories" v-on:click="updateFilter('categories', category)">{{category}}</label>
-                </p>
-            </div>
             <div v-if="nbResults === 0 && searchValue.length > 0 && loading === 0">
                 <p class="error">
                     Aucun résultat pour la recherche «
@@ -65,13 +47,46 @@
                     pour la recherche «
                     <strong>{{searchValue}}</strong> »
                 </p>
-
+    
                 <p class="success" v-else>Top
                     <strong>9</strong> des produits
                     <strong>les plus visités</strong>
                 </p>
+            </div>
 
-                <div class="results">
+            <div class="container-results">
+                <aside v-if="!popular">
+                    <h3>Filtrer</h3>
+                    <p class="float">
+                        <select class="themes" v-model="filterTheme" v-on:change="filterChange">
+                            <option value="default">Thème</option>
+                            <option v-bind:value="theme" 
+                            v-for="theme in listresults.all_themes" 
+                            v-if="themes.indexOf(theme) === -1">{{theme}}</option>
+                        </select>
+        
+                        <select class="categories" v-model="filterCategory" v-on:change="filterChange">
+                            <option value="default">Catégorie</option>
+                            <option v-bind:value="category" 
+                            v-for="category in listresults.all_categories"
+                            v-if="categories.indexOf(category) === -1">{{category}}</option>
+                        </select>
+                    </p>
+
+                    <p class="float" v-if="!listresults.prices || (listresults.prices.max !== listresults.prices.min)">
+                        <label for="range">Prix maximum :</label> {{maxprice}} <br>
+                        {{listresults.prices && listresults.prices.min}}
+                        <input type="range" v-bind:min="listresults.prices && listresults.prices.min" v-bind:max="listresults.prices && listresults.prices.max" step="1" v-model="maxprice" id="range" v-on:change="changeMaxPrice">
+                        {{listresults.prices && listresults.prices.max}}
+                    </p>
+
+                    <p class="filters" v-if="themes.length > 0 || categories.length > 0">
+                        Filtres actifs : <br>
+                        <label class="active" v-for="theme in themes" v-on:click="updateFilter('themes', theme)">{{theme}}</label>
+                        <label class="active" v-for="category in categories" v-on:click="updateFilter('categories', category)">{{category}}</label>
+                    </p>
+                </aside>
+                <div v-if="nbResults > 0" class="results">
                     <a v-bind:href="'produit-' + product.id_produit + '.html'" class="result" v-for="(product, index) in listresults.products">
                         <div class="product-cover" v-if="(product.images && product.images.length > 0)">
                             <span class="product-cover-img loading" v-bind:data-image="product.images[0]"></span>
@@ -80,7 +95,7 @@
                         <div v-else v-html="notavailable()"></div>
                         <span class="description">
                             <span v-html="highlight('#' + product.id_produit + ' ' + product.nom, 'name')" class="product-title"></span>
-                            <!-- <br> Prix : 
+                            <br> Prix : 
                             <strong v-if="product.price">
                                 <span v-if="product.price.max > product.price.min">{{product.price.min}}€ - {{product.price.max}}€</span>
                                 <span v-else>{{product.price.min}}€</span>
@@ -93,7 +108,7 @@
                                 <span v-for="(category, index) in product.categories" class="more-text">
                                     {{category}}<span v-if="index < (product.categories.length - 1)">,</span>
                                 </span>
-                            </span> -->
+                            </span>
                         </span>
                     </a>
 

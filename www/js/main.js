@@ -7,7 +7,6 @@ if (location.protocol != 'https:') {
     domain = '//localhost:3000';
 }
 
-
 if ($('#app-product').length > 0) {
     var productApp = new Vue({
         el: '#app-product',
@@ -64,7 +63,6 @@ if ($('#app-product').length > 0) {
 
 if ($('#app-search').length > 0) {
     var listFilters = ['name', 'location', 'theme'];
-    console.log('init appsearch');
     var appSearch = new Vue({
         el: '#app-search',
         data: {
@@ -80,13 +78,12 @@ if ($('#app-search').length > 0) {
             filterTheme: 'default',
             filterCategory: 'default',
             themes: [],
-            categories: []
+            categories: [],
+            maxprice: 0
         },
         methods: {
-            getProductsByName: function () {
+            getProductsByName: function (updateMaxPrice = true) {
                 this.loading = 1;
-
-                console.log(this.searchValue);
 
                 if (this.searchValue.length > 0 && this.filters.length > 0) {
                     if (this.ajax) {
@@ -101,12 +98,17 @@ if ($('#app-search').length > 0) {
                     var url = domain + '/api/products/search';
                     url += '?query=' + this.searchValue + '&filters=' + filters;
                     url +='&from=' + from + '&nbProducts=' + this.resultsPerPage;
+                    url +='&maxPrice=' + this.maxprice;
+
                     if (categories.length > 0) {
                         url +='&categories=' + categories;
                     }
+
                     if (themes.length > 0) {
                         url +='&theme=' + themes;
                     }
+
+                    console.log(url);
 
                     if (this.filters.length === listFilters.length) {
                         window.location.hash = this.searchValue;
@@ -115,10 +117,12 @@ if ($('#app-search').length > 0) {
                     }
 
                     this.ajax = $.get(url + token, (data) => {
-
                         if (data.products) {
                             this.nbResults = data.nb_results;
                             this.listresults = data;
+                            if (updateMaxPrice) {
+                                this.maxprice = data.prices.max;
+                            }
                         } else {
                             this.nbResults = 0;
                             this.listresults = [];
@@ -202,6 +206,9 @@ if ($('#app-search').length > 0) {
                 this.filterCategory = 'default';
 
                 this.getProductsByName();
+            },
+            changeMaxPrice: function() {
+                this.getProductsByName(false);
             }
         },
         watch: {
@@ -279,4 +286,19 @@ if ($('#app-search').length > 0) {
 
         return [hashes[0], filters];
     }
+
+
+    $(window).scroll(function(){
+        var $aside = $('.container-results aside');
+        var offset = $('.results').offset().top - 50;
+        
+        var scrollFromTop = $(document).scrollTop() - offset;
+        var distanceFromTop = $aside.offset().top - offset;
+
+        if (scrollFromTop >= 0) {
+            $aside.css('top', scrollFromTop);
+        } else {
+            $aside.css('top', 0);
+        }
+    });
 }
