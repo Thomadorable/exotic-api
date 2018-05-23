@@ -78,6 +78,7 @@ DONE
 - API google Map : boutique = trajet
 - refacto boutique html (séparation js)
 - filtrer selon le prix
+- compter le bon nombre de produit avec le filtre de prix
 
 
 
@@ -109,4 +110,3 @@ TODO :
 - pouvoir s'inscrire ?
 - retirer "let" dans le loading images
 - afficher [] quand 0 résult
-- compter le bon nombre de produit avec le filtre de prix

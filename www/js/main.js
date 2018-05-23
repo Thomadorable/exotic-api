@@ -208,6 +208,7 @@ if ($('#app-search').length > 0) {
                 this.getProductsByName();
             },
             changeMaxPrice: function() {
+                this.currentPage = 0;
                 this.getProductsByName(false);
             }
         },
@@ -224,7 +225,7 @@ if ($('#app-search').length > 0) {
                 $('html, body').animate({
                     scrollTop: 0
                 }, 500); // Go
-                this.getProductsByName();
+                this.getProductsByName(false);
             }
         },
         mounted: function () {

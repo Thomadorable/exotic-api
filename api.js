@@ -7,10 +7,14 @@ const http = require('http');
 const fs = require('fs');
 const conf = require('./conf.js');
 const crypto = require('crypto');
+const bodyParser = require("body-parser");
 
-console.log("#######################################################");
-console.log("Le serveur a bien été lancé sur le port 3000 (en HTTPS)");
-console.log("#######################################################");
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(bodyParser.json());
+
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -21,9 +25,14 @@ const con = mysql.createConnection({
 });
 
 function sendJSON(res, result) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    if (conf.isProd) {
+        res.setHeader("Access-Control-Allow-Origin", "https://exotique.design");
+    } else {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+    }
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Cache-Control', 'min-fresh=3600');
 
     if (!result) {
         result = [{
@@ -129,23 +138,22 @@ function getMoreDatas(where, callback) {
 }
 
 function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd, res, callback) {
-    let sql = "SELECT produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
-    sql += "theme.nom AS 'theme', ";
-    sql += "marque.nom AS 'marque', ";
-    sql += "GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'categories', ";
-    sql += "GROUP_CONCAT(DISTINCT photo.url SEPARATOR ';') as 'photos', ";
-    sql += "GROUP_CONCAT(DISTINCT localisation.prix SEPARATOR ';') as 'prices' ";
+    let select = "SELECT produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
+    select += "theme.nom AS 'theme', ";
+    select += "marque.nom AS 'marque', ";
+    select += "GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'categories', ";
+    select += "GROUP_CONCAT(DISTINCT photo.url SEPARATOR ';') as 'photos', ";
+    select += "GROUP_CONCAT(DISTINCT localisation.prix SEPARATOR ';') as 'prices' ";
     
-    sql += "FROM produit ";
-    sql += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
-    sql += "LEFT JOIN marque ON marque.id_marque = produit.id_marque ";
-    sql += "LEFT JOIN photo ON photo.id_produit = produit.id_produit ";
-    sql += "LEFT JOIN categorisation ON categorisation.id_produit = produit.id_produit ";
-    sql += "LEFT JOIN categorie ON categorie.id_categorie = categorisation.id_categorie ";
-    sql += "LEFT JOIN localisation ON localisation.id_produit = produit.id_produit ";
-    sql += "LEFT JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
-   
-    sql += "WHERE " + where + " ";
+    let from = "FROM produit ";
+    from += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
+    from += "LEFT JOIN marque ON marque.id_marque = produit.id_marque ";
+    from += "LEFT JOIN photo ON photo.id_produit = produit.id_produit ";
+    from += "LEFT JOIN categorisation ON categorisation.id_produit = produit.id_produit ";
+    from += "LEFT JOIN categorie ON categorie.id_categorie = categorisation.id_categorie ";
+    from += "LEFT JOIN localisation ON localisation.id_produit = produit.id_produit ";
+    from += "LEFT JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
+    from += "WHERE " + where + " ";
 
     let groupBy = "GROUP BY produit.id_produit ";
     groupBy += having;
@@ -153,12 +161,17 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
     
     let limit = "LIMIT " + limitBegin + ", " + limiteEnd + " ";
 
-    let sqlLimited = sql + whereLimited + groupBy + limit;
-    let sqlWithoutLimit = sql + groupBy;
-    
+    let sqlLimited = select + from + whereLimited + groupBy + limit;
+    let sqlWithoutLimit = select + from + groupBy;
+
+    let sqlCount = 'SELECT produit.id_produit ' + from + whereLimited + groupBy;
+
     console.log('#SQL : get products by');
     console.log(sqlLimited);
     console.log('-----------------');
+
+
+    let countResults = 'SELECT COUNT(id_produit) FROM produit'
 
     con.query(sqlLimited, function (err, products, fields) {
         if (err) throw err;
@@ -168,6 +181,12 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
             let minPrice = 0;
             let maxPrice = 0;
             let datas = {};
+
+
+            con.query(sqlCount, function (err, products, fields) {
+                datas.nb_results = products.length;
+            });
+            
 
             for (let index = 0; index < products.length; index++) {
                 let product = products[index];
@@ -189,7 +208,6 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
                     product.price.max = max;  
                 }
 
-                delete product.nb_results;
                 delete product.prices;
                 delete product.photos;
 
@@ -201,8 +219,6 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
                         // Get list of all products without pagination limit
                         con.query(sqlWithoutLimit, function (err, allProducts, fields) {
                             let listIDProduct = '0';
-
-                            datas.nb_results = allProducts.length;
 
                             if (allProducts && allProducts.length > 0) {
                                 listIDProduct = allProducts.map(y => y.id_produit);
@@ -278,12 +294,16 @@ function filterByCategories(categories) {
 
 
 // GENERATE TOKEN
-app.get('/token', function (req, res) {
-    let usermail = req.query.usermail;
-    let mdp = req.query.mdp;
+app.post('/api/token', function (req, res) {
+    console.log('TOKEN ??');
+
+    console.log(req.body);
+
+    let usermail = req.body.usermail;
+    let mdp = req.body.mdp;
     let forbidden = [{
         status: 403,
-        message: "Invalid mail or password."
+        message: "Invalid mail or password." + usermail + mdp
     }];
 
     if(typeof(usermail) !== 'undefined' && typeof(mdp) !== 'undefined') {
@@ -577,9 +597,16 @@ if (conf.isProd) {
         cert: fs.readFileSync('keys/domain.cert.pem')
     };
     
-    https.createServer(options, app).listen(3000);
-    // http.createServer(app).listen(3000);
+    https.createServer(options, app).listen(3000, function(){
+        console.log("#######################################################");
+        console.log("Le serveur a bien été lancé sur le port 3000 (en HTTPS)");
+        console.log("#######################################################");
+    });
 } else {
-    app.listen(3000);
+    app.listen(3000, function(){
+        console.log("#######################################################");
+        console.log("Le serveur a bien été lancé sur le port 3000 (en HTTPS)");
+        console.log("#######################################################");
+    });
 }
   
