@@ -38,7 +38,7 @@ function sendJSON(res, result) {
         result = [{
             status: 404
         }];
-    } else {
+    } else if (!result.status) {
         result.status = 202;
     }
 
@@ -293,12 +293,8 @@ function filterByCategories(categories) {
 }
 
 
-// GENERATE TOKEN
+// #ROUTE 1 : GENERATE TOKEN
 app.post('/api/token', function (req, res) {
-    console.log('TOKEN ??');
-
-    console.log(req.body);
-
     let usermail = req.body.usermail;
     let mdp = req.body.mdp;
     let forbidden = [{
@@ -356,13 +352,39 @@ app.post('/api/token', function (req, res) {
     }
 });
 
+// #ROUTE 1 : GENERATE TOKEN
+app.get('/api/products', function (req, res) {
+    sendJSON(res, {
+        routes: {
+            "get" : {
+                2: "/api/products/search",
+                3: "/api/products/popular",
+            }
+        },
+        status: 404
+    })
+});
+
 
 // ALL OTHER ROUTES
 app.use(function (req, res, next) {
     let token = req.query.token;
     let forbidden = [{
         status: 403,
-        message: "You need a valid token."
+        message: "You need a valid token.",
+        routes: {
+            "post" : {
+                1: "/api/token",
+            },
+            "get" : {
+                2: "/api/products/search",
+                3: "/api/products/popular",
+                4: "/api/product",
+                5: "/api/product/shop",
+                6: "/api/shop",
+                7: "/api/shop/near"
+            }
+        }
     }];
 
     if (typeof (token) !== 'undefined') {
@@ -388,7 +410,7 @@ app.use(function (req, res, next) {
     console.log('Visite du serveur sur : ', req.url);
 });
 
-// ROUTE #1 SEARCH BY ALL
+// ROUTE #2 : SEARCH BY ALL
 app.get('/api/products/search', function (req, res) {
     let filters = req.query.filters;
     let begin = req.query.from;
@@ -461,7 +483,12 @@ app.get('/api/products/search', function (req, res) {
     }
 });
 
-// ROUTE #2 GET PRODUCT BY ID
+// ROUTE #3 : POPULAR PRODUCTS
+app.get('/api/products/popular', function (req, res) {
+    getFullProductInfos('produit.nb_visites > 0', '', '', 0, 9, res);
+});
+
+// ROUTE #4 GET PRODUCT BY ID
 app.get('/api/product', function (req, res) {
     let idProduct = req.query.id;
 
@@ -482,7 +509,7 @@ app.get('/api/product', function (req, res) {
     }
 })
 
-// GET PRODUCT SHOPS, ORDER BY LOCATION
+// ROUTE #5 : GET PRODUCT SHOPS, ORDER BY LOCATION
 app.get('/api/product/shop', function (req, res) {
     let lat = req.query.lat;
     let lng = req.query.lng;
@@ -509,13 +536,7 @@ app.get('/api/product/shop', function (req, res) {
     }
 });
 
-
-// POPULAR PRODUCTS
-app.get('/api/products/popular', function (req, res) {
-    getFullProductInfos('produit.nb_visites > 0', '', '', 0, 9, res);
-});
-
-// SHOP INFOS
+// ROUTE #6 : SHOP INFOS
 app.get('/api/shop', function (req, res) {
     let idBoutique = req.query.id;
 
@@ -553,7 +574,7 @@ app.get('/api/shop', function (req, res) {
     }
 });
 
-// FIND SHOP BY LOCATION
+// ROUTE #7 : FIND SHOP BY LOCATION
 app.get('/api/shop/near', function (req, res) {
     let lat = req.query.lat;
     let lng = req.query.lng;
@@ -573,15 +594,6 @@ app.get('/api/shop/near', function (req, res) {
     } else {
         sendJSON(res);
     }
-});
-
-// FIND SHOP BY LOCATION
-app.get('/test', function (req, res) {
-    sql = 'SELECT * FROM boutique';
-    con.query(sql, function (err, results) {
-        if (err) throw err;
-        sendJSON(res, results);
-    });
 });
 
 app.use(function (req, res, next) {

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rechercher une boutique</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <style>
+        h4 {
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+
+        li {
+            margin: 0;
+            margin-left: 20px;
+        }
+
+        a {
+            text-decoration: underline;
+            color: black;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        article {
+            margin-bottom: 40px;
+        }
+
+        h4, ul {
+            margin-left: 30px;
+        }
+
+        p + p {
+            margin-top: -10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Liste des routes</h1>
+    <h2> Lien d’accès à l’api : <a href="https://81.57.199.69:3000/">https://81.57.199.69:3000/</a></h2>
+
+    <article>
+        <h3>Route #1</h3>
+
+        <p>POST <strong>/api/token</strong></p>
+        <p>Génère un token pour l'utilisateur</p>
+        
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>usermail : mail de l'utilisateur</li>
+            <li>mdp : mot de passe de l'utilisateur</li>
+        </ul>
+        
+    
+        <h4>Retourne : (ex : /api/token?usermail=thomas.deroua@hotmail.com&mdp=piscine)</h4>
+        <ul>
+            <li>token : token unique généré pour l'utilisateur</li>
+            <li>status : 202</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Route #2</h3>
+
+        <p>GET <strong>/api/products/search</strong></p>
+        <p>Retourne la liste des produits recherchés selon plusieurs filtres</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>query : texte recherché</li>
+            <li>filters : liste des filtres activés (séparés par une virgule sans espace) : theme,name,location</li>
+            <li>begin X : début de la limite (LIMIT X, N)</li>
+            <li>nbProducts N : fin de la limite (LIMIT X, N)</li>
+            <li>categories : liste des catégories activées (séparés par une virgule sans espace) : boisson,fruit,légume</li>
+            <li>theme : 1 thème actif (ex: Asiatique)</li>
+            <li>maxPrice : prix max recherché</li>
+            <li>token : token obligatoire</li>
+        </ul>
+        
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/products/search?query=asi&filters=name,location,theme&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>nb_results : nombre de correspondance (sans la limite pagination)</li>
+            <li>[products] : liste de produits détaillés</li>
+            <li>all_categories : toutes les catégories des produits correspondants (sans la limite pagination)</li>
+            <li>all_themes : tous les thèmes des produits correspondants (sans la limite pagination)</li>
+            <li>all_prices : tous les prix des produits correspondants (sans la limite pagination)</li>
+            <li>prices : contient le prix maximum et le prix minimum (sans la limite pagination)</li>
+            <li>status : 202 | 404 | 403</li>
+        </ul>
+    </article>
+    
+    
+    <article>
+        <h3>Route #3</h3>
+
+        <p>GET <strong>/api/products/popular</strong></p>
+        <p>Récupère les 9 produits les plus visités</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>token : token obligatoire</li>
+        </ul>
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/products/popular?token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>nb_results : nombre de correspondance (sans la limite pagination)</li>
+            <li>[products] : liste de produits détaillés</li>
+            <li>all_categories : toutes les catégories des produits correspondants (sans la limite pagination)</li>
+            <li>all_themes : tous les thèmes des produits correspondants (sans la limite pagination)</li>
+            <li>all_prices : tous les prix des produits correspondants (sans la limite pagination)</li>
+            <li>prices : contient le prix maximum et le prix minimum (sans la limite pagination)</li>
+            <li>status : 202 | 404 | 403</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Route #4</h3>
+
+        <p>GET <strong>/api/product</strong></p>
+        <p>Récupère les infos du produit</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>id : id produit</li>
+            <li>token : token obligatoire</li>
+        </ul>
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/product?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>nb_results : 1</li>
+            <li>products : list du produit détaillé</li>
+            <li>all_categories : toutes les catégories des produits correspondants (sans la limite pagination)</li>
+            <li>all_themes : tous les thèmes des produits correspondants (sans la limite pagination)</li>
+            <li>all_prices : tous les prix des produits correspondants (sans la limite pagination)</li>
+            <li>prices : contient le prix maximum et le prix minimum (sans la limite pagination)</li>
+            <li>status : 202 | 404 | 403</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Route #5</h3>
+
+        <p>GET <strong>/api/product/shop</strong></p>
+        <p>Récupère les boutiques liés à un produit</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>idProduct : id produit</li>
+            <li>lat : position lat</li>
+            <li>lng : position lng</li>
+            <li>token : token obligatoire</li>
+        </ul>
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/product/shop?lat=48.8077711&lng=2.3673933&idProduct=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>[Liste de boutiques détaillées] :</li>
+            <li>- id_boutique</li>
+            <li>- nom</li>
+            <li>- lieu : adresse boutique</li>
+            <li>- lat : lat de la boutique</li>
+            <li>- lng : lng de la boutique</li>
+            <li>- distance : (lat boutique - position lat) + (lng boutique + position lng)</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Route #6</h3>
+
+        <p>GET <strong>/api/shop</strong></p>
+        <p>Récupère les infos de la boutique</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>id : id boutique</li>
+            <li>token : token obligatoire</li>
+        </ul>
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/shop?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>id_boutique</li>
+            <li>nom</li>
+            <li>lieu : adresse boutique</li>
+            <li>lat : lat de la boutique</li>
+            <li>lng : lng de la boutique</li>
+            <li>[products] : liste de produits détaillés</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Route #7</h3>
+
+        <p>GET <strong>/api/shop/near</strong></p>
+        <p>Récupère les 9 boutiques les plus proches</p>
+    
+        <h4>Params :</h4>
+        <ul>
+            <li>id : id boutique</li>
+            <li>lat : position lat</li>
+            <li>lng : position lng</li>
+            <li>limit X : début de la limite (LIMIT X, 8)</li>
+            <li>token : token obligatoire</li>
+        </ul>
+    
+        <h4>Retourne : <a href="http://localhost:3000/api/shop/near?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <ul>
+            <li>[Liste de boutiques détaillées] :</li>
+            <li>- id_boutique</li>
+            <li>- nom</li>
+            <li>- lieu : adresse boutique</li>
+            <li>- lat : lat de la boutique</li>
+            <li>- lng : lng de la boutique</li>
+            <li>- distance : (lat boutique - position lat) + (lng boutique + position lng)</li>
+        </ul>
+    </article>
+        
+        
+</body>
+
+</html>
