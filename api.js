@@ -122,8 +122,6 @@ function splitResult(result) {
 
 function getMoreDatas(where, callback) {
     let sql = "SELECT GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'all_categories', ";
-    // sql += "MAX(localisation.prix) as 'max_price', "
-    // sql += "MIN(localisation.prix) as 'min_price', "
     sql += "GROUP_CONCAT(DISTINCT theme.nom SEPARATOR ';') as 'all_themes', "
     sql += "GROUP_CONCAT(DISTINCT localisation.prix SEPARATOR ';') as 'all_prices' "
     sql += "FROM produit ";
@@ -334,7 +332,7 @@ app.post('/api/token', function (req, res) {
                         });
                     } else { // Sinon on lui créé
                         let insertSQL = "INSERT INTO token SET token = '" + token + "', id_proprietaire = " + userID;
-                        insertSQL += ", debut = NOW(), fin = DATE_ADD(NOW(), INTERVAL 10 DAY) , nb_appel = 0";
+                        insertSQL += ", debut = NOW(), fin = DATE_ADD(NOW(), INTERVAL 10 MINUTE) , nb_appel = 0";
         
                         con.query(insertSQL, function (err, result) {
                             if (err) throw err;
@@ -395,21 +393,44 @@ app.use(function (req, res, next) {
         }
     }];
 
+    let maxCall = [{
+        status: 404,
+        message: "Vous avez dépassé la limite d'appels.",
+    }];
+
     if (typeof (token) !== 'undefined') {
         token = jsStringEscape(token);
 
-        const sql = "UPDATE token SET nb_appel = nb_appel + 1 WHERE token = '" + token + "' ";
+        // SET nb_appel = nb_appel + 1
+        const sql = "SELECT * FROM token WHERE token = '" + token + "' ";
         con.query(sql, function (err, result) {
             if (err) throw err;
 
-            if (result.changedRows > 0) {
-                next();
+            if(result.length > 0) {
+                let myToken = result[0];
+                let end = myToken.fin;
+
+                let sqlUpdate = "UPDATE token SET nb_appel = nb_appel + 1 ";
+                let sqlWhere = "WHERE id_token = " + myToken.id_token ;
+
+                if (myToken.nb_appel >= 100 && new Date() <= end) {
+                    sendJSON(res, maxCall);
+                } else {
+                    if (new Date() > end) {
+                        sqlUpdate = "UPDATE token SET nb_appel = 0, fin = DATE_ADD(NOW(), INTERVAL 1 MINUTE) ";
+                    } 
+
+                    sqlUpdate += sqlWhere;
+
+                    con.query(sqlUpdate, function(err, result){
+                        if (err) throw err;
+                        next();
+                    });
+                }
             } else {
                 sendJSON(res, forbidden);
             }
         });
-
-        // next();
     } else {
         sendJSON(res, forbidden);
     }
