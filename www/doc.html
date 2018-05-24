@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Rechercher une boutique</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/map.css">
     <link rel="icon" type="image/png" href="favicon.png" />
 
     <style>
@@ -25,7 +25,7 @@
 
         a {
             text-decoration: underline;
-            color: black;
+            color: blue;
         }
 
         a:hover {
@@ -33,7 +33,9 @@
         }
 
         article {
-            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 5px;
+            padding-top: 40px;
         }
 
         h4, ul {
@@ -44,6 +46,10 @@
             margin-top: -10px;
             font-style: italic;
         }
+
+        article:target {
+            background: white;
+        }
     </style>
 </head>
 
@@ -52,7 +58,17 @@
     <h1>Liste des routes</h1>
     <h2> Lien d’accès à l’api : <a href="https://81.57.199.69:3000/">https://81.57.199.69:3000/</a></h2>
 
-    <article>
+    <ul>
+        <li><a href="#route1">ROUTE #1</a> : Token</li>
+        <li><a href="#route2">ROUTE #2</a> : Recherche produits</li>
+        <li><a href="#route3">ROUTE #3</a> : Produits populaires</li>
+        <li><a href="#route4">ROUTE #4</a> : Infos du produit</li>
+        <li><a href="#route5">ROUTE #5</a> : Boutiques liés au produit</li>
+        <li><a href="#route6">ROUTE #6</a> : Infos de la boutique</li>
+        <li><a href="#route7">ROUTE #7</a> : Boutiques à proximité</li>
+    </ul>
+
+    <article id="route1">
         <h3>Route #1</h3>
 
         <p>POST <strong>/api/token</strong></p>
@@ -66,14 +82,14 @@
         </ul>
         
     
-        <h4>Retourne : (ex : /api/token?usermail=thomas.deroua@hotmail.com&mdp=piscine)</h4>
+        <h4>Retourne : (ex : /api/token?usermail=thomas.deroua@hotmail.com&amp;mdp=piscine)</h4>
         <ul>
             <li>token : token unique généré pour l'utilisateur</li>
             <li>status : 202</li>
         </ul>
     </article>
 
-    <article>
+    <article id="route2">
         <h3>Route #2</h3>
 
         <p>GET <strong>/api/products/search</strong></p>
@@ -92,7 +108,7 @@
         </ul>
         
     
-        <h4>Retourne : <a href="http://localhost:3000/api/products/search?query=asi&filters=name,location,theme&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <h4>Retourne : <a href="http://localhost:3000/api/products/search?query=asi&amp;filters=name,location,theme&amp;token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
         <ul>
             <li>nb_results : nombre de correspondance (sans la limite pagination)</li>
             <li>[products] : liste de produits détaillés</li>
@@ -105,7 +121,7 @@
     </article>
     
     
-    <article>
+    <article id="route3">
         <h3>Route #3</h3>
 
         <p>GET <strong>/api/products/popular</strong></p>
@@ -128,7 +144,7 @@
         </ul>
     </article>
 
-    <article>
+    <article id="route4">
         <h3>Route #4</h3>
 
         <p>GET <strong>/api/product</strong></p>
@@ -140,7 +156,7 @@
             <li>token : token obligatoire</li>
         </ul>
     
-        <h4>Retourne : <a href="http://localhost:3000/api/product?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <h4>Retourne : <a href="http://localhost:3000/api/product?id=2&amp;token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
         <ul>
             <li>nb_results : 1</li>
             <li>products : list du produit détaillé</li>
@@ -152,7 +168,7 @@
         </ul>
     </article>
 
-    <article>
+    <article id="route5">
         <h3>Route #5</h3>
 
         <p>GET <strong>/api/product/shop</strong></p>
@@ -166,7 +182,7 @@
             <li>token : token obligatoire</li>
         </ul>
     
-        <h4>Retourne : <a href="http://localhost:3000/api/product/shop?lat=48.8077711&lng=2.3673933&idProduct=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <h4>Retourne : <a href="http://localhost:3000/api/product/shop?lat=48.8077711&amp;lng=2.3673933&amp;idProduct=2&amp;token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
         <ul>
             <li>[Liste de boutiques détaillées] :</li>
             <li>- id_boutique</li>
@@ -178,7 +194,7 @@
         </ul>
     </article>
 
-    <article>
+    <article id="route6">
         <h3>Route #6</h3>
 
         <p>GET <strong>/api/shop</strong></p>
@@ -190,7 +206,7 @@
             <li>token : token obligatoire</li>
         </ul>
     
-        <h4>Retourne : <a href="http://localhost:3000/api/shop?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <h4>Retourne : <a href="http://localhost:3000/api/shop?id=2&amp;token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
         <ul>
             <li>id_boutique</li>
             <li>nom</li>
@@ -201,7 +217,7 @@
         </ul>
     </article>
 
-    <article>
+    <article id="route7">
         <h3>Route #7</h3>
 
         <p>GET <strong>/api/shop/near</strong></p>
@@ -216,7 +232,7 @@
             <li>token : token obligatoire</li>
         </ul>
     
-        <h4>Retourne : <a href="http://localhost:3000/api/shop/near?id=2&token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb">Url test</a></h4>
+        <h4>Retourne : <a href="http://localhost:3000/api/shop/near?id=2&amp;token=d557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb&amp;lat=20&amp;lng=20&amp;limit=5">Url test</a></h4>
         <ul>
             <li>[Liste de boutiques détaillées] :</li>
             <li>- id_boutique</li>

@@ -8,6 +8,11 @@ const fs = require('fs');
 const conf = require('./conf.js');
 const crypto = require('crypto');
 const bodyParser = require("body-parser");
+const path = require('path');
+
+app.use(express.static('www'));
+
+
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -352,7 +357,10 @@ app.post('/api/token', function (req, res) {
     }
 });
 
-// #ROUTE 1 : GENERATE TOKEN
+app.get('/api', function (req, res) {
+    res.sendFile(path.join(__dirname + '/www/doc.html'));
+});
+
 app.get('/api/products', function (req, res) {
     sendJSON(res, {
         routes: {
