@@ -5,7 +5,7 @@ const app = express();
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const conf = require('./conf.js');
+const conf = require('./assets.js');
 const crypto = require('crypto');
 const bodyParser = require("body-parser");
 const path = require('path');
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Get credentials from conf.js (prod / dev instance)
+// Get credentials from assets.js (prod / dev instance)
 const con = mysql.createConnection({
     host: "localhost",
     user: conf.user,
