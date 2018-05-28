@@ -431,7 +431,7 @@ app.use(function (req, res, next) {
                 let sqlUpdate = "UPDATE token SET nb_appel = nb_appel + 1 ";
                 let sqlWhere = "WHERE id_token = " + myToken.id_token ;
 
-                if (myToken.nb_appel >= 100 && new Date() <= end) {
+                if (myToken.nb_appel >= 50 && new Date() <= end) {
                     sendJSON(res, maxCall);
                 } else {
                     if (new Date() > end) {
