@@ -473,4 +473,8 @@ iframe {
     .pagination-btn.next {
         right: 0;
     }
+
+    .search-input-icon {
+        width: auto;
+    }
 }

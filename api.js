@@ -355,6 +355,10 @@ app.post('/api/token', function (req, res) {
     }
 });
 
+app.get('/', function (req, res, next) {
+    res.sendFile(path.join(__dirname + '/www/doc.html'));
+});
+
 app.get('/api', function (req, res) {
     res.sendFile(path.join(__dirname + '/www/doc.html'));
 });

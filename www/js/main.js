@@ -1,8 +1,9 @@
-var domain = 'https://81.57.199.69:3000';
+var domain = 'https://api.exotique.design:3000';
 const iToken = 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb';
 const token = '&token=' + iToken;
 
 if (location.protocol != 'https:') {
+    // TODO : décommenter + supprimer la ligne en dessous
     // location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
     domain = '//localhost:3000';
 }
