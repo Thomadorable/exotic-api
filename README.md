@@ -1,7 +1,10 @@
 # exotic-api
 
 - $ npm install
-- créer la base de données 
-- insérer les identifiants bdd (objet localConfif) dans /conf.js (isProd = false)
-- insérer les dernières donnés depuis le dossier /dump dans la base
-- $ node api.js à la racine
+- create database
+- write bdd credentials (in localConfif object) from /conf.js (isProd = false)
+- insert last datas from /dump/xx-xx-xx.sql
+- $ node api.js
+
+DOC API URL : https://api.exotique.design:3000/ 
+FRONT example : https://exotique.design
