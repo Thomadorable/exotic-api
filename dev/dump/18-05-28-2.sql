@@ -1,22 +1,20 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
+-- version 4.2.12deb2+deb8u2
+-- http://www.phpmyadmin.net
 --
--- Hôte : 127.0.0.1:3306
--- Généré le :  Dim 27 mai 2018 à 23:21
--- Version du serveur :  5.7.19
--- Version de PHP :  7.0.23
+-- Client :  localhost
+-- Généré le :  Lun 28 Mai 2018 à 07:28
+-- Version du serveur :  5.5.59-0+deb8u1
+-- Version de PHP :  5.6.33-0+deb8u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de données :  `exotic`
@@ -28,22 +26,18 @@ SET time_zone = "+00:00";
 -- Structure de la table `boutique`
 --
 
-DROP TABLE IF EXISTS `boutique`;
 CREATE TABLE IF NOT EXISTS `boutique` (
-  `id_boutique` int(11) NOT NULL AUTO_INCREMENT,
+`id_boutique` int(11) NOT NULL,
   `nom` varchar(255) NOT NULL,
   `lieu` text NOT NULL,
   `id_proprietaire` int(11) NOT NULL,
   `lat` float NOT NULL,
   `lng` float NOT NULL,
-  `nb_visites` int(11) NOT NULL,
-  PRIMARY KEY (`id_boutique`),
-  KEY `id_proprietaire` (`id_proprietaire`),
-  KEY `id_proprietaire_2` (`id_proprietaire`)
+  `nb_visites` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `boutique`
+-- Contenu de la table `boutique`
 --
 
 INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, `lng`, `nb_visites`) VALUES
@@ -68,7 +62,7 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (19, 'Stamm-Kessler', '3 La Follette Avenue', 76, 48.8348, 2.3708, 0),
 (20, 'McCullough-Wisoky', '19368 Pearson Circle', 64, 48.8354, 2.4196, 0),
 (21, 'Wyman Inc', '92 Golf Course Crossing', 17, 48.8627, 2.3341, 0),
-(22, 'Runte, Boyer and Lakin', '6 Ilene Trail', 65, 48.8165, 2.3681, 7),
+(22, 'Runte, Boyer and Lakin', '6 Ilene Trail', 65, 48.8165, 2.3681, 8),
 (23, 'Berge, Schamberger and Leuschke', '691 Washington Road', 73, 48.853, 2.3748, 0),
 (24, 'Anderson, Blick and Kuphal', '2320 Sauthoff Terrace', 25, 48.8657, 2.299, 0),
 (25, 'Shanahan Group', '3123 Haas Place', 1, 48.83, 2.4063, 0),
@@ -98,10 +92,10 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (49, 'Pfeffer and Sons', '642 Roth Road', 7, 48.8444, 2.3418, 0),
 (50, 'Auer, Bailey and Satterfield', '0 Kennedy Lane', 56, 48.8647, 2.3889, 0),
 (51, 'Feeney-Bradtke', '13909 Killdeer Road', 72, 48.9086, 2.3731, 1),
-(52, 'Spencer-O\'Keefe', '2142 Clemons Terrace', 5, 48.8355, 2.4285, 0),
+(52, 'Spencer-O''Keefe', '2142 Clemons Terrace', 5, 48.8355, 2.4285, 0),
 (53, 'Ledner and Sons', '65 Rieder Crossing', 86, 48.8767, 2.2794, 0),
 (54, 'Lakin-Bradtke', '64124 Victoria Alley', 57, 48.8647, 2.3275, 0),
-(55, 'Emmerich-Littel', '27458 Oakridge Drive', 26, 48.8737, 2.377, 4),
+(55, 'Emmerich-Littel', '27458 Oakridge Drive', 26, 48.8737, 2.377, 5),
 (56, 'Adams-Price', '1368 Milwaukee Crossing', 78, 48.8491, 2.4267, 0),
 (57, 'McCullough-Cronin', '39394 Myrtle Parkway', 30, 48.8433, 2.3435, 0),
 (58, 'Hermann Group', '01129 Declaration Crossing', 9, 48.8324, 2.428, 0),
@@ -113,7 +107,7 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 (64, 'Glover-Rutherford', '886 Division Road', 28, 48.8481, 2.2911, 0),
 (65, 'Hodkiewicz, Kris and Watsica', '6141 Toban Alley', 87, 48.8208, 2.3409, 0),
 (66, 'Senger Group', '55291 Cardinal Hill', 11, 48.8417, 2.4241, 0),
-(67, 'Brown, O\'Kon and Witting', '1209 Mayfield Terrace', 22, 48.8698, 2.2874, 0),
+(67, 'Brown, O''Kon and Witting', '1209 Mayfield Terrace', 22, 48.8698, 2.2874, 0),
 (68, 'Willms-Larkin', '89 Paget Crossing', 85, 48.8679, 2.3731, 0),
 (69, 'Barton, Crona and Johns', '59146 Pierstorff Alley', 57, 48.8413, 2.3027, 0),
 (70, 'Jaskolski-Lynch', '0818 Manitowish Junction', 26, 48.8187, 2.4265, 0),
@@ -154,15 +148,13 @@ INSERT INTO `boutique` (`id_boutique`, `nom`, `lieu`, `id_proprietaire`, `lat`, 
 -- Structure de la table `categorie`
 --
 
-DROP TABLE IF EXISTS `categorie`;
 CREATE TABLE IF NOT EXISTS `categorie` (
-  `id_categorie` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_categorie`)
+`id_categorie` int(11) NOT NULL,
+  `nom` varchar(255) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `categorie`
+-- Contenu de la table `categorie`
 --
 
 INSERT INTO `categorie` (`id_categorie`, `nom`) VALUES
@@ -176,18 +168,14 @@ INSERT INTO `categorie` (`id_categorie`, `nom`) VALUES
 -- Structure de la table `categorisation`
 --
 
-DROP TABLE IF EXISTS `categorisation`;
 CREATE TABLE IF NOT EXISTS `categorisation` (
-  `id_categorisation` int(11) NOT NULL AUTO_INCREMENT,
+`id_categorisation` int(11) NOT NULL,
   `id_categorie` int(11) NOT NULL,
-  `id_produit` int(11) NOT NULL,
-  PRIMARY KEY (`id_categorisation`),
-  KEY `id_categorie` (`id_categorie`),
-  KEY `id_produit` (`id_produit`)
+  `id_produit` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `categorisation`
+-- Contenu de la table `categorisation`
 --
 
 INSERT INTO `categorisation` (`id_categorisation`, `id_categorie`, `id_produit`) VALUES
@@ -307,20 +295,16 @@ INSERT INTO `categorisation` (`id_categorisation`, `id_categorie`, `id_produit`)
 -- Structure de la table `localisation`
 --
 
-DROP TABLE IF EXISTS `localisation`;
 CREATE TABLE IF NOT EXISTS `localisation` (
-  `id_localisation` int(11) NOT NULL AUTO_INCREMENT,
+`id_localisation` int(11) NOT NULL,
   `id_produit` int(11) NOT NULL,
   `id_boutique` int(11) NOT NULL,
   `prix` varchar(255) NOT NULL,
-  `stock` int(11) NOT NULL,
-  PRIMARY KEY (`id_localisation`),
-  KEY `id_produit` (`id_produit`),
-  KEY `id_boutique` (`id_boutique`)
+  `stock` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `localisation`
+-- Contenu de la table `localisation`
 --
 
 INSERT INTO `localisation` (`id_localisation`, `id_produit`, `id_boutique`, `prix`, `stock`) VALUES
@@ -441,15 +425,13 @@ INSERT INTO `localisation` (`id_localisation`, `id_produit`, `id_boutique`, `pri
 -- Structure de la table `marque`
 --
 
-DROP TABLE IF EXISTS `marque`;
 CREATE TABLE IF NOT EXISTS `marque` (
-  `id_marque` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_marque`)
+`id_marque` int(11) NOT NULL,
+  `nom` varchar(255) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `marque`
+-- Contenu de la table `marque`
 --
 
 INSERT INTO `marque` (`id_marque`, `nom`) VALUES
@@ -462,7 +444,7 @@ INSERT INTO `marque` (`id_marque`, `nom`) VALUES
 (6, 'Foco'),
 (7, 'Pimento'),
 (8, 'Siya'),
-(9, 'L\'ordiaire'),
+(9, 'L''ordiaire'),
 (10, 'Solo'),
 (11, 'Vitamalt'),
 (12, 'Panchy'),
@@ -476,17 +458,14 @@ INSERT INTO `marque` (`id_marque`, `nom`) VALUES
 -- Structure de la table `photo`
 --
 
-DROP TABLE IF EXISTS `photo`;
 CREATE TABLE IF NOT EXISTS `photo` (
-  `id_photo` int(11) NOT NULL AUTO_INCREMENT,
+`id_photo` int(11) NOT NULL,
   `url` text NOT NULL,
-  `id_produit` int(11) NOT NULL,
-  PRIMARY KEY (`id_photo`),
-  KEY `id_produit` (`id_produit`)
+  `id_produit` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `photo`
+-- Contenu de la table `photo`
 --
 
 INSERT INTO `photo` (`id_photo`, `url`, `id_produit`) VALUES
@@ -643,31 +622,27 @@ INSERT INTO `photo` (`id_photo`, `url`, `id_produit`) VALUES
 -- Structure de la table `produit`
 --
 
-DROP TABLE IF EXISTS `produit`;
 CREATE TABLE IF NOT EXISTS `produit` (
-  `id_produit` int(11) NOT NULL AUTO_INCREMENT,
+`id_produit` int(11) NOT NULL,
   `nom` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `code_barre` varchar(255) NOT NULL,
   `id_theme` int(11) NOT NULL,
   `id_marque` int(11) NOT NULL,
-  `nb_visites` int(11) NOT NULL,
-  PRIMARY KEY (`id_produit`),
-  KEY `id_theme` (`id_theme`),
-  KEY `id_marque` (`id_marque`)
+  `nb_visites` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `produit`
+-- Contenu de la table `produit`
 --
 
 INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_theme`, `id_marque`, `nb_visites`) VALUES
-(1, 'Igname', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus. Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '8474989205', 10, 0, 40),
-(2, 'Mangue asiatique', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '123456789', 1, 0, 315),
+(1, 'Igname', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus. Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '8474989205', 10, 0, 42),
+(2, 'Mangue asiatique', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '123456789', 1, 0, 317),
 (3, 'Manioc', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.\r\n\r\nVestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.', '5275610009', 22, 0, 13),
 (4, 'Quenette', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '8502808761', 4, 0, 18),
 (5, 'Salacca (fruit à peau de serpent)', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\r\n\r\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '5630882198', 25, 0, 13),
-(6, 'La baie d\'argousier', 'Fusce consequat. Nulla nisl. Nunc nisl.\r\n\r\nDuis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', '3938444177', 6, 0, 28),
+(6, 'La baie d''argousier', 'Fusce consequat. Nulla nisl. Nunc nisl.\r\n\r\nDuis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', '3938444177', 6, 0, 28),
 (7, 'Kiwano', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.\r\n\r\nMaecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '2809068615', 35, 0, 7),
 (8, 'Akée', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.\n\nDonec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '9818078829', 35, 0, 5),
 (9, 'Mangoustan', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.\r\n\r\nQuisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '1659335310', 35, 0, 5),
@@ -685,13 +660,13 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 (21, 'Fruit de la passion', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.\r\n\r\nPhasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', '1397134100', 22, 0, 14),
 (22, 'Fruit du jacquier', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.\r\n\r\nVestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.\r\n\r\nDuis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', '2832389597', 22, 0, 5),
 (23, 'Kaki', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.\r\n\r\nFusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '1604411589', 24, 0, 7),
-(24, 'Kiwi', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '4093614180', 24, 0, 10),
-(25, 'Kumquat', 'In congue. Etiam justo. Etiam pretium iaculis justo.\r\n\r\nIn hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.\r\n\r\nNulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', '7000925973', 24, 0, 9),
+(24, 'Kiwi', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '4093614180', 24, 0, 11),
+(25, 'Kumquat', 'In congue. Etiam justo. Etiam pretium iaculis justo.\r\n\r\nIn hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.\r\n\r\nNulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', '7000925973', 24, 0, 10),
 (26, 'Longane (œil du dragon)', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.\r\n\r\nPhasellus in felis. Donec semper sapien a libero. Nam dui.\r\n\r\nProin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '9379910851', 24, 0, 6),
 (27, 'Bibasse (nèfle du japon)', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', '0200102133', 29, 0, 6),
 (28, 'Pomme de cajou', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.\r\n\r\nCurabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.\r\n\r\nInteger tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', '0784826765', 22, 0, 6),
 (29, 'Pitaya (fruit du dragon)', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '6048894341', 104, 0, 10),
-(30, 'Ramboutan (litchi chevelu)', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '6940275649', 1, 0, 5),
+(30, 'Ramboutan (litchi chevelu)', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '6940275649', 1, 0, 6),
 (31, 'Litchi', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', '3986226338', 1, 0, 9),
 (32, 'Tamarillo', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '8602927541', 104, 0, 3),
 (33, 'Tamarin', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\r\n\r\nPraesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', '6368089636', 2, 0, 6),
@@ -725,7 +700,7 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 (61, 'Jus de coco Foco', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.\r\n\r\nIn quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', '9288951946', 35, 6, 6),
 (62, 'Pimento Gingembre', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\r\n\r\nEtiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', '1291243666', 35, 7, 4),
 (63, 'Siya', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', '9803685147', 27, 8, 4),
-(64, 'L\'ordinaire original', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.\r\n\r\nMaecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '5888149470', 102, 9, 5),
+(64, 'L''ordinaire original', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.\r\n\r\nMaecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', '5888149470', 102, 9, 5),
 (65, 'Kola Champion original', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.\r\n\r\nMorbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.\r\n\r\nFusce consequat. Nulla nisl. Nunc nisl.', '4131504499', 102, 10, 3),
 (66, 'Vitamalt', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '2611039402', 35, 11, 5),
 (67, 'Panchy', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\r\n\r\nEtiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\r\n\r\nPraesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', '5804691384', 1, 12, 5),
@@ -777,17 +752,15 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `code_barre`, `id_the
 -- Structure de la table `proprietaire`
 --
 
-DROP TABLE IF EXISTS `proprietaire`;
 CREATE TABLE IF NOT EXISTS `proprietaire` (
-  `id_proprietaire` int(11) NOT NULL AUTO_INCREMENT,
+`id_proprietaire` int(11) NOT NULL,
   `nom` varchar(255) NOT NULL,
   `mail` varchar(255) NOT NULL,
-  `mdp` text NOT NULL,
-  PRIMARY KEY (`id_proprietaire`)
+  `mdp` text NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `proprietaire`
+-- Contenu de la table `proprietaire`
 --
 
 INSERT INTO `proprietaire` (`id_proprietaire`, `nom`, `mail`, `mdp`) VALUES
@@ -859,7 +832,7 @@ INSERT INTO `proprietaire` (`id_proprietaire`, `nom`, `mail`, `mdp`) VALUES
 (66, 'Vanni Blare', 'vblare1t@free.fr', '98xUW8AL'),
 (67, 'Nicky Bosden', 'nbosden1u@skyrock.com', 'jp4rlXyRuD'),
 (68, 'Antonietta Walsh', 'awalsh1v@omniture.com', 'WrszBx50W'),
-(69, 'Robbie O\'Scollain', 'roscollain1w@sfgate.com', 'PngOUxMKFa'),
+(69, 'Robbie O''Scollain', 'roscollain1w@sfgate.com', 'PngOUxMKFa'),
 (70, 'Aurlie Shurman', 'ashurman1x@parallels.com', 'lbcLrJVVfB2'),
 (71, 'Consalve Jephcote', 'cjephcote1y@pcworld.com', 'Id8Av00d'),
 (72, 'Cami Stocker', 'cstocker1z@usa.gov', '1TEn1crkqA'),
@@ -885,7 +858,7 @@ INSERT INTO `proprietaire` (`id_proprietaire`, `nom`, `mail`, `mdp`) VALUES
 (92, 'Sula Acome', 'sacome2j@ameblo.jp', 'l5Vck1NR'),
 (93, 'Gwyn Sanham', 'gsanham2k@globo.com', 'XxLShZLv3Jmj'),
 (94, 'Hilarius Fosdick', 'hfosdick2l@ow.ly', 'XUh4gjq8uSfk'),
-(95, 'Mischa L\' Anglois', 'ml2m@opera.com', 'Wds64kMjG8g'),
+(95, 'Mischa L'' Anglois', 'ml2m@opera.com', 'Wds64kMjG8g'),
 (96, 'Cariotta Gantz', 'cgantz2n@biglobe.ne.jp', 'ayPdUC9tt'),
 (97, 'Leland Stitson', 'lstitson2o@paypal.com', 'iS1Os5L'),
 (98, 'Tabina Connelly', 'tconnelly2p@ebay.com', 'o6aX3v'),
@@ -898,15 +871,13 @@ INSERT INTO `proprietaire` (`id_proprietaire`, `nom`, `mail`, `mdp`) VALUES
 -- Structure de la table `theme`
 --
 
-DROP TABLE IF EXISTS `theme`;
 CREATE TABLE IF NOT EXISTS `theme` (
-  `id_theme` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_theme`)
+`id_theme` int(11) NOT NULL,
+  `nom` varchar(255) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `theme`
+-- Contenu de la table `theme`
 --
 
 INSERT INTO `theme` (`id_theme`, `nom`) VALUES
@@ -1023,61 +994,176 @@ INSERT INTO `theme` (`id_theme`, `nom`) VALUES
 -- Structure de la table `token`
 --
 
-DROP TABLE IF EXISTS `token`;
 CREATE TABLE IF NOT EXISTS `token` (
-  `id_token` int(11) NOT NULL AUTO_INCREMENT,
+`id_token` int(11) NOT NULL,
   `token` text NOT NULL,
   `id_proprietaire` int(11) NOT NULL,
   `debut` date NOT NULL,
-  `fin` date NOT NULL,
-  `nb_appel` int(11) NOT NULL,
-  PRIMARY KEY (`id_token`)
+  `fin` datetime NOT NULL,
+  `nb_appel` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `token`
+-- Contenu de la table `token`
 --
 
 INSERT INTO `token` (`id_token`, `token`, `id_proprietaire`, `debut`, `fin`, `nb_appel`) VALUES
-(1, 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb', 2, '2018-05-21', '2018-05-31', 1618);
+(1, 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb', 2, '2018-05-21', '2018-05-28 07:29:03', 1);
 
 --
--- Contraintes pour les tables déchargées
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `boutique`
+--
+ALTER TABLE `boutique`
+ ADD PRIMARY KEY (`id_boutique`), ADD KEY `id_proprietaire` (`id_proprietaire`), ADD KEY `id_proprietaire_2` (`id_proprietaire`);
+
+--
+-- Index pour la table `categorie`
+--
+ALTER TABLE `categorie`
+ ADD PRIMARY KEY (`id_categorie`);
+
+--
+-- Index pour la table `categorisation`
+--
+ALTER TABLE `categorisation`
+ ADD PRIMARY KEY (`id_categorisation`), ADD KEY `id_categorie` (`id_categorie`), ADD KEY `id_produit` (`id_produit`);
+
+--
+-- Index pour la table `localisation`
+--
+ALTER TABLE `localisation`
+ ADD PRIMARY KEY (`id_localisation`), ADD KEY `id_produit` (`id_produit`), ADD KEY `id_boutique` (`id_boutique`);
+
+--
+-- Index pour la table `marque`
+--
+ALTER TABLE `marque`
+ ADD PRIMARY KEY (`id_marque`);
+
+--
+-- Index pour la table `photo`
+--
+ALTER TABLE `photo`
+ ADD PRIMARY KEY (`id_photo`), ADD KEY `id_produit` (`id_produit`);
+
+--
+-- Index pour la table `produit`
+--
+ALTER TABLE `produit`
+ ADD PRIMARY KEY (`id_produit`), ADD KEY `id_theme` (`id_theme`), ADD KEY `id_marque` (`id_marque`);
+
+--
+-- Index pour la table `proprietaire`
+--
+ALTER TABLE `proprietaire`
+ ADD PRIMARY KEY (`id_proprietaire`);
+
+--
+-- Index pour la table `theme`
+--
+ALTER TABLE `theme`
+ ADD PRIMARY KEY (`id_theme`);
+
+--
+-- Index pour la table `token`
+--
+ALTER TABLE `token`
+ ADD PRIMARY KEY (`id_token`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `boutique`
+--
+ALTER TABLE `boutique`
+MODIFY `id_boutique` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
+--
+-- AUTO_INCREMENT pour la table `categorie`
+--
+ALTER TABLE `categorie`
+MODIFY `id_categorie` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT pour la table `categorisation`
+--
+ALTER TABLE `categorisation`
+MODIFY `id_categorisation` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=110;
+--
+-- AUTO_INCREMENT pour la table `localisation`
+--
+ALTER TABLE `localisation`
+MODIFY `id_localisation` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=111;
+--
+-- AUTO_INCREMENT pour la table `marque`
+--
+ALTER TABLE `marque`
+MODIFY `id_marque` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT pour la table `photo`
+--
+ALTER TABLE `photo`
+MODIFY `id_photo` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=150;
+--
+-- AUTO_INCREMENT pour la table `produit`
+--
+ALTER TABLE `produit`
+MODIFY `id_produit` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=109;
+--
+-- AUTO_INCREMENT pour la table `proprietaire`
+--
+ALTER TABLE `proprietaire`
+MODIFY `id_proprietaire` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
+--
+-- AUTO_INCREMENT pour la table `theme`
+--
+ALTER TABLE `theme`
+MODIFY `id_theme` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=107;
+--
+-- AUTO_INCREMENT pour la table `token`
+--
+ALTER TABLE `token`
+MODIFY `id_token` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- Contraintes pour les tables exportées
 --
 
 --
 -- Contraintes pour la table `boutique`
 --
 ALTER TABLE `boutique`
-  ADD CONSTRAINT `boutique_ibfk_1` FOREIGN KEY (`id_proprietaire`) REFERENCES `proprietaire` (`id_proprietaire`);
+ADD CONSTRAINT `boutique_ibfk_1` FOREIGN KEY (`id_proprietaire`) REFERENCES `proprietaire` (`id_proprietaire`);
 
 --
 -- Contraintes pour la table `categorisation`
 --
 ALTER TABLE `categorisation`
-  ADD CONSTRAINT `categorisation_ibfk_1` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`),
-  ADD CONSTRAINT `categorisation_ibfk_2` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`);
+ADD CONSTRAINT `categorisation_ibfk_1` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`),
+ADD CONSTRAINT `categorisation_ibfk_2` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`);
 
 --
 -- Contraintes pour la table `localisation`
 --
 ALTER TABLE `localisation`
-  ADD CONSTRAINT `localisation_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`),
-  ADD CONSTRAINT `localisation_ibfk_2` FOREIGN KEY (`id_boutique`) REFERENCES `boutique` (`id_boutique`);
+ADD CONSTRAINT `localisation_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`),
+ADD CONSTRAINT `localisation_ibfk_2` FOREIGN KEY (`id_boutique`) REFERENCES `boutique` (`id_boutique`);
 
 --
 -- Contraintes pour la table `photo`
 --
 ALTER TABLE `photo`
-  ADD CONSTRAINT `photo_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`);
+ADD CONSTRAINT `photo_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`);
 
 --
 -- Contraintes pour la table `produit`
 --
 ALTER TABLE `produit`
-  ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`id_theme`) REFERENCES `theme` (`id_theme`),
-  ADD CONSTRAINT `produit_ibfk_2` FOREIGN KEY (`id_marque`) REFERENCES `marque` (`id_marque`);
-COMMIT;
+ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`id_theme`) REFERENCES `theme` (`id_theme`),
+ADD CONSTRAINT `produit_ibfk_2` FOREIGN KEY (`id_marque`) REFERENCES `marque` (`id_marque`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

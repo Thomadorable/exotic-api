@@ -83,31 +83,10 @@ DONE
 
 
 PEUT-ÊTRE :
-- refacto sql by id theme + sql by id location
-- responsive ?
-- utiliser les stats boutiques
-
-- commenter tout le code front
-- commenter le code api
-- traduire la BDD ?
-- améliorer la récup list thème boutiques
-
-TODO :
-- templatiser le html des markers sur la carte
-- autocompletion ?
 - gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
-- afficher tous les produits d'une catégorie
-- afficher tous les produits d'une même marque ?
-- rechercher par marque ?
-- calculer le prix moyen des prix ? (utile ?)
-- refacto API.js paramètres
-- trier par prix
-- utiliser le propriétaire ?
-- ne pas charger les images déjà chargées
 - supprimer le 999 => pagination des produits en boutique
-- jquery = charger maps après les dépendances
-- checker token date de fin
-- pouvoir s'inscrire ?
-- retirer "let" dans le loading images
-- afficher [] quand 0 résult
 - choisir la limite des produits populaires
+- créer des comptes fakes
+- minfier les images
+- responsive ?
+- mettre des fakes adresses
