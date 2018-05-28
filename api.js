@@ -10,17 +10,17 @@ const crypto = require('crypto');
 const bodyParser = require("body-parser");
 const path = require('path');
 
+// Static Folder
 app.use(express.static('www'));
 
 
-
+// Get POST datas
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
 app.use(bodyParser.json());
 
-
+// Get credentials from conf.js (prod / dev instance)
 const con = mysql.createConnection({
     host: "localhost",
     user: conf.user,
@@ -29,6 +29,7 @@ const con = mysql.createConnection({
     port: conf.port
 });
 
+// Return parsed JSON with correct status + correct headers + cache
 function sendJSON(res, result) {
     if (conf.isProd) {
         res.setHeader("Access-Control-Allow-Origin", "https://exotique.design");
@@ -37,7 +38,7 @@ function sendJSON(res, result) {
     }
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Cache-Control', 'min-fresh=3600');
+    res.setHeader('Cache-Control', 'public, min-fresh=3600');
 
     if (!result) {
         result = [{
@@ -50,6 +51,7 @@ function sendJSON(res, result) {
     res.send(JSON.stringify(result));
 }
 
+// Get string of list of themes by theme name
 function getListThemesID(isThemeactive, search, res, callback) {
     if (!isThemeactive && callback && typeof (callback) === 'function') {
         // if we don't need theme, and we have a callback
@@ -72,6 +74,7 @@ function getListThemesID(isThemeactive, search, res, callback) {
     }
 }
 
+// Get string of list of boutiques by categorie name
 function getListBoutiquesID(isLocationActive, search, res, callback) {
     if (!isLocationActive && callback && typeof (callback) === 'function') {
         callback();
@@ -93,6 +96,7 @@ function getListBoutiquesID(isLocationActive, search, res, callback) {
     }
 }
 
+// Get all shop associated to 1 particular product (by product id)
 function getShopByProduct(productID, callback) {
     let sql = "SELECT boutique.lat, boutique.lng, boutique.nom AS 'nom_boutique', boutique.lieu AS 'lieu_boutique', ";
     sql += "localisation.id_localisation, localisation.id_boutique, localisation.prix, localisation.stock, ";
@@ -108,10 +112,12 @@ function getShopByProduct(productID, callback) {
     });
 }
 
+// Is filter active function
 function isActive(array, filter) {
     return array.indexOf(filter) !== -1;
 }
 
+// Function to split result or return empty array
 function splitResult(result) {
     if (result) {
         return result.split(';');
@@ -120,6 +126,37 @@ function splitResult(result) {
     }
 }
 
+function sha256(data) {
+    return crypto.createHash("sha256").update(data, 'utf8').digest('hex');
+}
+
+function filterByCategories(categories) {
+    let having = '';
+    if (categories && typeof (categories) !== 'undefined') {
+        categories = categories.split(',');
+
+        if (categories.length > 0) {
+            having = 'HAVING ';
+
+            for (let index = 0; index < categories.length; index++) {
+                const category = categories[index];
+                having += 'categories LIKE "%' +category+ '%" AND '
+            }
+
+            having = having.substring(0, having.length - 4); // Remove last 'and '
+        }
+    }
+
+    return having;
+}
+
+function parseNumber(nb, defaultNb = 0) {
+    return nb = nb && !isNaN(nb) && nb >= 0 ? nb : defaultNb;
+}
+
+// Function to get all datas about categories, themes and prices for 1 query search
+// This allow to return all categories/themes/prices from all matching products (=> allow creating front filters)
+// without limit pagination
 function getMoreDatas(where, callback) {
     let sql = "SELECT GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'all_categories', ";
     sql += "GROUP_CONCAT(DISTINCT theme.nom SEPARATOR ';') as 'all_themes', "
@@ -132,14 +169,13 @@ function getMoreDatas(where, callback) {
     sql += "LEFT JOIN theme ON theme.id_theme = produit.id_theme ";
     sql += "WHERE " + where + " ";
 
-    console.log('more infos ---->');
-    console.log(sql);
-
     con.query(sql, function (err, results, fields) {
         callback(results);
     });
 }
 
+
+// Get list of detailed products with 1 query search + limits + filters
 function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd, res, callback) {
     let select = "SELECT produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
     select += "theme.nom AS 'theme', ";
@@ -164,46 +200,47 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
     
     let limit = "LIMIT " + limitBegin + ", " + limiteEnd + " ";
 
+
+    // Limited sql for products result
     let sqlLimited = select + from + whereLimited + groupBy + limit;
+
+    // Without limit => get datas from all matching products (list of categories/themes/etc)
     let sqlWithoutLimit = select + from + groupBy;
 
+    // Sql to count products without limit but matching filters
     let sqlCount = 'SELECT produit.id_produit ' + from + whereLimited + groupBy;
 
     console.log('#SQL : get products by');
     console.log(sqlLimited);
     console.log('-----------------');
 
-
-    let countResults = 'SELECT COUNT(id_produit) FROM produit'
-
     con.query(sqlLimited, function (err, products, fields) {
         if (err) throw err;
         else if (products.length > 0) {
-            let listThemes = [];
-            let listCategories = [];
-            let minPrice = 0;
-            let maxPrice = 0;
             let datas = {};
 
-
+            // Count all results
             con.query(sqlCount, function (err, products, fields) {
                 datas.nb_results = products.length;
             });
             
-
+            // Foreach all products to get images + categories + shop datas
             for (let index = 0; index < products.length; index++) {
                 let product = products[index];
                 const productID = product.id_produit;
 
+                // Split result to get array from example : "category1;category2"
                 product.categories = splitResult(product.categories);
                 product.images = splitResult(product.photos);
                 let prices = splitResult(product.prices);
 
                 if (prices.length > 0) {
+                    // Get array of all prices without "€" sign + parse float
                     prices = prices.map(function(price){
                         return parseFloat(price.replace('€'));
                     });
-    
+                    
+                    // Return min + max prices of this product
                     let min = Math.min.apply(null, prices);
                     let max = Math.max.apply(null, prices);
                     product.price = {};
@@ -211,15 +248,18 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
                     product.price.max = max;  
                 }
 
+                // we don't need anymore these sql result datas
                 delete product.prices;
                 delete product.photos;
 
                 getShopByProduct(productID, function(localisations){
                     product.localisations = localisations;
 
+                    // After looping all products (= last index)
                     if (index === (products.length - 1)) {
+                        datas.products = products;
 
-                        // Get list of all products without pagination limit
+                        // Get list of all products ID without pagination limit
                         con.query(sqlWithoutLimit, function (err, allProducts, fields) {
                             let listIDProduct = '0';
 
@@ -228,9 +268,8 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
                                 listIDProduct = listIDProduct.join(',');
                             }
 
+                            // Get global datas (all matching themes + cat + prices)
                             getMoreDatas('produit.id_produit IN (' + listIDProduct + ')', function(moreDatas){
-                                datas.products = products;
-
                                 if (moreDatas && moreDatas[0]) {
                                     datas.all_categories = splitResult(moreDatas[0].all_categories);
                                     datas.all_themes = splitResult(moreDatas[0].all_themes);
@@ -270,31 +309,6 @@ function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd,
         }
     });
 }
-
-function sha256(data) {
-    return crypto.createHash("sha256").update(data, 'utf8').digest('hex');
-}
-
-function filterByCategories(categories) {
-    let having = '';
-    if (categories && typeof (categories) !== 'undefined') {
-        categories = categories.split(',');
-
-        if (categories.length > 0) {
-            having = 'HAVING ';
-
-            for (let index = 0; index < categories.length; index++) {
-                const category = categories[index];
-                having += 'categories LIKE "%' +category+ '%" AND '
-            }
-
-            having = having.substring(0, having.length - 4); // Remove last 'and '
-        }
-    }
-
-    return having;
-}
-
 
 // #ROUTE 1 : GENERATE TOKEN
 app.post('/api/token', function (req, res) {
@@ -453,8 +467,8 @@ app.get('/api/products/search', function (req, res) {
     let theme = req.query.theme;
     let maxPrice = req.query.maxPrice;
 
-    begin = begin ? begin : 0;
-    nbProducts = nbProducts ? nbProducts : 20;
+    begin = begin && !isNaN(begin) ? begin : 0;
+    nbProducts = nbProducts && !isNaN(nbProducts) ? nbProducts : 20;
 
     if (typeof (filters) !== 'undefined' && typeof (query) !== 'undefined') {
         filters = filters.split(',');
@@ -518,7 +532,10 @@ app.get('/api/products/search', function (req, res) {
 
 // ROUTE #3 : POPULAR PRODUCTS
 app.get('/api/products/popular', function (req, res) {
-    getFullProductInfos('produit.nb_visites > 0', '', '', 0, 9, res);
+    let from = parseNumber(req.query.from);
+    let to = parseNumber(req.query.to, 9);
+
+    getFullProductInfos('produit.nb_visites > 0', '', '', from, to, res);
 });
 
 // ROUTE #4 GET PRODUCT BY ID
@@ -572,6 +589,8 @@ app.get('/api/product/shop', function (req, res) {
 // ROUTE #6 : SHOP INFOS
 app.get('/api/shop', function (req, res) {
     let idBoutique = req.query.id;
+    let from = parseNumber(req.query.from);
+    let to = parseNumber(req.query.to, 9);
 
     if (!isNaN(idBoutique) && idBoutique > 0) {
         sql = 'SELECT id_boutique, nom, lieu, lat, lng FROM boutique WHERE id_boutique = ' + idBoutique;
@@ -579,7 +598,7 @@ app.get('/api/shop', function (req, res) {
             if (err) throw err;
             
             let sql = 'produit.id_produit IN (SELECT id_produit FROM localisation WHERE id_boutique = ' + idBoutique + ')';
-            getFullProductInfos(sql, '', '', 0, 999, res, function(data){
+            getFullProductInfos(sql, '', '', from, to, res, function(data){
                 if (shopDatas && shopDatas[0]) {
                     shopDatas[0].products = [];
 
@@ -611,9 +630,9 @@ app.get('/api/shop', function (req, res) {
 app.get('/api/shop/near', function (req, res) {
     let lat = req.query.lat;
     let lng = req.query.lng;
-    let limit = req.query.limit;
+    let limit = parseNumber(req.query.limit);
 
-    if (!isNaN(lat) && !isNaN(lng) && !isNaN(limit) && limit >= 0) {
+    if (!isNaN(lat) && !isNaN(lng)) {
         // avoid &limit= (with blank value)
         if (limit == 0) limit = 0;
         if (lat == 0) lat = 0;

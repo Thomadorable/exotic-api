@@ -144,7 +144,7 @@ if ($('#app-search').length > 0) {
                         this.listresults = [];
 
 
-                        this.ajax = $.get(domain + '/api/products/popular?token=' + iToken, (data) => {
+                        this.ajax = $.get(domain + '/api/products/popular?from=0&to=9&token=' + iToken, (data) => {
                             this.loading = 0;
                             this.nbResults = 9;
                             this.popular = true;

@@ -3,13 +3,13 @@ const tokenMaps = 'AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k';
 
 
 // TODO : remove this test
-// navigator.geolocation.getCurrentPosition = function (callback) {
-//     var position = {};
-//     position.coords = {};
-//     position.coords.latitude = 48.8077711;
-//     position.coords.longitude = 2.3673933;
-//     callback(position);
-// }
+navigator.geolocation.getCurrentPosition = function (callback) {
+    var position = {};
+    position.coords = {};
+    position.coords.latitude = 48.8077711;
+    position.coords.longitude = 2.3673933;
+    callback(position);
+}
 
 
 function generateMap() {
@@ -127,7 +127,8 @@ if ($('#app-map').length > 0) {
             listBoutiques: [],
             markers: [],
             limit: 0,
-            noShop: false
+            noShop: false,
+            hideseemore: false
         },
         methods: {
             initMap: function () {
@@ -235,8 +236,7 @@ if ($('#app-shop').length > 0) {
                         this.duration = response.routes[0].legs[0].duration.text;
                         this.directionsDisplay.setDirections(response);
                     } else {
-                        // TODO : get error
-                        window.alert('Directions request failed due to ' + status);
+                        console.log('Directions request failed due to ' + status);
                     }
                 });
             }

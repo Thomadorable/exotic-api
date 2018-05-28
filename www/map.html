@@ -40,10 +40,8 @@
                 </span>
             </a>
         </div>
-
-        <span style="font-size:20px">{{listBoutiques.length}}</span>
         
-        <a href="" style="font-size:20px" v-on:click="seeMore">See more</a>
+        <a href="" style="font-size:20px" v-on:click="seeMore" v-if="!hideseemore">Afficher plus de boutiques</a>
     </div>
 
 
@@ -63,12 +61,12 @@
             var url = domain + '/api/shop/near?';
             url += 'lat=' + mapp.lat.toFixed(4) + '&lng=' + mapp.lng.toFixed(4) + '&limit=' + mapp.limit;
 
-            console.log(url);
-
             $.get(url + token, (boutiques) => {
                 if (boutiques.length > 0) {
                     mapp.limit = mapp.limit + 6;
                     generateMarkers(boutiques);
+                } else {
+                    mapp.hideseemore = true;
                 }
             });
         }

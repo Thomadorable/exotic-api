@@ -79,14 +79,13 @@ DONE
 - refacto boutique html (séparation js)
 - filtrer selon le prix
 - compter le bon nombre de produit avec le filtre de prix
-
+- choisir la limite des produits populaires
+- gérer mieux la pagination des boutiques (retirer "see more" au bon moment)
+- supprimer le 999 => pagination des produits en boutique
+- minfier les images
 
 
 PEUT-ÊTRE :
-- gérer mieux la pagination des boutiques (optionnelle + retirer au bon moment)
-- supprimer le 999 => pagination des produits en boutique
-- choisir la limite des produits populaires
 - créer des comptes fakes
-- minfier les images
 - responsive ?
 - mettre des fakes adresses
