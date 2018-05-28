@@ -45,7 +45,7 @@ function sendJSON(res, result) {
             status: 404
         }];
     } else if (!result.status) {
-        result.status = 202;
+        result.status = 200;
     }
 
     res.send(JSON.stringify(result));
@@ -98,9 +98,11 @@ function getListBoutiquesID(isLocationActive, search, res, callback) {
 
 // Get all shop associated to 1 particular product (by product id)
 function getShopByProduct(productID, callback) {
-    let sql = "SELECT boutique.lat, boutique.lng, boutique.nom AS 'nom_boutique', boutique.lieu AS 'lieu_boutique', ";
+    let sql = "SELECT ";
+    sql += "CONCAT('https://api.exotique.design:3000/api/shop?id=', boutique.id_boutique) AS href, "
+    sql += "boutique.lat, boutique.lng, boutique.nom AS 'nom_boutique', boutique.lieu AS 'lieu_boutique', ";
     sql += "localisation.id_localisation, localisation.id_boutique, localisation.prix, localisation.stock, ";
-    sql +="proprietaire.nom as 'nom_proprietaire' ";
+    sql += "proprietaire.nom as 'nom_proprietaire' ";
     sql += "FROM localisation ";
     sql += "INNER JOIN boutique ON boutique.id_boutique = localisation.id_boutique ";
     sql += "INNER JOIN proprietaire ON proprietaire.id_proprietaire = boutique.id_proprietaire ";
@@ -177,9 +179,12 @@ function getMoreDatas(where, callback) {
 
 // Get list of detailed products with 1 query search + limits + filters
 function getFullProductInfos(where, whereLimited, having, limitBegin, limiteEnd, res, callback) {
-    let select = "SELECT produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
+    let select = "SELECT ";
+    select += "CONCAT('https://api.exotique.design:3000/api/product?id=', produit.id_produit) AS href, "
+    select += "produit.id_produit, produit.nom, produit.description, produit.code_barre, ";
     select += "theme.nom AS 'theme', ";
     select += "marque.nom AS 'marque', ";
+    
     select += "GROUP_CONCAT(DISTINCT categorie.nom SEPARATOR ';') as 'categories', ";
     select += "GROUP_CONCAT(DISTINCT photo.url SEPARATOR ';') as 'photos', ";
     select += "GROUP_CONCAT(DISTINCT localisation.prix SEPARATOR ';') as 'prices' ";
@@ -457,7 +462,7 @@ app.use(function (req, res, next) {
     console.log('Visite du serveur sur : ', req.url);
 });
 
-// ROUTE #2 : SEARCH BY ALL
+// ROUTE 2 : SEARCH BY ALL
 app.get('/api/products/search', function (req, res) {
     let filters = req.query.filters;
     let begin = req.query.from;
@@ -467,8 +472,8 @@ app.get('/api/products/search', function (req, res) {
     let theme = req.query.theme;
     let maxPrice = req.query.maxPrice;
 
-    begin = begin && !isNaN(begin) ? begin : 0;
-    nbProducts = nbProducts && !isNaN(nbProducts) ? nbProducts : 20;
+    begin = parseNumber(begin);
+    nbProducts = parseNumber(nbProducts, 20);
 
     if (typeof (filters) !== 'undefined' && typeof (query) !== 'undefined') {
         filters = filters.split(',');
@@ -530,7 +535,7 @@ app.get('/api/products/search', function (req, res) {
     }
 });
 
-// ROUTE #3 : POPULAR PRODUCTS
+// ROUTE 3 : POPULAR PRODUCTS
 app.get('/api/products/popular', function (req, res) {
     let from = parseNumber(req.query.from);
     let to = parseNumber(req.query.to, 9);
@@ -538,7 +543,7 @@ app.get('/api/products/popular', function (req, res) {
     getFullProductInfos('produit.nb_visites > 0', '', '', from, to, res);
 });
 
-// ROUTE #4 GET PRODUCT BY ID
+// ROUTE 4 GET PRODUCT BY ID
 app.get('/api/product', function (req, res) {
     let idProduct = req.query.id;
 
@@ -557,9 +562,9 @@ app.get('/api/product', function (req, res) {
     } else {
         sendJSON(res);
     }
-})
+});
 
-// ROUTE #5 : GET PRODUCT SHOPS, ORDER BY LOCATION
+// ROUTE 5 : GET PRODUCT SHOPS, ORDER BY LOCATION
 app.get('/api/product/shop', function (req, res) {
     let lat = req.query.lat;
     let lng = req.query.lng;
@@ -586,7 +591,7 @@ app.get('/api/product/shop', function (req, res) {
     }
 });
 
-// ROUTE #6 : SHOP INFOS
+// ROUTE 6 : SHOP INFOS
 app.get('/api/shop', function (req, res) {
     let idBoutique = req.query.id;
     let from = parseNumber(req.query.from);
@@ -626,7 +631,7 @@ app.get('/api/shop', function (req, res) {
     }
 });
 
-// ROUTE #7 : FIND SHOP BY LOCATION
+// ROUTE 7 : FIND SHOP BY LOCATION
 app.get('/api/shop/near', function (req, res) {
     let lat = req.query.lat;
     let lng = req.query.lng;
