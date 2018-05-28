@@ -6,15 +6,14 @@ const localConfif = {
     password: "root",
     database: "exotic",
     port: "8889"
-    //  port: "3306"
 };
 
 if (isProd) {
     module.exports = {
-        user: "pi",
-        password: "Rammsterchu",
-        database: "exotic",
-        port: ""
+        user: "*****",
+        password: "*****",
+        database: "*****",
+        port: "*****"
     };
 } else {
     module.exports = localConfif;

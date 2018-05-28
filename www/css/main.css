@@ -449,6 +449,10 @@ iframe {
 }
 
 @media screen and (max-width: 640px) {
+    html {
+        font-size: 12px;
+    }
+
     body {
         padding: 50px 20px;
     }
@@ -476,5 +480,13 @@ iframe {
 
     .search-input-icon {
         width: auto;
+    }
+
+    .container-results aside,
+    .results-container,
+    aside + .results-container {
+        position: static;
+        width: 100%;
+        margin: 0;
     }
 }

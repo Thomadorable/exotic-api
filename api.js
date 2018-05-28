@@ -674,7 +674,7 @@ if (conf.isProd) {
 } else {
     app.listen(3000, function(){
         console.log("#######################################################");
-        console.log("Le serveur a bien été lancé sur le port 3000 (en HTTPS)");
+        console.log("Le serveur a bien été lancé sur le port 3000");
         console.log("#######################################################");
     });
 }

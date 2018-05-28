@@ -3,13 +3,13 @@ const tokenMaps = 'AIzaSyB4_D-KNKcJlgMwy0TZjkgzLBBz6O3DT5k';
 
 
 // TODO : remove this test
-navigator.geolocation.getCurrentPosition = function (callback) {
-    var position = {};
-    position.coords = {};
-    position.coords.latitude = 48.8077711;
-    position.coords.longitude = 2.3673933;
-    callback(position);
-}
+// navigator.geolocation.getCurrentPosition = function (callback) {
+//     var position = {};
+//     position.coords = {};
+//     position.coords.latitude = 48.8077711;
+//     position.coords.longitude = 2.3673933;
+//     callback(position);
+// }
 
 
 function generateMap() {
