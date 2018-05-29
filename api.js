@@ -321,7 +321,7 @@ app.post('/api/token', function (req, res) {
     let mdp = req.body.mdp;
     let forbidden = [{
         status: 403,
-        message: "Invalid mail or password." + usermail + mdp
+        message: "Invalid usermail or mdp params."
     }];
 
     if(typeof(usermail) !== 'undefined' && typeof(mdp) !== 'undefined') {
@@ -475,6 +475,12 @@ app.get('/api/products/search', function (req, res) {
     begin = parseNumber(begin);
     nbProducts = parseNumber(nbProducts, 20);
 
+    let forbidden = [{
+        status: 403,
+        message: "Query & filters (min 1) params are required",
+        example: "https://api.exotique.design:3000/api/products/search?query=mangue&filters=name,location&token=" + req.query.token
+    }];
+
     if (typeof (filters) !== 'undefined' && typeof (query) !== 'undefined') {
         filters = filters.split(',');
 
@@ -528,10 +534,10 @@ app.get('/api/products/search', function (req, res) {
                 });
             });
         } else {
-            sendJSON(res);
+            sendJSON(res, forbidden);
         }
     } else {
-        sendJSON(res);
+        sendJSON(res, forbidden);
     }
 });
 

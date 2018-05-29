@@ -858,11 +858,11 @@ INSERT INTO `theme` (`id_theme`, `nom`) VALUES
 --
 
 CREATE TABLE `token` (
-  `id` int(11) NOT NULL,
+  `id_token` int(11) NOT NULL,
   `token` text NOT NULL,
   `id_proprietaire` int(11) NOT NULL,
-  `debut` date NOT NULL,
-  `fin` date NOT NULL,
+  `debut` datetime NOT NULL,
+  `fin` datetime NOT NULL,
   `nb_appel` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -870,7 +870,7 @@ CREATE TABLE `token` (
 -- Déchargement des données de la table `token`
 --
 
-INSERT INTO `token` (`id`, `token`, `id_proprietaire`, `debut`, `fin`, `nb_appel`) VALUES
+INSERT INTO `token` (`id_token`, `token`, `id_proprietaire`, `debut`, `fin`, `nb_appel`) VALUES
 (1, 'd557ef8b9827b063b0c29e4bfc6d474e080e65a1e4d76217a03845038f2427bb', 2, '2018-05-21', '2018-05-31', 654);
 
 --
@@ -944,7 +944,7 @@ ALTER TABLE `theme`
 -- Index pour la table `token`
 --
 ALTER TABLE `token`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_token`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -1008,7 +1008,7 @@ ALTER TABLE `theme`
 -- AUTO_INCREMENT pour la table `token`
 --
 ALTER TABLE `token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_token` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Contraintes pour les tables déchargées
